@@ -1,0 +1,42 @@
+<div >
+	<fieldset>
+		<div class="formitem">
+			<span class="label">Reporter:</span> <span data-dojo-attach-point='reporterName' class='forminput'></span>
+		</div>
+		<div class='formitem'>
+			<span class='label'>Victim:</span> 
+			<span data-group='vics' data-dojo-attach-point='victem_sel' data-dojo-type='sl_components/selectors/victem_selector'
+				  data-dojo-props='selectorName:"vics2"'></span>
+		</div>
+		<div class='formitem'>
+			<span class='label'>Subject:</span> <span class='forminput'>
+			 <select data-dojo-attach-point='subject'>
+					<option value='map'>Map</option>
+					<option value='layer'>Layer</option>
+			</select>
+			</span>
+		</div>
+		<div class='formitem'>
+			<span class='labelTextarea'>Notes:</span>
+			<textarea data-dojo-attach-point='notes' class='forminput' rows='5'>&nbsp;</textarea>
+		</div>
+		<div class='formitem'>
+			<span class='label'>&nbsp;</span> <span id='buttonTarget'
+				class='forminput'>
+				<button data-dojo-attach-point='cancel_button' 
+		 			data-dojo-type="sl_components/sl_button/widget"
+		 			data-bttnColor='red'
+		 			data-bttnIcon='univ_no' 
+		 			data-bttnSize='small cancel'
+		 			data-bttnLabel='Cancel'></button>
+				<button data-dojo-attach-point='ok_button' 
+		 			data-dojo-type="sl_components/sl_button/widget"
+		 			data-bttnColor='green'
+		 			data-bttnIcon='arrow_right_round_rev' 
+		 			data-bttnSize='small ok'
+		 			data-bttnLabel='Continue'></button>
+			</span>				
+		</div>
+	</fieldset>
+
+</div>

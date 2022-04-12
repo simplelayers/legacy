@@ -1,0 +1,25 @@
+<div class='workarea'>
+<table >
+	<tr data-dojo-attach-point='view_contextAndRoles' ><td>
+		<div class='context_container hidden' 	>
+			<div data-dojo-attach-point='roles_contexts'
+				data-dojo-type='sl_components/listings/role_context_listing/widget'></div>
+		</div>
+		</td><td class='roles_container'>
+		<div >
+			<div data-dojo-attach-point='roles'
+				data-dojo-type='sl_components/listings/role_listing/widget'></div>
+
+		</div>
+		</td>
+		<td>&nbsp;</td>
+	
+	</tr>
+	<tr><td  class='role_permissions' colspan='2' data-dojo-attach-point='view_permissions'>
+	
+		<div id='role_permissions_listing' class='two_col col1 context container' data-dojo-attach-point='role_permissions'
+			data-dojo-type='sl_components/listings/role_permissions_listing/widget'></div>
+	
+	</td></tr>	
+</table>
+</div>

@@ -1,0 +1,64 @@
+<div>
+	<div class='new_org_dialog' data-dojo-type="dijit/Dialog"
+		data-dojo-id="new_org" data-dojo-attach-point="dialog_neworg"
+		title="Add New Organization">
+		<table>
+			<tbody>
+				<tr>
+					<td><Label>Org Name:</Label></td>
+					<td><input data-dojo-attach-point='input_org_name' type='text'></input></td>
+				</tr>
+				<tr>
+					<td><Label>Account Name:</Label></td>
+					<td><input data-dojo-attach-point='input_account_name'
+						type='text'></input></td>
+				</tr>
+				<tr>
+					<td><Label>Account PW:</Label></td>
+					<td><input data-dojo-attach-point='input_account_pw'
+						type='password'></input></td>
+				</tr>
+				<tr>
+					<td><Label>Email:</Label>
+					<td><input data-dojo-attach-point='input_email' type='text'></input></td>
+				</tr>
+				<tr>
+					<td><Label>Plan:</Label></td>
+					<td><span data-dojo-attach-point='sel_planId'
+						data-dojo-type='sl_components/selectors/plan_selector/widget'></span>
+					</td>
+				</tr>
+				<tr>
+					<td><label>Begins: </label></td>
+					<td><input type="text" data-dojo-attach-point="datebox_starts"
+						value="" data-dojo-type="dijit/form/DateTextBox"></input></td>
+				</tr>
+				<tr>
+					<td><label>Expires:</label></td>
+					<td><input type="text"
+						data-dojo-attach-point="datebox_expires" value=""
+						data-dojo-type="dijit/form/DateTextBox"></input></td>
+				</tr>
+				<tr>
+					<td><label>ReferralId:</label></td>
+					<td><input type='text' data-dojo-attach-point='input_refId'
+						value=''></input></td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+					<td>
+						<button data-dojo-attach-point='submit_item_bttn'
+							data-dojo-type="sl_components/sl_button/widget"
+							data-bttnIcon='plus_round' data-bttnSize='sm'
+							data-bttnLabel='Add' data-bttnColor='green'></button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<Label>Organizations:</Label>
+	<button data-dojo-attach-point='add_bttn'
+		data-dojo-type="sl_components/sl_button/widget"
+		data-bttnIcon='plus_round' data-bttnSize='sm' data-bttnLabel='Add'
+		data-bttnColor='green'></button>
+</div>

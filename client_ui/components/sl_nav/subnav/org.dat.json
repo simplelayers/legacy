@@ -1,0 +1,78 @@
+[
+{"groupTitle" : "View",
+	"requirements" : {},
+	"links":[ {
+		"title":"Details",
+		"ref": "?",
+		"fields": [
+			{
+			 "name":"do",
+			 "value":"organization.info",
+			 "type":"static"},
+			{"name":"orgId",
+			 "value":"orgId",
+			 "type":"pageArg"}]
+	},{
+		"title":"Group",
+		"ref": "?",
+		"fields":[
+			{"name":"do",
+			 "value":"group.info",
+			 "type":"static"},
+			{"name":"groupId",
+			 "value":"orgGroupId",
+			 "type":"pageArg"}]
+	},{
+		"title":"Resources",
+		"ref": "organization/resources/",
+		"fields":[
+			{"name":"orgId",
+			 "value":"orgId",
+			"type":"pageArg"}],
+		"orgActor":"org_owner"
+	} , {
+		"title":"Usage Report",
+		"ref": "?",
+		"fields":[
+			{"name":"do",
+			 "value":"organization.report",
+			 "type":"static"},
+			{"name":"orgId",
+			 "value":"orgId",
+			 "type":"pageArg"}
+		],	
+		"orgActor":"org_owner"
+	}]
+
+} , {"groupTitle" : "Administrate",
+	"requirements" : {
+		"orgActor":"org_owner"
+	},
+	"links":[ {
+		"title":"Employees",
+		"ref": "organization/employees/",
+		"fields":[
+			{"name":"orgId",
+			"value":"orgId",
+			"type":"pageArg"}],
+		"orgActor":"org_owner"
+	} , {
+		"title":"Invites",
+		"ref": "organization/invites/",
+		"fields":[
+			{"name":"orgId",
+			 "value":"orgId",
+			 "type":"pageArg"}],
+			"orgActor":"org_owner"			 
+	} , {
+		"title":"License",
+		"ref": "organization/license/",
+		"fields":[
+			{"name":"orgId",
+			 "value":"orgId",
+			 "type":"pageArg"}],
+		"orgActor":"org_owner"
+	}]
+}
+]
+		 

@@ -1,0 +1,43 @@
+<div id='form_cfg' data-sl-use_common='true' class='hidden'></div>
+
+<div class="form-group">
+    <label>Geometry Format</label> 
+    <div class="description">What format is the geometry data in?</div>
+    <div class="form-check form-check-inline">
+        <label class="form-check-label">No Geometry</label>
+        <input class="form-check-input"  checked="checked" type="radio" name="geometry_format" value="none" title="No spatial data." >
+    </div>
+    <div class="form-check form-check-inline">
+        <label class="form-check-label">Lat/Lon</label>
+        <input class="form-check-input" type="radio" name="geometry_format" value="latlon" title="A column for Latitude and Longitude">
+    </div>
+    <div class="form-check form-check-inline">
+        <label class="form-check-label">WKT</label>
+        <input class="form-check-input" type="radio" name="geometry_format" value="wkt" title="Well Known Text, used in SimpleLayers CSV output">
+    </div>
+    <div class="form-check form-check-inline">
+        <label class="form-check-label">WKB</label>
+        <input class="form-check-input" type="radio" name="geometry_format" value="wkb" title="Well Known Binary">
+    </div>
+    <input id='gfmt' type="hidden" name="gfmt" value="" />
+</div>
+<div class="form-group stateful req-latlon">
+    <label class="form-label">Longitude</label>
+    <div class="description">Field/Column holding x-coordinate (longitudinal) data</div>
+    <input class="form-control" name="x" type="text" value="Longitude">
+</div>
+<div class="form-group stateful req-latlon">
+    <label class="form-label ">Latitude</label>
+    <div class="description">Field/Column holding y-coordinate (latitudinal) data</div>
+    <input class="form-control" name="y" type="text" value="Latitude">
+</div>
+<div class="form-group stateful req-wkt">
+    <label class="form-label  ">WKT Field</label>
+    <div class="description">Field/Column holding values in Well-Known-Text format.</div>
+    <input class="form-control" name="wkt" type="text" value="wkt">
+</div>
+<div class="form-group stateful req-wkb">
+    <label>WKB Field</label>
+    <div class="description">Field/Column holding values in Well-Known-Binary format</div>
+    <input class="form-control" name='wkb' type='text' value='wkb'>
+</div>

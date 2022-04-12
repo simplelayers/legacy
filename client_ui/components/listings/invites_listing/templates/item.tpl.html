@@ -1,0 +1,30 @@
+<tr>
+	<td>
+		<button data-dojo-attach-point='del_item_bttn'
+			data-dojo-type='sl_components/sl_button/widget'
+			data-bttnIcon='univ_no' data-bttnSize='sm' data-bttnLabel=''
+			data-bttnColor='normal'></button>
+	</td>
+	 <td><a data-dojo-attach-point='link_email'>Contact:</a></td>
+	<td>
+		<input data-dojo-type="dijit/form/TextBox" 	type='text' data-dojo-attach-point='textbox_name'></input><br>
+		<input data-dojo-type="dijit/form/TextBox" 	type='text' data-dojo-attach-point='textbox_email'></input><br>
+	</td>
+	<td>
+		<input data-dojo-type="dijit/form/TextBox" type='text' data-dojo-attach-point='textbox_title'></input> ,
+		<br><label class='referrer'>Referred by &mdash; <span data-dojo-attach-point='span_referrer_name'></span></label>
+	</td>
+	<td>
+		<input data-dojo-type="dijit/form/TextBox" type='text' data-dojo-attach-point='textbox_organization'></input>
+		<br>
+		<label class='viewstates invite_sent noadmin state_inactive'>Invitation Sent</label>
+		<label class='viewstates invite_org_created state_inactive'>Organization Created</label>
+		<label class='viewstates invite_org_removed state_inactive'>Organization Removed</label>
+		<button class='viewstates invite_sent admin state_inactive'
+			data-dojo-attach-point='add_org_bttn'
+			data-dojo-type='sl_components/sl_button/widget'
+			data-bttnIcon='network' data-bttnSize='sm' data-bttnLabel='Create Organization'
+			data-bttnColor='normal'></button>
+	</td>
+	
+</tr>

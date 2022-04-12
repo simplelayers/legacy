@@ -1,0 +1,43 @@
+<form name="login_form" method="post" target="_top" action="https://dev.simplelayers.com/~art/simplelayers/?do=wapi.auth.authenticate&application=dmi">
+
+	<h1 class='title' data-dojo-attach-point='title'>Data Management
+		Interface &#151; Login</h1>
+	<!--{if $message != ''}-->
+	<div class="notice error" data-dojo-attach-point="login_msg_area">
+		<h2 class="header" data-dojo-attach-point='heading'></h2>
+		<hr />
+		<p class="message" data-dojo-attach-point="message"></p>
+	</div>
+	<input name="force" type="hidden" value="1" />
+	<!--{/if}-->
+	<fieldset class='inputs'>
+		<div class='field_info'>
+			<label class='field_label'
+				data-dojo-attach-point='login_username_lbl' for='username'>Username:</label>
+			<span class='field_item'> <input type="text" name="username"
+				data-dojo-attach-point='username' />
+			</span>
+		</div>
+		<div class="field_info">
+			<label class="field_label"
+				data-dojo-attach-point="login_password_lbl" for='password'>Password:</label>
+			<span class='field_item'> <input type="password"
+				name="password" data-dojo-attach-point="password" />
+			</span>
+		</div>
+		<div class="field_info ">
+			<label class='field_label'>&nbsp;</label><span class='field_item'>
+				<button type='submit' data-dojo-attach-point='login_button'
+					data-dojo-type="sl_components/sl_button/widget"
+					data-bttnLabel="Login" data-bttnIcon='power_ico'
+					data-bttnSize='small'></button> <span class='forgotpw_area'>
+					<a class='forgotpw_lnk' data-dojo-attach-point='forgotpw_lnk'
+					href='' target="_self">Forgot your password?</a>
+			</span>
+			</span>
+		</div>
+		<input name="action" type="hidden" value="handle_login" /> <input
+			name="state" type="hidden" value="<!--{$state}-->" />
+	</fieldset>
+
+</form>

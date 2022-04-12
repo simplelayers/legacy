@@ -1,0 +1,66 @@
+<div class='workarea'>
+	<div class="alert hidden" data-dojo-attach-point='usage_alert'>
+		<!--{if $user->diskUsageRemaining() <= 0 }-->
+		Your account is already at the maximum allowed storage.<br /> To
+		import more data, either <a href=".?do=layer.list">delete some
+			layers</a> or <a href=".?do=account.addstorage">purchase more storage
+			space</a>
+	</div>
+
+	<div class='content_panel'>
+		<div data-dojo-attach-point="title" class='section_head'></div>
+		<form data-dojo-attach-point='import_form' method="post"
+			enctype="multipart/form-data" 
+		>
+			<input type="hidden" name="name" value=""  />
+			<input data-dojo-attach-point='import_fmt' type="hidden"
+				name="import_format" value=""
+			></input>
+			<input data-dojo-attach-point="import_layer_id" type="hidden"
+				name="layerid" value=""
+			></input>
+
+			<table role='formatting'>
+				<tbody>
+					<tr class='form_item'>
+						<th>Upload file:</th>
+						<td><input type="file" name="source" size="44"></input></td>
+					</tr>
+					<tr class='form_item'>
+						<th>File URL:</th>
+						<td><input data-dojo-attach-point='fileURL'  type="text" name="fileURL"></input></td>
+					</tr>
+					<tr data-dojo-attach-point='format_frm'>
+					</tr>
+					<tr class='form_item'>
+						<th>Projection</th>
+						<td><span class="form_item_description">Projection to use (if projection is not defined by uploaded content)
+						</span><p><div data-dojo-attach-point='projection_container' data-dojo-type="sl_components/include_content/widget"></div>
+					</tr>
+					<tr class='form_item'>
+						<th>&nbsp;</th>
+						<td><p><button class='button' name="submit" >Submit</button></p></td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
+	</div>
+	
+	<div data-dojo-attach-point="instructions"
+		class='instruction_panel content_panel'
+	>
+		<div data-dojo-attach-point="common_ins" class='instructions_common'>
+			<div data-dojo-attach-point="common_ins_head" class="section_head">Standard
+				Instructions:</div>
+			<div data-dojo-attach-point="common_ins_txt"
+				data-dojo-type="sl_components/include_content/widget"
+			></div>
+		</div>
+		<div data-dojo-attach-point="format_ins" class='format_ins'>
+			<div data-dojo-attach-point="format_ins_head" class="section_head"></div>
+			<div data-dojo-attach-point="format_ins_txt"
+				data-dojo-type="sl_components/include_content/widget"
+			></div>
+		</div>
+	</div>
+</div>

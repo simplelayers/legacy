@@ -1,0 +1,35 @@
+<div id='form_cfg' data-sl-use_common='true' class='hidden'></div>
+<tr class='form_item'>
+	<th>Geometry Format</th>
+	<td>
+	<span class='form_item_description'>What format is the geometry data in?</span>
+	<p>
+	<input type='radio' name='geometry_format' value='none' title='No spatial data.' >No Geometry
+	<input type='radio' name='geometry_format' value='latlon' title='A column for Latitude and Longitude' checked="checked">Lat/Lon
+	<input type='radio' name='geometry_format' value='wkt' title="Well Known Text, used in SimpleLayers CSV output">WKT
+	<input type='radio' name='geometry_format' value='wkb' title="Well Known Binary">WKB
+	<input id='gfmt' type='hidden' name='gfmt' value='' />
+	</p>
+	</td>
+</tr>
+<tr id='csv_lon' class='form_item csv_item hidden csv_latlon'>
+	<th>Longitude</th>
+	<td><span class="form_item_description">Field/Column holding x-coordiate (longitudinal) data.</span>
+	<p><input name='x' type='text' value='Longitude'></input><p></td>
+</tr>
+<tr id='csv_lat' class='form_item csv_item hidden csv_latlon'>
+	<th>Latitude</th>
+	
+	<td><span class="form_item_description">Field/Column holding y-coordiate (latitudinal) data.</span>
+	<p><input name='y' type='text' value='Latitude'></input></p></td>
+</tr>
+<tr id='csv_wkt' class='form_item csv_item hidden csv_wkt'>
+	<th>WKT Field</th>
+	<td><span class="form_item_description">Field/Column holding values in Well-Known-Text format.</span>
+	<p><input name='wkt' type='text' value='wkt'></input><p></td>
+</tr>
+<tr id='csv_wkb' class='form_item csv_item hidden csv_wkb'>
+	<th>WKB Field</th>
+	<td><span class="form_item_description">Field/Column holding values in Well-Known-Binary format.</span>
+	<p><input name='wkb' type='text' value='wkb'></input><p></td>
+</tr>

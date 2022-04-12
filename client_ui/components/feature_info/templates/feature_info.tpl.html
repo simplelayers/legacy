@@ -1,0 +1,18 @@
+<div class="dijitDialog" role="dialog" aria-labelledby="${id}_title">
+	<div data-dojo-attach-point="titleBar" class="dijitDialogTitleBar">
+		<span data-dojo-attach-point="titleNode" class="dijitDialogTitle" id="${id}_title"
+				role="heading" level="1"></span>
+		<span data-dojo-attach-point="closeButtonNode" class="dijitDialogCloseIcon" data-dojo-attach-event="ondijitclick: onCancel" title="${buttonCancel}" role="button" tabindex="0">
+			<span data-dojo-attach-point="closeText" class="closeText" title="${buttonCancel}">x</span>
+		</span>
+	</div>
+	<div data-dojo-attach-point="containerNode" class="dijitDialogPaneContent">
+		<div data-dojo-id="paging_info" >
+			<button data-dojo-type='sl_components/sl_button' data-dojo-id='feature_paging_back' data-bttnIcon='rewind' data-bttnSize='small' ></button>
+			<label data-dojo-attach-point='featureOffsetLabel'></label> / <label data-dojo-attach-point="featureCountLabel"></label>		  
+			<button data-dojo-type='sl_components/sl_button' data-dojo-id='feature_paging_back' data-bttnIcon='fastfwd' data-bttnSize='small' ></button>
+		</div>
+		<hr />
+		<div data-dojo-attach-point="featureDisplay"></div>
+	</div>
+</div>

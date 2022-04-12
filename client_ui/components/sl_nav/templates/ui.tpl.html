@@ -1,0 +1,29 @@
+<div>
+<!-- Tags end on line afterwards to eliminate any whitespace -->
+<div data-dojo-type="dijit/Toolbar">
+	<div data-dojo-type="dijit/form/ToggleButton" 
+        data-dojo-props="iconClass:'nav_button admin', showLabel:true" data-dojo-attach-point='admin'>Admin.</div>
+    <span data-dojo-type="dijit/ToolbarSeparator" data-dojo-attach-point='admin_sep'></span>
+    <div data-dojo-type="dijit/form/ToggleButton" 
+        data-dojo-props="iconClass:'nav_button organization', showLabel:true" data-dojo-attach-point='organization'>My Org</div>
+    <span data-dojo-type="dijit/ToolbarSeparator"></span>
+    <div data-dojo-type="dijit/form/ToggleButton" 
+        data-dojo-props="iconClass:'nav_button community', showLabel:true" data-dojo-attach-point='community'>Community</div>
+    
+    <span data-dojo-type="dijit/ToolbarSeparator"></span>
+    <div data-dojo-type="dijit/form/ToggleButton" 
+        data-dojo-props="iconClass:'nav_button data', showLabel:true" data-dojo-attach-point='data'>Data</div>
+    <span data-dojo-type="dijit/ToolbarSeparator"></span>
+    <div data-dojo-type="dijit/form/ToggleButton" data-dojo-attach-point='maps' 
+        data-dojo-props="iconClass:'nav_button maps', showLabel:true">Maps</div>
+    <!-- <span data-dojo-type="dijit/ToolbarSeparator"></span>
+    <div data-dojo-type="dijit/form/ToggleButton" data-dojo-attach-point='permissions'
+        data-dojo-props="iconClass:'nav_button permissions', showLabel:true">Permissions</div>
+    -->
+    <div data-dojo-type="dijit/form/ToggleButton" class='lastItem' data-dojo-attach-point='help'
+        data-dojo-props="iconClass:'nav_button help', showLabel:true">Help</div>
+    <div class='invite_link' style='display:block-inline'><a data-dojo-attach-point='invite_link' >Invite a colleague</a></div>
+  
+</div>
+<div class='sl_subnav' data-dojo-attach-point='subnav' data-dojo-type='sl_components/sl_nav/sl_subnav'></div>
+</div>

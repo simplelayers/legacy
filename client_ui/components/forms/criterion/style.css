@@ -1,0 +1,91 @@
+@CHARSET "ISO-8859-1";
+.search_criterion {
+	padding: 10px;
+}
+th {
+	padding-right: 5px;
+}
+
+.dropdownlist td {
+	vertical-align:middle;
+}
+
+.section_head {
+	font-weight: 700;
+	text-align: right;
+	display:inline-block;
+	padding: 0px !important;
+	float:right;
+	margin-right: 5px;
+	
+}
+
+.search_criterion:nth-child(even){
+	background: #eee;
+}
+.search_criterion .dijitSelect {
+	width:100%;
+	
+}
+.dijitSelect .dijitDownArrowButton {
+	width: 10px;
+}
+.search_criterion tr:nth-child(2) td:nth-child(1) .dropdownlist {
+	min-width: 10em !important;
+	text-align:right;
+} 
+.search_criterion tr:nth-child(1) td:nth-child(2) {
+	padding-left: 5px;
+}
+
+.search_criterion tr:nth-child(1) td:nth-child(3) {
+	text-align: right !important;
+	padding:0px !important;
+	line-height: 38px !important;
+	
+		
+}
+
+.search_criterion tr:nth-child(1) td:nth-child(3) button {
+	margin-top: -4px !important;
+}
+
+.search_criterion tr:nth-child(2) td {
+	padding-right: 5px !important;
+}
+
+
+.search_criterion tr:nth-child(2) td:nth-child(3) .dropdownlist {
+	min-width: 8em !important;
+}
+.search_criterion tr:nth-child(3) td {
+	min-width: 8em !important;
+	padding: 4px !important;
+	margin:0px !important;
+}
+
+.search_criterion tr:nth-child(3) .dijitTextBox {
+	width: 100%;
+}
+
+.search_criterion td {
+	line-height: 28px !important;
+	padding-left: 5px !important;
+		
+}
+
+.to_right {
+	display: inline-block;
+	float:right;
+}
+
+.search_limit {
+	
+}
+th {
+	width: 155px;
+}
+.limit_cell .dijitSelect {
+ 	min-width: 92px;
+}
+

@@ -1,0 +1,64 @@
+<!DOCTYPE html >
+<html>
+<head>
+<meta charset="utf-8">
+<script>
+	// Instead of using data-dojo-config, we’re creating a dojoConfig object
+	// *before* we load dojo.js; they’re functionally identical.
+	var baseURL = "https://dev.simplelayers.com/~art/simplelayers/";
+	var dojoConfig = {
+		async : true,
+		baseUrl : baseURL,
+		// This code registers the correct location of the "demo" package
+		// so we can load Dojo from the CDN whilst still being able to
+		// load local modules
+		modulePaths : "client_ui/components/",
+		packages : [
+				{
+					name : "dojo",
+					location : baseURL+"lib/js/dojo.1.9.1/dojo"
+				},
+				{
+					name : "dijit",
+					location : baseURL+"lib/js/dojo.1.9.1/dijit"
+				},
+				{
+					name : "dojox",
+					location : baseURL+"lib/js/dojo.1.9.1/dojox"
+				},
+				{
+					name : "testwidgets",
+					location : baseURL+"client_ui/tests/temp/"
+				} 
+			]
+	};
+</script>
+</head>
+<body id='wrapper'>
+	<div id="target"></div>
+	<form>
+	<button></button>
+	<button id='b2'></button>
+	</form>
+	<script src="https://dev.simplelayers.com/lib/js/dojo.1.9.1/dojo/dojo.js" ></script>
+	<script>
+		function test() {
+
+			// Require the module we just created
+			require([ "dojo/dom","testwidgets/widgetExample","dojo/parser",
+			  		"dijit/layout/StackContainer"
+					],
+					function(dom, widgetExample,paraser,container ) {
+						dom.byId('#b2').addEventListener('click',)
+					}
+			);
+			
+		}
+		function clickHandler() {
+			window.location.href = '../proof.html'
+		}
+		test()
+	</script>
+
+</body>
+</html>

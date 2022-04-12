@@ -1,0 +1,61 @@
+[
+{"groupTitle" : "Activity",
+	"requirements" : {
+		"perm" : ":SysAdmin:Logs:"	
+	},
+	"links" : [ {
+		"title" : "Map usage",
+		"ref" : "?do=admin.projectlog",	
+		"perm":":SysAdmin:Logs:MapUsage:"	
+	}, {
+		"title" : "Account Logins",
+		"ref" : "?do=admin.loginlog",
+		"perm":":SysAdmin:Logs:AccountLogins:"
+		
+	}, {
+		"title" : "Account Changes",
+		"ref" : "?do=admin.accountlog",	
+		"perm":":SysAdmin:Logs:AccountChanges:"	
+	}, {
+		"title" : "Layer Transactions",
+		"ref" : "?do=admin.report.transactions",
+		"perm":":SysAdmin:Logs:LayerTransactions:"		
+	} ]
+},{
+		"groupTitle" : "Configuration",
+		"requirements" : {
+			"perm" : ":SysAdmin:Config:"			
+		},
+		"links" : [ {
+			"title" : "Permissions",
+			"ref" : "admin/master_list/",
+			"perm":":SysAdmin:Logs:LayerTransactions:"			
+		}, {
+			"title" : "Plans Manager",
+			"ref" : "admin/plan_manager"			
+		}, {
+			"title" : "Roles Manager",
+			"ref" : "admin/roles_manager"			
+		}, {
+			"title" : "Seats Manager",
+			"ref" : "admin/seat_manager"			
+		} ]
+	}, {
+		"groupTitle" : "Organizations",
+		"requirements" : {
+			"perm" : ":SysAdmin:Organizations:View"
+			
+		},
+		"links" : [ {
+			"title" : "List",
+			"ref" : "/admin/organization/list",
+			"perm" : ":SysAdmin:Organizations:View"
+		}, {
+			"title" : "New",
+			"ref" : "admin/organization/list/cmd:new_org/",
+			"perm" : ":SysAdmin:Organizations:Create"
+		}, {
+			"title" : "Invites",
+			"ref" : "/admin/organization/invites"
+		} ]
+	} ]

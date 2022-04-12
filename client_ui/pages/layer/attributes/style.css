@@ -1,0 +1,26 @@
+@CHARSET "ISO-8859-1";
+.pageLayout .mainContent {
+	padding-left: 0px !important;
+	bottom:0px;
+}
+
+.content_panel {
+	position: absolute !important;
+	position: relative;
+	top: 255px;
+	bottom: 10px;
+    left: 10px;
+	right: 10px;	
+}
+
+.listing_container {
+	position:absolute;
+	top:0px;
+	left:0px;
+	right:0px;
+	bottom:0px;
+}
+
+
+
+

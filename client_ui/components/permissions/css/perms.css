@@ -1,0 +1,175 @@
+@CHARSET "ISO-8859-1";
+
+
+.view_area {
+	width:100%;
+	height:100%;
+}
+
+.role_context_listing , .role_listing {
+	display:inline-block;
+	min-width:300px;
+	width:100%;
+	height:100%;	
+}
+
+.dijitContentPane   {
+	padding-right:10px !important;
+	overflow-y:auto !important;
+	overflow_x:hidden !important;
+}
+
+
+
+.role_permissions.listing {
+	width:700px !important;
+}
+
+
+
+.masterlist .permission_item .deleted{
+	text-decoration: line-through;
+	
+}
+
+.masterlist table {
+	border-spacing: 0px;
+	border-collapse: collapse;
+	border-style: none;
+}
+.masterlist table td {
+	vertical-align:middle;
+	
+}
+.masterlist table tr:nth-child(even) {
+	background:#fff;	
+}
+.permission_actions {
+	width:30px;	
+}
+
+
+.permission_cell {
+	width:100%;
+	
+	vertical-align:baseline !important;
+}
+
+.masterlist input {
+	border-style:inset;
+	min-width:20em;
+}
+
+
+.masterlist .scrollable_listing td input {
+	width:100%;
+	border-style:inset;
+	display:hidden;
+	height:18px !important;
+	margin:0px;
+	padding-right;10px;
+	min-width: 20em;
+		
+}
+.masterlist input.deleted   {
+	border:0px !important;
+}
+
+.permissions.masterlist h1 {
+	
+	font-size:16pt;
+	background-color:#eee;
+	left:0px; right: 0px; 
+	
+	padding:0px;
+	padding-left:10px;
+	margin:0px;	
+}
+.permissions.masterlist {
+	overflow:hidden;
+}
+
+.permissions.masterlist .viewselector {
+	display:block;
+	padding-left:10px;
+	background-color: #ccc;
+	
+}
+
+
+.permissions.masterlist h2 {
+	font-size:16pt;
+	height:8pt !important;
+}
+
+.permissions.masterlist h3 {
+	font-size:12pt;
+	font-style: italic;
+	font-weight:normal;
+	width: 51em;	
+}
+
+.permissions.masterlist .scrollable_listing {
+	width:auto;
+	min-height:0px;
+	border-width:1px;
+	border-style:outset;
+	overflow: auto;
+	
+	
+	background-color:#eee;
+	
+	
+}
+.permissions.masterlist textarea {
+	
+	min-width:100%;
+	min-height:200px;
+	height:75%;
+	border:none;;
+}
+.permissions.masterlist .textpane {
+	overflow:hidden;
+	
+	left:0px;
+	right:10px;
+	
+	padding:0px;
+	border-width:1px;
+	border-style:outset;
+	
+	top:80px;
+		
+}
+
+
+
+.permissions.masterlist div {
+	overflow:hidden;
+}
+
+.permissions.masterlist .masterlist-footer, .permission-import-footer {
+	margin-top: 7px;
+	
+}
+
+
+.permissions.masterlist .tools {
+	white-space:nowrap;
+	min-width:51em;
+	height: 32pt;
+}
+.permissions.masterlist input {
+	background:none;
+}
+.permissions.masterlist button {
+	
+}
+.permissions.masterlist .dijitStackContainer  {
+	height:100% !important;
+}
+.permissions.masterlisst .dijitContentPane {
+	
+}
+
+

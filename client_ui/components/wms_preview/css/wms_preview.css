@@ -1,0 +1,106 @@
+@CHARSET "ISO-8859-1";
+body {
+	line-height: 21pt;
+}
+.cancel {
+	margin-right:5px !important;
+}
+.groupings {
+	display:table-column-group;
+}
+.grouping {
+	display:table-column;
+}
+.group {
+	white-space:nowrap;
+	display:table-cell;
+	width:1000px;	
+	min-width:240px;
+}
+.group img {
+	float:left;
+}
+.group div {
+	line-height:32px;
+	vertical-align:middle !important;
+}
+.problem-title {
+	font-weight:bold;
+	font-size:18pt;
+}
+fieldset {
+	display:table;
+	padding-left:10px;
+	padding-right:10px;
+	margin-bottom:0px;
+	border:0px;
+	
+}
+.problem_listing fieldset:nth-child(even) {
+	background:#efefef;
+} 
+.formitem {
+	display:table-row;
+	overflow:hidden;
+}
+.forminput {
+	display:table-cell;
+	width:100%;
+}
+.wms_preview_img_container {
+	border:3px solid #ccc;
+	border-bottom:0px;
+	
+}
+.wms_preview_img {
+	width:250px;
+	height:250px;
+}
+
+.wms_preview_params {
+	width:250px;
+}
+
+.user_selector {
+	display:inline-block;
+}
+
+.group_selector {
+	display:inline-block;
+}
+
+
+form {
+	width:100%;
+}
+
+.formitem .label{
+	line-height:21pt;
+	display:table-cell;
+	font-weight:bold;
+	white-space: nowrap;
+	vertical-align: text-top;	
+	padding-right:12px;
+}
+
+.formitem .labelTextarea{
+	line-height:21pt;
+	display:table-cell;
+	font-weight:bold;
+	white-space: nowrap;
+	vertical-align: top;	
+	padding-right:12px;
+}
+input[type=radio] {
+	margin-right:10px;
+	margin-left:-10px;
+	
+}
+
+.formitem textarea {
+	
+}
+.victem_selector {
+	width:100% !important;
+}
+

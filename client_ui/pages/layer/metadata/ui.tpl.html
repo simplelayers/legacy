@@ -1,0 +1,22 @@
+<div class='workarea'>
+    <div data-dojo-attach-point="contentContainer" class="content hidden">
+        <h1>Metadata Content for <span data-dojo-attach-point="title"></span> (ID: <span data-dojo-attach-point="layerId_lbl"></span>)    <button data-dojo-attach-point="download_btn" class="btn btn-primary fas fa-save" type="button"></button> 
+               </h1>
+        <div data-dojo-attach-point="contentBody" class="content-body">
+            <div data-node-id="{{nodeId}}" style="margin-left:calc(.25em * {{indent}}" class="element open" data-dojo-attach-point="containerTemplate">
+                <header class="{{intHidden}}">
+                    <div data-toggle-group="{{nodeId}}"  class="fas fa-caret-down {{showToggle}}"></div>
+                    <label data-role="element-title" class="element-title not{{showToggle}}">{{elementName}}</label><span>{{value}}</span>
+                 </header>
+                <div class="node-body">
+                    <div class="attributes">
+                        {{attElements}}
+                    </div>
+                    <div class="childNodes">
+                        {{children}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

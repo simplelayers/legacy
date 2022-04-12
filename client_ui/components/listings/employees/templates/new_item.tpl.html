@@ -1,0 +1,49 @@
+<div>
+	<div data-dojo-type="dijit/Dialog" data-dojo-id="new_employee"
+		data-dojo-attach-point="new_employee" title="Add New Employee">
+		<div class="dijitDialogPaneContentArea new_employee">
+			<div data-dojo-attach-point='instructions' class='instructions'>Email will serve as this employee's username and may be virtual. The Fwd Email will be used for communications.</div>
+			
+			<table>
+				<tr >
+					<td><label data-dojo-attach-point='new_email_lbl'>Account Name:</label></td>
+					<td><input type='text'
+						data-dojo-attach-point='new_email_input'></input></td>
+				</tr>
+				<tr class='at_orgname' >
+					<td>&nbsp;</td>
+					<td><span  data-dojo-attach-point='orgAccount'>@</span></td>
+				</tr>
+				
+				<tr >
+					<td><label data-dojo-attach-point='new_displayname_lbl'>Display	Name:</label></td>
+					<td><input type='text'
+						data-dojo-attach-point='new_displayname_input'></input></td>
+				</tr>
+				<tr >
+					<td><label data-dojo-attach-point='new_pwd_lbl'>Password:</label></td>
+					<td><input type='Password' data-dojo-attach-point='new_pwd_input'></input></td>
+				</tr>
+				<tr >
+					<td><label data-dojo-attach-point='new_fwd_lbl'>
+						Fwd Email:</label></td>
+					<td><input type='text' data-dojo-attach-point='new_fwd_input'></input></td>
+				</tr>				
+			</table>
+		</div>
+
+		<div class="dijitDialogPaneActionBar">
+			<button data-dojo-attach-point='ok_button'
+				data-dojo-type="sl_components/sl_button/widget" data-bttnIcon=''
+				data-bttnSize='sm' data-bttnLabel='Ok' data-bttnColor='normal'></button>
+
+			<button data-dojo-attach-point='cancel_button'
+				data-dojo-type="sl_components/sl_button/widget" data-bttnIcon=''
+				data-bttnSize='sm' data-bttnLabel='Cancel' data-bttnColor='normal'></button>
+		</div>
+	</div>
+	<button data-dojo-attach-point='add_bttn'
+		data-dojo-type="sl_components/sl_button/widget"
+		data-bttnIcon='plus_round' data-bttnSize='sm' data-bttnLabel='Add'
+		data-bttnColor='green'></button>
+</div>

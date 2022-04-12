@@ -1,0 +1,241 @@
+@CHARSET "ISO-8859-1";
+
+
+
+.icon {
+	background-position: center;
+	background-repeat: no-repeat !important;
+}
+.vector_ico {
+	background-image: url("../wapi/media/icons/action:get/target:icon/icon:Design-28/size:16/category:Icons/");
+}
+.raster_ico {
+	background-image: url("../media/icons_16x16/raster.png");
+}
+.wms_ico {
+	background-image: url("../media/icons_16x16/wms.png");
+}
+.odbc_ico {
+	background-image: url("../wapi/media/icons/action:get/target:icon/icon:Programming-59/size:16/category:Icons/");
+}
+.relational_ico {
+	background-image: url("../wapi/media/icons/action:get/target:icon/icon:Content-36/size:16/category:Icons/");
+}
+.collection_ico {
+	background-image: url("../wapi/media/icons/action:get/target:icon/icon:Content-40/size:16/category:Icons/");
+}
+.smart_layer_ico {
+	background-image: url("../wapi/media/icons/action:get/target:icon/icon:Object-59/size:16/category:Icons/");
+}
+.relatable_ico {
+	background-image: url("../wapi/media/icons/action:get/target:icon/icon:Programing-49/size:16/category:Icons/");
+}
+
+.point_ico {
+	background-image: url("../media/icons_16x16/point.png");
+}
+.line_ico {
+	background-image: url("../media/icons_16x16/line.png");
+}
+.polygon_ico {
+	background-image: url("../media/icons_16x16/poly.png");
+}
+.unknown_ico {
+	background-image: url("../wapi/media/icons/action:get/target:icon/icon:Interface-56/size:16/category:Icons/")
+}
+
+.wms_ico {
+	background-image: url("../media/icons_16x16/wms.png");
+}
+
+.wms2_ico {
+	background-image: url("../media/icons_16x16/wms2.png");
+}
+
+.relatable {
+	background-image: url("../wapi/media/icons/action:get/target:icon/icon:Programming-59/size:16/category:Icons/") ;
+	background-repeat: no-repeat !important;
+	
+}
+.vector_ico {
+	background-image: url("../wapi/media/icons/action:get/target:icon/icon:Content-36/size:16/category:Icons/") ;	
+}
+
+.gridXCellWidget {
+	width: 100%;
+	height: 100%;
+}
+
+a.layer_icon , .layer_icon .icon {
+	min-width: 32px;
+	min-height:32px;
+	
+}
+a.layer_icon {
+	display: inline-block;
+	width: 100% !important;
+	text-align:center;
+	height: 100%;	
+}
+
+
+.icos_visibility {
+	background-image: url("../wapi/media/icons/action:get/target:icon/icon:Edition-29/size:16/category:Icons/") ;
+	background-repeat: no-repeat !important;
+	
+}
+.toggled_on .icos_visibility {
+	background-image: url("../wapi/media/icons/action:get/target:icon/icon:Edition-29/size:16/category:Icons/color:269CE9/style:reverse/rev_color:ffffff") ;	
+}
+.icos_labels {
+	background-image: url("../wapi/media/icons/action:get/target:icon/icon:Vote-1/size:16/category:Icons/") ;
+	background-repeat: no-repeat !important;
+	
+}
+.toggled_on .icos_labels {
+	background-image: url("../wapi/media/icons/action:get/target:icon/icon:Vote-1/size:16/category:Icons/color:269CE9/style:reverse/rev_color:ffffff") ;	
+}
+.icos_tooltip {
+	background-image: url("../wapi/media/icons/action:get/target:icon/icon:Communication-103/size:16/category:Icons/") ;
+	background-repeat: no-repeat !important;
+	
+}
+.toggled_on .icos_tooltip {
+	background-image: url("../wapi/media/icons/action:get/target:icon/icon:Communication-103/size:16/category:Icons/color:269CE9/style:reverse/rev_color:ffffff") ;	
+}
+.icos_classification_edit {
+	background-image: url("../wapi/media/icons/action:get/target:icon/icon:Design-23/size:16/category:Icons/") ;
+	background-repeat: no-repeat !important;
+	
+}
+.toggled_on .icos_classification_edit {
+	background-image: url("../wapi/media/icons/action:get/target:icon/icon:Design-23	/size:16/category:Icons/color:269CE9/style:reverse/rev_color:ffffff") ;	
+}
+.icos_classification_from_default {
+	background-image: url("../wapi/media/icons/action:get/target:icon/icon:Files-7/size:16/category:Icons/") ;
+	background-repeat: no-repeat !important;
+	
+}
+.toggled_on .classification_from_default {
+	background-image: url("../wapi/media/icons/action:get/target:icon/icon:Transfers-5/size:16/category:Icons/color:269CE9/style:reverse/rev_color:ffffff") ;	
+}
+.icos_classification_to_default {
+	background-image: url("../wapi/media/icons/action:get/target:icon/icon:Transfers-7/size:16/category:Icons/") ;
+	background-repeat: no-repeat !important;
+	
+}
+.toggled_on .icos_classification_to_default {
+	background-image: url("../wapi/media/icons/action:get/target:icon/icon:Transfers-7/size:16/category:Icons/color:269CE9/style:reverse/rev_color:ffffff") ;	
+}
+
+.icos_searchable {
+	background-image: url("../wapi/media/icons/action:get/target:icon/icon:Edition-28/size:16/category:Icons/") ;
+	background-repeat: no-repeat !important;
+	
+}
+.toggled_on .icos_searchable {
+	background-image: url("../wapi/media/icons/action:get/target:icon/icon:Edition-28/size:16/category:Icons/color:269CE9/style:reverse/rev_color:ffffff") ;	
+}
+
+.icos_sublayers {
+	background-image: url("../wapi/media/icons/action:get/target:icon/icon:Design-32/size:16/category:Icons/") ;
+	background-repeat: no-repeat !important;
+	
+}
+.toggled_on .icos_sublayers {
+	background-image: url("../wapi/media/icons/action:get/target:icon/icon:Design-32/size:16/category:Icons/color:269CE9/style:reverse/rev_color:ffffff") ;	
+}
+
+.icos_edit {
+	background-image: url("../wapi/media/icons/action:get/target:icon/icon:Edition-30/size:16/category:Icons/") ;
+	background-repeat: no-repeat !important;
+	
+}
+.toggled_on .icos_edit {
+	background-image: url("../wapi/media/icons/action:get/target:icon/icon:Edition-39/size:16/category:Icons/color:000000/style:reverse/rev_color:ffffff") ;	
+}
+
+.icos_delete {
+	background-image: url("../wapi/media/icons/action:get/target:icon/icon:Interface-71/size:16/category:Icons/color:ee0000/style:reverse/rev_color:ffffff") ;
+	background-repeat: no-repeat !important;
+	
+}
+.icos_vmove {
+	background-image: url("../wapi/media/icons/action:get/target:icon/icon:Interface-30/size:16/category:Icons/");
+	background-repeat: no-repeat !important;
+	
+}
+
+.icos_back {
+	background-image: url("../wapi/media/icons/action:get/target:icon/icon:straight-big-1-01/size:16/category:Arrows/");
+	background-repeat: no-repeat !important;
+	
+}
+
+
+.icos_access_none,.icos_access_none_ico  {
+	margin-left:5px !important;
+	margin-top: 0px !important;
+	background-image: url("../../../../wapi/media/icons/action:get/target:icon/icon:Edition-55/size:16/category:Icons/") ;
+	background-repeat: no-repeat !important;
+	
+}
+
+.icos_access_view,.icos_access_read_ico  {
+	margin-top: 2px !important;
+	margin-left: 4px !important;
+	background-image: url("../../../../wapi/media/icons/action:get/target:icon/icon:Edition-29/size:16/category:Icons/") ;
+	background-repeat: no-repeat !important;
+	
+}
+
+.icos_access_copy,.icos_access_copy_ico {
+	margin-top: 2px !important;
+	background-image: url("../../../../wapi/media/icons/action:get/target:icon/icon:Files-28/size:16/category:Icons/") ;
+	background-repeat: no-repeat !important;
+}
+
+.icos_access_create,.icos_access_create_ico {
+	margin-top: 2px !important;
+	background-image: url("../../../../wapi/media/icons/action:get/target:icon/icon:Files-3/size:16/category:Icons/") ;
+	background-repeat: no-repeat !important;
+}
+
+.icos_access_save,.icos_access_save_ico {
+	margin-top: 2px !important;
+	background-image: url("../../../../wapi/media/icons/action:get/target:icon/icon:Programing-58/size:16/category:Icons/") ;
+	background-repeat: no-repeat !important;
+}
+
+.icos_access_delete,.icos_access_delete_ico {
+	margin-top: 2px !important;
+	background-image: url("../../../../wapi/media/icons/action:get/target:icon/icon:Edition-44/size:16/category:Icons/") ;
+	background-repeat: no-repeat !important;
+}
+
+
+.icos_access_edit,.icos_access_edit_ico {
+	margin-left: 5px !important;
+	background-image: url("../../../../wapi/media/icons/action:get/target:icon/icon:Edition-30/size:16/category:Icons/") ;
+	background-repeat: no-repeat !important;
+	
+}
+
+.icos_access_full,.icos_access_full_ico {
+	margin-left:5px !important;
+	margin-top: 0px !important;
+	background-image: url("../../../../wapi/media/icons/action:get/target:icon/icon:Edition-56/size:16/category:Icons/") ;
+	background-repeat: no-repeat !important;
+	
+}
+
+.toggled_on.icos_bookmarked_ico {
+	margin-left: 5px !important;
+	background-image: url("../../../../wapi/media/icons/action:get/target:icon/icon:Vote-6/size:16/category:Icons/") ;
+	background-repeat: no-repeat !important;	
+}
+.icos_bookmarked_ico {
+	margin-left: 5px !important;
+	background-image: url("../../../../wapi/media/icons/action:get/target:icon/icon:Vote-7/size:16/category:Icons/") ;
+	background-repeat: no-repeat !important;	
+}

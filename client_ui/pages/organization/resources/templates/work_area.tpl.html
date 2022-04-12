@@ -1,0 +1,40 @@
+<div  class='workarea'>
+<form data-dojo-attach-point='form' enctype="multipart/form-data" method='post' >
+<input data-dojo-attach-point='media_name' type="hidden" name="media_name"></input>
+
+<table data-dojo-attach-point='media_form' role='display'>
+<tr role='display'><td class='instructions'>Add or update resources: </td></tr>
+<tr  role='display' class='new_media_entry'>
+<td >
+<label>Resource Type: </label></td>
+<td class='cell_max_height'>
+
+<span  data-dojo-attach-point='sel_media_options' data-dojo-type='sl_components/selectors/media_selector/widget'></span>
+
+</td>
+</tr>
+<tr class='hidden' role='display' data-dojo-attach-point='file_row'>
+<td class=''><Label data-dojo-attach-point='file_label'></Label></td>
+<td data-dojo-attach-point='input_file'><input name='file_content' type='file'></input>
+</tr>
+
+<tr class='hidden' role='display' data-dojo-attach-point='link_row'>
+<td><Label data-dojo-attach-point='link_label'></Label>
+<td data-dojo-attach-point='input_link'><input name='link_content' type='text'></input></td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>
+<button data-dojo-attach-point='submit_item' type='submit'
+						data-dojo-type="sl_components/sl_button/widget"
+						data-bttnIcon='plus_round' data-bttnSize='sm' data-bttnLabel='Add'
+						data-bttnColor='green'></button>
+</td>
+
+</tr>
+</table>
+<hr>
+<ul data-dojo-attach-point='org_media' data-dojo-type='sl_components/listings/org_media_listing/widget'></ul>
+
+</form>
+</div>

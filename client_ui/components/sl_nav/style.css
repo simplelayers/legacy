@@ -1,0 +1,256 @@
+@CHARSET "ISO-8859-1";
+.sl_nav {}
+
+.sl_nav .dijitToolbar.subnav_toolbar {
+	display: inline-block;
+	border:none !important; 
+	border-collapse: collapse !important;
+}
+
+.sl_nav .section_icon_area {
+	width:52px; 
+	height:52px; 
+	display:inline-block;
+	margin-left:5px;
+	margin-top:5px
+}
+.sl_nav .section_icon {
+	width:32px;
+	height:32px;
+	border: 0px;
+	border-collapse: collapse;
+	margin-left:14px;
+	margin-top:14px;
+	vertical-align:middle;	
+}
+.sl_nav .dijitToolbar {
+	background: #000 !important;
+	color: #ccc;
+	height: 36px;
+	padding-top:2.5px;
+	border: 0px !important;
+	border-collapse: collapse; 
+}
+.sl_nav .nav_button {
+	margin-left:10px;
+	margin-right:5px;
+	background-repeat: no-repeat;
+	width: 24px;
+	height: 24px;
+	text-align: center;	
+}
+.sl_nav .section_icon.community {
+	background-image: url('../../../wapi/media/icons/action:get/target:icon/category:Icons/icon:Communication-79/size:32/color:eeeeee/style:reverse/rev_color:000000');
+}
+.sl_nav .community {
+	background-image: url('../../../wapi/media/icons/action:get/target:icon/category:Icons/icon:Communication-79/size:24/color:000000/style:reverse/rev_color:aaaaaa');
+}
+.sl_nav .dijitToggleButtonHover .community, .sl_nav .dijitToggleButtonChecked .community  {
+	background-image: url('../../../wapi/media/icons/action:get/target:icon/category:Icons/icon:Communication-79/size:24/color:000000/style:reverse/rev_color:ffffff');
+}
+.sl_nav .help {
+	background-image: url('../../../wapi/media/icons/action:get/target:icon/category:Icons/icon:Interface-13/size:24/color:000000/style:reverse/rev_color:aaaaaa');
+}
+.sl_nav .dijitToggleButtonHover .help, .sl_nav .dijitToggleButtonChecked .help  {
+	background-image: url('../../../wapi/media/icons/action:get/target:icon/category:Icons/icon:Interface-13/size:24/color:000000/style:reverse/rev_color:ffffff');
+}
+
+.sl_nav .section_icon.data {
+	background-image: url('../../../wapi/media/icons/action:get/target:icon/category:Icons/icon:Programing-49/size:32/color:eeeeee/style:reverse/rev_color:000000');
+}
+.sl_nav .data {
+	background-image: url('../../../wapi/media/icons/action:get/target:icon/category:Icons/icon:Programing-49/size:24/color:000000/style:reverse/rev_color:aaaaaa');
+}
+.sl_nav .dijitToggleButtonHover .data, .sl_nav .dijitToggleButtonChecked .data  {
+	background-image: url('../../../wapi/media/icons/action:get/target:icon/category:Icons/icon:Programing-49/size:24/color:000000/style:reverse/rev_color:ffffff');
+}
+
+.sl_nav .section_icon.maps {
+	background-image: url('../../../wapi/media/icons/action:get/target:icon/category:Icons/icon:Places-30/size:32/color:eeeeee/style:reverse/rev_color:000000');
+}
+.sl_nav .maps {
+	background-image: url('../../../wapi/media/icons/action:get/target:icon/category:Icons/icon:Places-30/size:24/color:000000/style:reverse/rev_color:aaaaaa');
+}
+.sl_nav .dijitToggleButtonHover .maps, .sl_nav .dijitToggleButtonChecked .maps  {
+	background-image: url('../../../wapi/media/icons/action:get/target:icon/category:Icons/icon:Places-30/size:24/color:000000/style:reverse/rev_color:ffffff');
+}
+.sl_nav .permissions {
+	background-image: url('../../../wapi/media/icons/action:get/target:icon/category:Icons/icon:Edition-55/size:24/color:000000/style:reverse/rev_color:aaaaaa');
+}
+.sl_nav .dijitToggleButtonHover .permissions, .sl_nav .dijitToggleButtonChecked .permissions  {
+	background-image: url('../../../wapi/media/icons/action:get/target:icon/category:Icons/icon:Edition-55/size:24/color:000000/style:reverse/rev_color:ffffff');
+}
+.sl_nav .help {
+	background-image: url('../../../wapi/media/icons/action:get/target:icon/category:Icons/icon:Interface-56/size:24/color:000000/style:reverse/rev_color:aaaaaa');
+}
+.sl_nav .dijitToggleButtonHover .help, .sl_nav .dijitToggleButtonChecked .help  {
+	background-image: url('../../../wapi/media/icons/action:get/target:icon/category:Icons/icon:Interface-56/size:24/color:000000/style:reverse/rev_color:ffffff');
+}
+
+.sl_nav .section_icon.organization {
+	background-image: url('../../../wapi/media/icons/action:get/target:icon/category:Icons/icon:Content-33/size:32/color:eeeeee/style:reverse/rev_color:000000');
+}
+.sl_nav .organization {
+	background-image: url('../../../wapi/media/icons/action:get/target:icon/category:Icons/icon:Content-33/size:24/color:000000/style:reverse/rev_color:aaaaaa');
+}
+.sl_nav .dijitToggleButtonHover .organization, .sl_nav .dijitToggleButtonChecked .organization  {
+	background-image: url('../../../wapi/media/icons/action:get/target:icon/category:Icons/icon:Content-33/size:24/color:000000/style:reverse/rev_color:ffffff');
+}
+
+.sl_nav .admin {
+	background-image: url('../../../wapi/media/icons/action:get/target:icon/category:Icons/icon:Edition-29/size:24/color:000000/style:reverse/rev_color:aaaaaa');
+}
+.sl_nav .section_icon.admin {
+	background-image: url('../../../wapi/media/icons/action:get/target:icon/category:Icons/icon:Edition-29/size:32/color:eeeeee/style:reverse/rev_color:000000');
+}
+
+.sl_nav .dijitToggleButtonHover .admin, .sl_nav .dijitToggleButtonChecked .admin  {
+	background-image: url('../../../wapi/media/icons/action:get/target:icon/category:Icons/icon:Edition-29/size:24/color:000000/style:reverse/rev_color:ffffff');
+}
+
+.sl_nav .dijitButtonText {
+	font-size: 12pt;
+}
+
+.sl_nav .dijitToggleButtonChecked {
+	color: #fff !important;
+	padding: 1px 1px !important;
+	background:#000 !important;
+	border: 0px !important;
+	border-collapse: collapse !important;
+	
+}
+
+.sl_nav .dijitButtonHover .dijitButtonNode,
+.sl_nav .dijitButtonNodeHover,
+.sl_nav .dijitToggleButtonHover .dijitButtonNode,
+.sl_nav .dijitDropDownButtonHover .dijitButtonNode,
+.sl_nav .dijitComboButton .dijitButtonContentsHover,
+.sl_nav .dijitComboButton .dijitDownArrowButtonHover {
+	color: #fff !important;
+	background-color: #000 !important;
+	border: 0px !important;
+	border-collapse: collapse !important;
+}
+
+ .sl_nav .lastItem ,
+.sl_nav .dijitButtonHover .dijitButtonNode .lastItem,
+.sl_nav .dijitButtonNodeHover .lastItem,
+.sl_nav .dijitToggleButtonHover .dijitButtonNode .lastItem,
+.sl_nav .dijitDropDownButtonHover .dijitButtonNode .lastItem,
+.sl_nav .dijitComboButton .dijitButtonContentsHover .lastItem,
+.sl_nav .dijitComboButton .dijitDownArrowButtonHover .lastItem
+{
+	float:right;
+	padding: 0px !important;
+	padding-right: 15px !important;	
+	border: 0px !important;
+	border-collapse: collapse !important;
+}
+
+#nav_row td {
+	white-space: normal;
+}
+
+.lastItem.dijitHover {
+	background:none !important;
+}
+.sl_subnav ul {
+	list-style-type: none !important;
+}
+
+.sl_subnav .dijitToolbar {
+	height:auto;
+	background: none !important;
+	color: #000;
+	padding-top:5px;
+	padding-left:10px;
+	
+	padding-right:10px;
+	border: 1px !important;
+	border-style: inset !important;
+	border-color: #ddd !important;
+		
+}
+
+#nav_area .dijitToggleButtonHover {
+	border-collapse:collapse;
+
+	border-color: black;
+}
+
+.sl_subnav .link_group{
+	border: 1px solid #ccc;
+	padding-top: 3px;
+	padding-left: 10px;
+	border: 1px groove #fff;
+	padding-right: 10px;
+	display: inline-block;
+	margin-right:5px;
+	height: 39pt;
+	width:auto !important;
+	
+	
+}
+
+.sl_subnav .link_group .group_title {
+	clear:both;
+	text-align: center;
+	position:relative;
+	top:-.5em;
+	font-size:10pt;
+	
+}
+
+.sl_subnav .link_group .group_title span {
+	background: #eee;
+	padding-left:5px;
+	padding-right:5px;	
+}
+
+.sl_subnav div{
+	vertical-align:top;
+}
+
+.sl_subnav .link_group  {
+	text-align: center !important;
+}
+.sl_subnav .link_group table {
+	display: inline-block;
+	text-align:left;	
+}
+
+.sl_subnav .link_group td {
+	font-size: 10pt;
+	line-height: 14pt;
+	padding-left:5px;
+	padding-right:10px;	
+}
+
+.sl_subnav .link_group .confirm_req {
+	color: #ff0000 !important;
+}
+
+.sl_subnav .link_group a, .sl_subnav a.link_group:visited,.sl_subnav a.link_group:hover {
+	text-decoration: none !important;
+	color: #7C89A5 !important;
+	font-weight: bold;
+}
+
+.sl_subnav .link_group label.unavailable {
+	font-style: italic;
+	color: #888;
+}
+
+.invite_link {
+	display:inline-block;
+	float:right;	
+}
+
+.invite_link a {
+	color: #ffffff;
+	padding-right: 15px;
+	font-size: 12pt;
+	font-weight: bold;
+	text-decoration: none;
+}

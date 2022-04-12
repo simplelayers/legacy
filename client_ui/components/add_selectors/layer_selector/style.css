@@ -1,0 +1,4 @@
+@CHARSET "ISO-8859-1";
+.scrollable_listing.footer button.no_updates {
+	display:hidden;
+}

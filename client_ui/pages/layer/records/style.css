@@ -1,0 +1,24 @@
+@CHARSET "ISO-8859-1";
+.dgrid-header th {
+	line-height: 12pt;
+	font-size: 10pt;
+}
+
+.dgrid-header th {
+	line-height: 12pt;
+	font-size: 10pt;
+}
+
+.dgrid tr:nth-child(even) {
+	background:#ccc;
+}
+
+.dgrid-row:nth-child(even) td {
+	background:#efefef;	
+}
+
+.dgrid-row td {
+	background: #fff;
+	padding-left: 5px;
+	font-size: 10pt;
+}

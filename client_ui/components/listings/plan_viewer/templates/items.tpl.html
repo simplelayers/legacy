@@ -1,0 +1,31 @@
+<div>
+	<table>
+		<tr>
+			<td><label>Plan Name: </label></td>
+			<td><input data-dojo-attach-point='input_plan_name' type='text'></input></td>
+			<td><label>Owner Role: </label></td>
+			<td><div data-label="" data-dojo-attach-point="sel_seat"
+					data-dojo-type='sl_components/selectors/seat_selector/widget'></div></td>
+		</tr>
+		<tr>
+			<td><label>Max Space (GB): </label></td>
+			<td><input type='text' data-dojo-attach-point='input_maxSpace'></input></td>
+			<td><label>Max Layers: </label></td>
+			<td><input type='text' data-dojo-attach-point='input_maxLayers'></input></td>
+		</tr>
+		<tr data-dojo-attach-point='web_integration'>
+			<td colspan="2">
+				<input data-dojo-attach-point='advertise_cb' name='advertise' type="checkbox" ></input> <label>Advertise</label>
+				<div class="tab1" data-dojo-attach-point='advertise_options'>
+					<input data-dojo-attach-point='allow_pubcat' name='allow_pubcat' type="checkbox"></input> <label>Allow embedded catalogs</label>
+					<br><input data-dojo-attach-point='allow_pubmap' name='allow_pubmap' type="checkbox"></input> <label>Allow embedded maps</label>
+					<br><input data-dojo-attach-point='allow_pubutils' name='allow_pubutils' type="checkbox"></input> <label>Allow embedded utils</label>
+					<br><label>Cost</label> $<input data-dojo-attach-point='cost' name="cost" type="text" size="5"></input> USD
+				</div>
+			</td>
+		</tr>
+	</table>
+	<div></div>
+	<div data-dojo-type="sl_components/scrollable_listing/widget"
+		data-dojo-attach-point='list'></div>
+</div>

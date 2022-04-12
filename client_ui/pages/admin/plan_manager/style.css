@@ -1,0 +1,35 @@
+@CHARSET "ISO-8859-1";
+.plan_manager {
+	margin-top: 15px;
+	width:100%;
+	-webkit-column-gap: 40px; /* Chrome, Safari, Opera */
+    -moz-column-gap: 40px; /* Firefox */
+    column-gap: 40px;
+}
+
+.plan_manager .plans_container{
+	width: 325px;
+
+}
+.plan_manager .plans_container tr {
+		line-height:24pt;
+}
+.plan_manager .plan_seats {
+	line-height:24pt;
+	
+}
+
+.plan_manager .plan_viewer table:nth-child(1) tr {
+	line-height:24pt;
+}
+
+.plan_manager .plan_viewer {
+	padding-left: 20px;
+	padding-right:20px;
+}
+.plan_manager .plan_viewer table:nth-child(1) tr td {
+	height:100%;
+	vertical-align:middle !important;
+	
+}
+

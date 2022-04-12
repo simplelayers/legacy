@@ -1,0 +1,717 @@
+[
+    {
+        "groupTitle": "Layers",
+        "requirements": {},
+        "links": [
+            {
+                "title": "List",
+                "ref": "?do=layer.list",
+                "perm": ":Layers:General:View"
+            }
+        ]
+    },
+    {
+        "groupTitle": "Edit",
+        "requirements": {
+            "pageArg": "isLayerEditor",
+            "pageArgValue": "true",
+            "perm": "Layers:General:View|Edit"
+        },
+        "links": [
+            {
+                "title": "General",
+                "ref": "?",
+                "fields": [
+                    {
+                        "name": "do",
+                        "value": "layer.edit1",
+                        "type": "static"
+                    },
+                    {
+                        "name": "id",
+                        "value": "layerId",
+                        "type": "pageArg"
+                    }
+                ],
+                "perm": "Layers:General:View"
+            },{
+                "title": "Metadata",
+                "ref": "layer/metadata/layer:[layerId]/",
+                
+                "perm": "Layers:Metadata:View"
+            },
+            {
+                "title": "Attributes",
+                "ref": "?",
+                "fields": [
+                    {
+                        "name": "do",
+                        "value": "vector.attributes",
+                        "type": "static"
+                    },
+                    {
+                        "name": "id",
+                        "value": "layerId",
+                        "type": "pageArg"
+                    }
+                ],
+                "perm": "Layers:Attributes:Edit",
+                "pageArg": "hasRecords",
+                "pageArgValue": "true"
+            },
+            {
+                "title": "Records",
+                "ref": "?",
+                "fields": [
+                    {
+                        "name": "do",
+                        "value": "vector.records",
+                        "type": "static"
+                    },
+                    {
+                        "name": "id",
+                        "value": "layerId",
+                        "type": "pageArg"
+                    }
+                ],
+                "perm": "Layers:Records:View",
+                "pageArg": "hasRecords",
+                "pageArgValue": "true"
+            },
+            {
+                "title": "Classification",
+                "ref": "?",
+                "fields": [
+                    {
+                        "name": "do",
+                        "value": "default.colorscheme",
+                        "type": "static"
+                    },
+                    {
+                        "name": "id",
+                        "value": "layerId",
+                        "type": "pageArg"
+                    }
+                ],
+                "perm": "Layers:Classifications:View",
+                "pageArg": "isVector",
+                "pageArgValue": "true"
+            }
+        ]
+    },
+    {
+        "groupTitle": "Info",
+         "requirements": {
+            "pageArg": "isLayerEditor",
+            "pageArgValue": "false",
+            "perm": "Layers:General:View|Edit"
+        },
+        "links": [
+            {
+                "title": "General",
+                "ref": "?",
+                "fields": [
+                    {
+                        "name": "do",
+                        "value": "layer.info",
+                        "type": "static"
+                    },
+                    {
+                        "name": "id",
+                        "value": "layerId",
+                        "type": "pageArg"
+                    }
+                ],
+                "perm": "Layers:General:View"
+            },
+            {
+                "title": "Metadata",
+                "ref": "?",
+                "fields": [
+                    {
+                        "name": "do",
+                        "value": "layer.metadata1",
+                        "type": "static"
+                    },
+                    {
+                        "name": "id",
+                        "value": "layerId",
+                        "type": "pageArg"
+                    }
+                ],
+                "perm": "Layers:Metadata:View"
+            },
+            {
+                "title": "Records",
+                "ref": "?",
+                "fields": [
+                    {
+                        "name": "do",
+                        "value": "vector.records",
+                        "type": "static"
+                    },
+                    {
+                        "name": "id",
+                        "value": "layerId",
+                        "type": "pageArg"
+                    }
+                ],
+                "pageArg": "isVector",
+                "pageArgValue": "true",
+                "perm": ":Layers:Records:View"
+               
+            }
+        ]
+    },
+    {
+        "groupTitle": "Export",
+        "requirements": {
+            "pageArg": "isExportable",
+            "pageArgValue": "true",
+            "perm": ":Layers:General:Save"
+        },
+        "links": [
+            {
+                "title": "KML",
+                "ref": "?",
+                "fields": [
+                    {
+                        "name": "do",
+                        "value": "download.kml",
+                        "type": "static"
+                    },
+                    {
+                        "name": "id",
+                        "value": "layerId",
+                        "type": "pageArg"
+                    }
+                ],
+                "pageArg": "isVector",
+                "pageArgValue": "true"
+            },
+            {
+                "title": "KML",
+                "ref": "",
+                "pageArg": "hasRecords",
+                "pageArgValue": "true",
+                "perm": "!Layers:Formats:KML:Save",
+                "tooltip":"You do not have permission to export KML files."
+                
+            },
+            {
+                "title": "SHP",
+                "ref": "?",
+                "fields": [
+                    {
+                        "name": "do",
+                        "value": "download.shp",
+                        "type": "static"
+                    },
+                    {
+                        "name": "layer",
+                        "value": "layerId",
+                        "type": "pageArg"
+                    }
+                ],
+                "pageArg": "hasRecords",
+                "pageArgValue": "true"
+            },
+            {
+                "title": "SHP",
+                "ref": "",
+                "pageArg": "hasRecords",
+                "pageArgValue": "true",
+                "perm": "!Layers:Formats:KML:Save",
+               	"tooltip":"You do not have permission to export SHP files."
+            },
+            {
+                "title": "CSV",
+                "ref": "?",
+                "fields": [
+                    {
+                        "name": "do",
+                        "value": "download.csv",
+                        "type": "static"
+                    },
+                    {
+                        "name": "id",
+                        "value": "layerId",
+                        "type": "pageArg"
+                    }
+                ],
+                "pageArg": "hasRecords",
+                "pageArgValue": "true",
+                "perm": ":Layers:Formats:CSV:Save"
+            },
+            {
+                "title": "CSV",
+                "ref": "",
+                "pageArg": "hasRecords",
+                "pageArgValue": "true",
+                "perm": "!:Layers:Formats:CSV:Save",
+                "tooltip":"You do not have permission to export CSV files"
+            },
+            {
+                "title": "TIFF",
+                "ref": "?",
+                "fields": [
+                    {
+                        "name": "do",
+                        "value": "download.raster",
+                        "type": "static"
+                    },
+                    {
+                        "name": "id",
+                        "value": "layerId",
+                        "type": "pageArg"
+                    }
+                ],
+                "pageArg": "isRaster",
+                "pageArgValue": "true",
+                "perm": "Layers:Formats:TIFF:Save"
+            },
+            {
+                "title": "TIFF",
+                "ref": "",
+                "pageArg": "isRaster",
+                "pageArgValue": "true",
+                "perm": "!Layers:Formats:TIFF:Save",
+                "tooltip":"You do not have permission to export TIFF files"
+            },
+            {
+                "title": "JPEG",
+                "ref": "?",
+                "fields": [
+                    {
+                        "name": "do",
+                        "value": "download.image",
+                        "type": "static"
+                    },
+                    {
+                        "name": "id",
+                        "value": "layerId",
+                        "type": "pageArg"
+                    }
+                ],
+                "pageArg": "isRaster",
+                "pageArgValue": "true",
+                "perm": "Layers:Formats:JPEG:Save"
+                
+            },
+            {
+                "title": "JPEG",
+                "ref": "",
+                "pageArg": "isRaster",
+                "pageArgValue": "true",
+                "perm": "!Layers:Formats:JPEG:Save",
+                "tooltip":"You do not have permission to export Jpeg"
+            }
+        ]
+    },
+    {
+        "groupTitle": "Analyze",
+        "requirements": {
+            "pageArg": "isVector",
+            "pageArgValue": "true"
+        },
+        "links": [
+            {
+                "title": "Buffer",
+                "ref": "?",
+                "fields": [
+                    {
+                        "name": "do",
+                        "value": "layer.analysisbuffer1",
+                        "type": "static"
+                    },
+                    {
+                        "name": "id",
+                        "value": "layerId",
+                        "type": "pageArg"
+                    }
+                ],
+                "perm":":Layers:Analysis:Buffer:Create",
+                "pageArg":"isLayerEditor",
+                "pageArgValue":"true"
+            },
+            {
+                "title": "Intersect",
+                "ref": "?",
+                "fields": [
+                    {
+                        "name": "do",
+                        "value": "layer.analysisintersection1",
+                        "type": "static"
+                    },
+                    {
+                        "name": "id",
+                        "value": "layerId",
+                        "type": "pageArg"
+                    }
+                ],
+                "perm":":Layers:Analysis:Intersection:Create",
+                "pageArg":"isLayerEditor",
+                "pageArgValue":"true"
+            }
+        ]
+    },
+    {
+        "groupTitle": "Manage",
+        "requirements": {
+            "pageArg": "isOwner",
+            "pageArgValue":"true"
+        },
+        "links": [
+            {
+                "title": "Sharing",
+                "ref": "?",
+                "fields": [
+                    {
+                        "name": "do",
+                        "value": "layer.permissions",
+                        "type": "static"
+                    },
+                    {
+                        "name": "id",
+                        "value": "layerId",
+                        "type": "pageArg"
+                    }
+                ],
+                "perm":"Layers:Sharing:View",
+                "pageArg":"isOwner",
+                "pageArgValue":"true"
+            },
+            {
+                "title": "Track",
+                "ref": "?",
+                "fields": [
+                    {
+                        "name": "do",
+                        "value": "layer.statistics",
+                        "type": "static"
+                    },
+                    {
+                        "name": "id",
+                        "value": "layerId",
+                        "type": "pageArg"
+                    }
+                ],
+                "perm":"Layers:Usage:View"
+            },
+            {
+            	"title": "Duplicate",
+            	"ref":"/wapi/layers/layer/action:duplicate/layerId:[layerId]/",
+            	"pageArg":"layerCanDuplicate",
+            	"perm":":Layers:General:Copy"            	
+            },
+            {
+            	"title":"Replace Original",
+            	"ref":"/wapi/layers/layer/action:replace_original/layerId:[layerId]/",
+            	"confirm":"This layer was copied from an original source layer. This action will replace references to the original layer in maps, bookmarks, sharing info, and relational layers with references to this layer. \n\nClick OK to continue. \nClick Cancel to contiue without replacing the original layer.", 
+            	"pageArg":"layerCanReplaceOriginal",
+            	"perm":":Layers:General:Copy",
+            	"tooltip":"This layer was copied from an original source layer. This action will replace references to the original layer in maps, bookmarks, sharing info, and relational layers with references to this layer."
+            },
+            {
+            	"title":"Revert to Original",
+            	"ref":"/wapi/layers/layer/action:revert_to_original/layerId:[layerId]/",
+            	"confirm":"This layer was copied from an original source layer and then the Replace Original action was performed with this layer; this action reverses that action. Reverting to original will replace references to this layer in maps, bookmarks, sharing info, and relational layers with references to the original layer. \n\nClick OK to continue. \nClick Cancel to contiue without replacing the original layer.",
+            	"pageArg":"layerCanRevertToOriginal",
+            	"perm":":Layers:General:Copy",
+            	"tooltip":"This layer was copied from an original source layer and then the Replace Original action was performed with this layer; this action reverses that action."
+            },
+            {
+                "title": "Delete",
+                "ref": "/wapi/layers/layer/action:delete/layerId:[layerId]/goto:do=layer.list",
+                "confirm": "Are you sure you want to delete this layer? \nThere is no way to un-delete or recover a layer once it has been deleted. \n\nClick OK to delete this layer. \nClick Cancel to continue without removing the layer.",
+                "pageArg": "isOwner",
+                "pageArgValue": "true",
+                "perm":":Layers:General:Edit"
+                
+            },
+            {
+                "title": "Backup",
+                "ref": "?",
+                "fields": [
+                    {
+                        "name": "do",
+                        "value": "layer.backup",
+                        "type": "static"
+                    },
+                    {
+                        "name": "action",
+                        "value": "backup",
+                        "type": "static"
+                    },
+                    {
+                        "name": "id",
+                        "value": "layerId",
+                        "type": "pageArg"
+                    }
+                ],
+                "confirm": "Are you sure you want to backup this layer and overwrite the back up stored [layerBackupTime]? This cannot be undone.",
+                "pageArg": "isVector",
+                "pageArgValue": "true",
+                "perm":"Layer:General:Edit"
+            },
+            {
+                "title": "Rollback",
+                "ref": "?",
+                "fields": [
+                    {
+                        "name": "do",
+                        "value": "layer.backup",
+                        "type": "static"
+                    },
+                    {
+                        "name": "action",
+                        "value": "rollback",
+                        "type": "static"
+                    },
+                    {
+                        "name": "id",
+                        "value": "layerId",
+                        "type": "pageArg"
+                    }
+                ],
+                "pageArg": "hasBackup",
+                "pageArgValue": "true",
+                "confirm": "Are you sure you want to restore this layer to its previous state stored [layerBackupTime]? This cannot be undone."
+            }
+           
+        ]
+    },
+    {
+        "groupTitle": "Create",
+        "requirements": {
+            "pageArg": "canCreate",
+            "perm":":Layers:General:Create"
+        },
+        "links": [
+            {
+                "title": "Feature Layer",
+                "ref": "?do=vector.create1"                
+            },
+            {
+                "title": "Relational Layer",
+                "ref": "?do=layer.createrelational1"
+            },
+            {
+                "title": "Layer Collection",
+                "ref": "?do=layer.collection.edit1"
+            }
+        ]
+    },
+    {
+        "groupTitle": "Import",
+        "requirements": {
+            "pageArg": "canCreate",
+            "perm":"Layers:General:Create"
+        },
+        "links": [
+            {
+                "title": "SHP",
+                "ref": "layer/import/format:shp",
+                "perm": ":Layers:Formats:SHP:View|Create"
+            },{
+                "title": "SHP",
+                "ref": null,
+                "perm": ":Layers:Formats:SHP:View|!Create",
+                "tooltip":"SHP Import not available with current role"
+                
+            },{
+                "title": "Raster",
+                "ref": "layer/import/format:raster",
+                "perm": ":Layers:Formats:Raster:View|Create"
+            },{
+                "title": "Raster",
+                "ref": null,
+                "perm": ":Layers:Formats:Raster:View|!Create",
+                "tooltip":"Raster Import not available with current role."
+            },{
+                "title": "WMS",
+                "ref": "?do=import.wms1",
+                "perm": ":Layers:Formats:WMS:View|Create",
+                "tooltip":"Web Map Server"
+            },
+            {
+                "title": "WMS",
+                "ref": null,
+                "perm": ":Layers:Formats:WMS:View|!Create",
+                "tooltip":"WMS Import not available with current role."                
+            },{
+                "title": "GPS",
+                "ref": "?do=layer.io&mode=import&stage=1&format=gps",
+                "perm": ":Layers:Formats:GPS:View|Create"                
+            },{
+                "title": "GPS",
+                "ref": null,
+                "perm": ":Layers:Formats:GPS:View|!Create",
+                "tooltip":"GPS Import not available with current role."   
+            },{
+            	"title": "GEN",
+                "ref": "?do=import.gen1",
+                "perm": ":Layers:Formats:GEN:View|Create"
+            },{
+            	"title": "GEN",
+                "ref": null,
+                "perm": ":Layers:Formats:GEN:View|!Create",
+                "tooltip":"GEN Import not available with current role."
+            },{
+                "title": "KML",
+                "ref": "?do=import.kml1",
+                "perm": ":Layers:Formats:KML:View|Create"
+            },{
+                "title": "KML",
+                "ref": "",
+                "perm": ":Layers:Formats:KML:View|!Create",
+                "tooltip":"KML Import not available with current role."
+            },{
+                "title": "CSV",
+                "ref": "layer/import/format:csv",
+                "perm": ":Layers:Formats:CSV:View|Create"
+                
+            },{
+                "title": "CSV",
+                "ref": "",
+                "perm": ":Layers:Formats:Delimited:View|!Create",
+                "tooltip":"CSV Import not available with current role."
+                
+            },{
+                "title": "ODBC",
+                "ref": "?do=import.odbc1",
+                "perm": ":Layers:Formats:ODBC:View|Create"
+                
+            },{
+                "title": "ODBC",
+                "ref": "",
+                "perm": ":Layers:Formats:ODBC:View|!Create",
+                "tooltip":"ODBC Import not available with current role."
+            }
+        ]
+    },    {
+        "groupTitle": "Update",
+        "requirements": {
+            "pageArg": "isLayerEditor",
+            "pageArgValue":"true",
+            "perm":":Layers:General:Edit"
+            
+        },
+        "links": [
+            {
+                "title": "SHP",
+                "ref": "layer/import/format:shp/",
+                "fields": [
+                    {
+                        "name": "layerid",
+                        "value": "layerId",
+                        "type": "pageArg"
+                    }
+                ],
+                "perm": ":Layers:Formats:SHP:View|Edit",
+                "pageArg": "hasEditableRecords",
+                "pageArgValue": "true"
+            },{
+                "title": "Raster",
+                "ref": "layer/import/format:raster",
+                "fields": [
+                    {
+                        "name": "layerid",
+                        "value": "layerId",
+                        "type": "pageArg"
+                    }
+                ],
+                "perm": ":Layers:Formats:Raster:View|Edit",
+                "pageArg": "isRaster",
+                "pageArgValue": "true"
+            },{
+            	"title": "GEN",
+                "ref": "?do=import.gen1",
+                "fields": [
+                    {
+                        "name": "layerid",
+                        "value": "layerId",
+                        "type": "pageArg"
+                    }
+                ],
+                "perm": ":Layers:Formats:GEN:View|Edit",
+                "pageArg": "isRaster",
+                "pageArgValue": "true"
+            },{
+                "title": "KML",
+                "ref": "?do=import.kml1",
+                "fields": [
+                    {
+                        "name": "layerid",
+                        "value": "layerId",
+                        "type": "pageArg"
+                    }
+                ],
+                "perm": ":Layers:Formats:KML:View|Edit",
+                "pageArg": "hasEditableRecords",
+                "pageArgValue": "true"                
+                
+            },{
+                "title": "CSV",
+                "ref": "layer/import/format:csv/",
+                "fields": [
+                    {
+                        "name": "layerId",
+                        "value": "layerId",
+                        "type": "pageArg"
+                    }
+                ],
+                "perm": ":Layers:Formats:CSV:View|Edit",
+                "pageArg": "hasEditableRecords",
+                "pageArgValue": "true"                              
+            },{
+                "title": "GPS",
+                "ref": "?",
+                "fields": [
+                    {
+                        "name": "do",
+                        "value": "layer.io",
+                        "type": "static"
+                    },
+                    {
+                        "name": "mode",
+                        "value": "import",
+                        "type": "static"
+                    },
+                    {
+                        "name": "stage",
+                        "value": "1",
+                        "type": "static"
+                    },
+                    {
+                        "name": "format",
+                        "value": "gps",
+                        "type": "static"
+                    },
+                    {
+                        "name": "layerid",
+                        "value": "layerId",
+                        "type": "pageArg"
+                    }
+                ],
+                "perm": ":Layers:Formats:GPS:View|Edit",
+                "pageArg": "isVector",
+                "pageArgValue": "true"
+            },{
+                "title": "WMS",
+                "ref": "?do=import.wms1",
+                "fields": [
+                    {
+                        "name": "layerid",
+                        "value": "layerId",
+                        "type": "pageArg"
+                    }
+                ],
+                "perm": ":Layers:Formats:WMS:View|Edit",
+                "pageArg": "isRaster",
+                "pageArgValue": "true"                
+            }
+            
+        ]
+    }
+]

@@ -1,0 +1,48 @@
+@CHARSET "ISO-8859-1";
+
+.org_item td:nth-child(2), .org_item .dijitTextBox {
+	width:100%;	
+}
+
+.org_item td:nth-child(3) {
+	text-align:right;
+	min-width:38px;
+}
+
+.new_org_dialog tr {
+	line-height: 24pt;	
+}
+
+.new_org_dialog tr td {
+	vertical-align: middle !important;
+}
+
+.new_org_dialog td input {
+	width:100%;
+}
+
+.new_org_dialog .plan_selector {
+	width:100%;
+}
+
+.new_org_dialog tr td:nth-child(1) {
+	text-align:right;
+}
+
+.new_org_dialog tr td:nth-child(2) {
+	padding-left:20px !important;
+	padding-right:20px;
+}
+
+.new_organization {
+	padding:5px;
+}
+
+.organizations.listing {
+	width:600px;
+}
+
+organizations.listing table {
+	width: 100%;
+}
+

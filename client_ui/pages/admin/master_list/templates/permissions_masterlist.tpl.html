@@ -1,0 +1,73 @@
+<div class='workarea' >
+<div class='viewselector'>
+		<button data-dojo-attach-point='listing_bttn'
+			data-dojo-type='sl_components/sl_button/widget'
+			data-bttnIcon='ul_list_ico' data-bttnSize='sm' data-bttnLabel=''></button><button data-dojo-attach-point='text_bttn'
+			data-dojo-type='sl_components/sl_button/widget' data-bttnIcon='text'
+			data-bttnSize='sm' data-bttnLabel=''></button>
+			<!-- <button data-dojo-attach-point='markup_bttn'
+			data-dojo-type='sl_components/sl_button/widget'
+			data-bttnIcon='markup' data-bttnSize='sm' data-bttnLabel=''></button>
+			 -->
+	</div>
+<table class='workarea_layout' >
+<tbody>
+<tr><td>
+		
+</td></tr>
+<tr><td>
+	<div class="view_area">
+		<div data-dojo-attach-point='views'
+			data-dojo-type="dijit/layout/StackContainer">
+			<div class='astext' data-dojo-type="dijit/layout/ContentPane"
+				data-dojo-attach-point="AsText">
+				<h2>Batch Import</h2>
+				<h3>Import a batch of permissions by pasting permission-paths in the text area below.</h3>
+				<div class='textpane'>
+				<textarea data-dojo-attach-point='import_text' ></textarea>
+				</div>
+				<div class='permission-import-footer'>
+					<button data-dojo-attach-point='update_fromtext_bttn'
+						data-dojo-type='sl_components/sl_button/widget'
+						data-bttnIcon='ret_button_left' data-bttnSize='sm'
+						data-bttnLabel='Import'></button>
+				</div>
+			</div>
+			<div class='aslist ' data-dojo-type="dijit/layout/ContentPane"
+				data-dojo-attach-point="AsList">
+				<h2>List View</h2>
+				<h3>View the permissions as a listing. Add new entries by
+					entering one below and clicking the add button. Or delete
+					individual entries by clicking that entry's delete button.</h3>
+				<div class="tools">
+					<label>New Permission:</label> <input
+						type='text' data-dojo-attach-point='newPermission'></input>
+						<button data-dojo-attach-point='add_bttn' 
+							data-dojo-type='sl_components/sl_button/widget'
+							data-bttnIcon='plus_round' data-bttnSize='sm'
+							data-bttnLabel='Add' data-bttnColor='green'></button>					
+				</div>
+				<div class='scrollable_listing'>
+					<table data-dojo-attach-point='masterlist'>
+					</table>
+				</div>
+				<div class='masterlist-footer'>
+					<button data-dojo-attach-point='refresh_bttn'
+							data-dojo-type='sl_components/sl_button/widget'
+							data-bttnIcon='refresh_double' data-bttnSize='sm'
+							data-bttnLabel=''></button>
+						
+					<button data-dojo-attach-point='update_bttn'
+							data-dojo-type='sl_components/sl_button/widget'
+							data-bttnColor='green'
+							data-bttnIcon='arrow_right' data-bttnSize='sm'
+							data-bttnLabel='Submit Changes'></button>
+				</div>
+			</div>			
+		</div>
+	</div>
+</td></tr>
+</tbody>
+</table>
+</div>
+

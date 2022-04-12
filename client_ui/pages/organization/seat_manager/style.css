@@ -1,0 +1,16 @@
+@CHARSET "ISO-8859-1";
+
+.seat_listing_ui {
+	min-width: 800px;
+}
+.seat_listing {
+	line-height: 24pt;
+}
+.seat_listing_ui td:nth-child(1) {
+
+	min-width:0px !important;
+}
+.seat_listing_ui td:nth-child(3) {
+	white-space:nowrap;
+	
+}

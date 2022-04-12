@@ -1,0 +1,73 @@
+@CHARSET "ISO-8859-1";
+.url_params .param_list  {
+	list-style: none;
+	font-weight:normal;
+	font-size:12pt;
+	margin:0px;
+	display:table;
+	list-style-type: none;
+	border:3px solid #ccc;
+	
+}
+
+.sl_url_item {
+	display:table-row;
+	border-bottom: 1px solid #efefef;
+	padding:0px;
+	margin:0px;
+}
+
+.sl_url_param {
+	padding:5pt;
+	font-weight:bold;
+	display: table-cell;	
+	padding-right:2em;	
+	background-color:#ddd;
+	color:#000;
+	
+}
+
+
+
+.sl_url_val {
+	display:table-cell;
+	font-style:italic;
+	background-color:#eee;
+	color:#000;
+	width:100%;
+	padding-right:.5em;
+	
+}
+.sl_url_val_input {
+	font-size:12pt;
+	font-style:italic;
+	background-color:#eee;
+	padding-bttom:0px;
+	margin-top:3pt;
+	margin-right:3pt;
+	padding-bottom:0px;
+	margin-bottom:0px;
+	
+	color:#000;
+	width:inherit;
+	
+}
+.sl_url_item:nth-child(odd) .sl_url_param {
+	background-color:#ccc;
+	color:#000;	
+}
+
+
+.sl_url_item:nth-child(odd) .sl_url_val {
+	background-color:#ddd;	
+}
+
+.sl_url_item:nth-child(1) .sl_url_param {
+	background-color:#fff;
+	color:#000;	
+}
+.sl_url_item:nth-child(1) .sl_url_val {
+	background-color:#fcfcfc;
+	color:#000;	
+}
+

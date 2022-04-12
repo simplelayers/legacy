@@ -1,0 +1,355 @@
+[
+	{
+		"groupTitle": "Organizations",
+		"requirements": 
+		{
+			"perm": ":SysAdmin:Organizations:View"
+		},
+
+		"links": 
+		[
+			{
+				"title": "List",
+				"ref": "/admin/organization/list/",
+				"perm": ""
+			},
+
+			{
+				"title": "New",
+				"ref": "admin/organization/list/cmd:new_org/",
+				"perm": ":SysAdmin:Organizations:"
+			}
+		]
+	},
+
+	{
+		"groupTitle": "Groups",
+		"requirements": 
+		{
+			
+		},
+
+		"links": 
+		[
+			{
+				"title": "List",
+				"ref": "?do=group.list",
+				"perm": ""
+			},
+
+			{
+				"title": "New",
+				"ref": "?do=group.new",
+				"perm": ""
+			}
+		]
+	},
+
+	{
+		"groupTitle": "Contacts",
+		"requirements": 
+		{
+			"perm": ""
+		},
+
+		"links": 
+		[
+			{
+				"title": "My profile",
+				"ref": "?do=contact.info",
+				"perm": ""
+			}, {
+				"title": "List",
+				"ref": "?do=contact.list",
+				"perm": ""
+			}
+		]
+	},
+
+	{
+		"groupTitle": "",
+		"titleArg": "groupName",
+		"requirements": 
+		{
+			"pageArg": "groupId"
+		},
+
+		"links": 
+		[
+			{
+				"title": "Details",
+				"ref": "?",
+				"fields": 
+				[
+					{
+						"name": "do",
+						"value": "group.info",
+						"type": "static"
+					},
+
+					{
+						"name": "groupId",
+						"value": "groupId",
+						"type": "pageArg"
+					}
+				]
+			},
+
+			{
+				"title": "Organization",
+				"ref": "?",
+				"fields": 
+				[
+					{
+						"name": "do",
+						"value": "organization.info",
+						"type": "static"
+					},
+
+					{
+						"name": "orgId",
+						"value": "groupOrg",
+						"type": "pageArg"
+					}
+				]
+			},
+
+			{
+				"title": "Maps",
+				"ref": "?",
+				"fields": 
+				[
+					{
+						"name": "do",
+						"value": "project.list",
+						"type": "static"
+					},
+
+					{
+						"name": "groupId",
+						"value": "groupId",
+						"type": "pageArg"
+					}
+				]
+			},
+
+			{
+				"title": "Layers",
+				"ref": "?",
+				"fields": 
+				[
+					{
+						"name": "do",
+						"value": "layer.list",
+						"type": "static"
+					},
+
+					{
+						"name": "groupId",
+						"value": "groupId",
+						"type": "pageArg"
+					}
+				]
+			}			
+		]
+	},
+	{	"groupTitle":"Membership",
+		"requirements":
+		{
+			"pageArg":"groupStatus",
+			"pageArgValue":0
+		},
+		"links":
+		[
+			{
+				"title":"Request Membership",
+				"ref":"?do=group.action&action=request&groupId=[groupId]"
+			}
+		]
+	},{
+		"groupTitle":"Membership",
+		"requirements":
+		{
+			"pageArg":"groupStatus",
+			"pageArgValue":1
+		},
+		"links":
+		[
+			{
+				"title":"Leave Group",
+				"ref":"?do=group.action&action=leave&groupId=[groupId]"
+			}
+		]
+	},{
+		"groupTitle":"Membership",
+		"requirements":
+		{
+			"pageArg":"groupStatus",
+			"pageArgValue":2
+		},
+		"links":
+		[
+			{
+				"title":"Accept Invitation",
+				"ref":"/group/action/action:acceptinvite/groupId:[groupId]"
+			},
+			{
+				"title":"Decline Invitation",
+				"ref":"/group/action/action:denyinvite/groupId:[groupId]"
+			}
+		]
+	},{
+		"groupTitle":"Membership",
+		"requirements":
+		{
+			"pageArg":"groupStatus",
+			"pageArgValue":3
+		},
+		"links":
+		[
+			{
+				"title":"Cancel Request",
+				"ref":"/group/action/action:unrequest/groupId:[groupId]"
+			}
+		]
+	},{
+		"groupTitle":"Membership",
+		"requirements": 
+		{
+			"pageArg": "groupStatus",
+			"pageArgValue":4			
+		},
+		"links":
+		[
+			{
+				"title":"Membership Request Declined",
+				"ref":null,
+				"tooltip":"Your membership request was declined by the moderator"
+			}
+		]
+	},{
+		"groupTitle": "Manage",
+		"requirements": 
+		{
+			"groupActor": "group_owner",
+			"pageArg": "groupId"
+		},
+
+		"links": 
+		[
+			{
+				"title": "Invite",
+				"ref": "?",
+				"perm": "",
+				"fields": 
+				[
+					{
+						"name": "do",
+						"value": "group.contacts",
+						"type": "static"
+					},
+
+					{
+						"name": "groupId",
+						"value": "groupId",
+						"type": "pageArg"
+					}
+				]
+			},
+
+			{
+				"title": "Delete",
+				"ref": "?",
+				"fields": 
+				[
+					{
+						"name": "do",
+						"value": "group.delete",
+						"type": "static"
+					},
+
+					{
+						"name": "groupId",
+						"value": "groupId",
+						"type": "pageArg"
+					}
+				],
+
+				"confirm": "Are you sure you want to delete this group? \nThere is no way to un-delete or recover a group once it has been deleted. \n\nClick OK to delete this group. \nClick Cancel to continue without removing the group.",
+				"pageArg":"groupDeleteAllowed",
+				"pageArgValue":"true"
+			}
+		]
+	},
+
+	{
+		"groupTitle": "",
+		"titleArg": "contactName",
+		"requirements": 
+		{
+			"pageArg": "contactId"
+		},
+
+		"links": 
+		[
+			{
+				"title": "Add Contact",
+				"ref": "?",
+				"fields":
+				[
+					{
+						"name": "do",
+						"value": "contact.add",
+						"type": "static"
+					},{
+						"name": "contactId",
+						"value": "contactId",
+						"type": "pageArg"
+					}
+				],
+				"pageArg":"isContact",
+				"pageArgValue":false
+				
+				
+			},
+			{
+				"title": "Remove Contact",
+				"ref": "?",
+				"fields":
+				[
+					{
+						"name": "do",
+						"value": "contact.remove",
+						"type": "static"
+					},{
+						"name": "contactId",
+						"value": "contactId",
+						"type": "pageArg"
+					}
+				],
+				"pageArg":"isContact",
+				"pageArgValue":true
+			},{
+				"title": "Disk Usage",
+				"ref": "?do=admin.showusage&contactId=[contactId]",
+				"perm": ":SysAdmin:Contacts:Usage:View"
+			},{
+				"title": "Message",
+				"ref": "?do=contact.email1&contactId=[contactId]",
+				"perm": ":Contacts:Messages:Outgoing:Create",
+				"contactActor":"viewer",
+				"pageArg":"hasEmail",
+				"pageArgValue":true								
+			},{
+				"title": "Message",
+				"ref": "",
+				"perm": ":Contacts:Messages:Outgoing:Create",
+				"pageArg":"hasEmail",
+				"pageArgValue":false,
+				"contactActor":"viewer",
+				"tooltip":"In order to send users message you must set an email address in your profile." 								
+			}
+			
+		]
+	}
+]

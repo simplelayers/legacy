@@ -1,0 +1,79 @@
+@CHARSET "ISO-8859-1";
+.map_layers..parentless button.back_button {
+	display:none;	
+}
+.row_stepper .dijitInputContainer  {
+	display: none;	
+}
+.row_stepper.dijitSpinner  {
+	width: 15px !important;
+}
+.row_stepper.dijitSpinner .dijitSpinnerButtonContainer {
+	
+	height: 25px !important;
+}
+.row_stepper.dijitSpinner .dijitArrowButton img {
+	height: 17px !important;
+}
+
+.scrollable_listing {
+	height:auto !important;
+	display:inline-block;
+	right:auto !important;
+	min-width:0px !important;
+	min-height:0px !important;
+	max-height: 80%;
+	width: auto !important;
+}
+.scrollable_listing table {
+	clear: both;
+	width: 500px !important;
+}
+.workarea {
+	
+}
+.map_layers.listing .scrollable_listing table tr td:nth-child(1) {
+  text-align: center;
+  
+}
+.map_layers.listing  .scrollable_listing table tr td:nth-child(2) {
+	
+}
+.map_layers.listing  .scrollable_listing table tr td:nth-child(3) {
+	max-width: 24px !important;
+	text-align: center;		
+}
+
+.map_layers.listing  .scrollable_listing table tr td:nth-child(4) {
+	width: 100%;
+}
+.map_layers_listing .scrollable_listing table tr td:nth-child(5) {
+	background: #ffff00;
+}
+.button_group {
+	display:block;
+	vertical-align: middle !important;
+	padding:2px;
+	white-space: nowrap !important	
+	
+}
+
+.not_moving .move_target{
+	display:none !important;
+}
+.moving .move_button{
+	display:none !important;
+}
+
+.moving .not_moving .move_button {
+	display: inline !important;
+}
+
+.action_buttons {
+	min-width: 84px !important;
+	text-align:right;	
+}
+
+
+
+

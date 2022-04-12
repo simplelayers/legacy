@@ -1,0 +1,74 @@
+<div>
+	<table role='layout'>
+		<tr>
+			<td><div data-dojo-attach-point='heading' class='section_head'>Filters: </div>
+				<select data-dojo-attach-point='comparisons'
+				data-dojo-type='dijit/form/Select'>
+					<option value='and'>AND</option>
+					<option value='or'>OR</option>
+			</select></td>
+			<td colspan='2'>
+				<button data-dojo-attach-point='end_group_bttn'
+					data-dojo-type='sl_components/sl_toggle_button/widget'
+					data-bttnIcon='' data-bttnSize='sm' data-bttnLabel=')'
+					data-value='1' title="End Grouping"></button>
+				<button data-dojo-attach-point='start_group_bttn'
+					data-dojo-type='sl_components/sl_toggle_button/widget'
+					data-bttnIcon='' data-bttnSize='sm' data-bttnLabel='('
+					data-value='1' title="Begin Grouping"></button>
+				<button data-dojo-attach-point='ignore_case_bttn'
+					data-state='on'
+					data-dojo-type='sl_components/sl_toggle_button/widget'
+					data-bttnIcon='' data-bttnSize='sm' data-bttnLabel='aA'
+					data-value='1'
+					title="Ignore Case; 'example' and 'ExAmplE are considered equal"></button>
+			<div class='to_right'><button data-dojo-attach-point='delete_bttn'
+					data-dojo-type='sl_components/sl_toggle_button/widget' data-offColor='red' data-onColor='red'
+					data-bttnIcon='icos_delete' data-bttnSize='sm' data-bttnLabel=''
+					
+					data-toggling='off' data-value='0' title="Remove filtler"></button></div>
+			</td>
+		</tr>
+		<tr>
+			<td><select data-dojo-attach-point='criteria1'
+				data-dojo-type='sl_components/selectors/attribute_selector/widget'></select>
+			</td>
+			<td><button data-dojo-attach-point='not_bttn'
+					data-dojo-type='sl_components/sl_toggle_button/widget'
+					data-bttnIcon='' data-bttnSize='sm' data-bttnLabel='!'
+					data-value='1' title="Is Not"></button></td>
+			<td><select data-dojo-attach-point='criteria2'
+				data-dojo-type='sl_components/selectors/operator_selector/widget'></select>
+			</td>
+		</tr>
+		<tr>
+			<td colspan=3><input data-dojo-attach-point='alphanum'
+				data-dojo-type='dijit/form/TextBox'></input> <textarea
+					data-dojo-attach-point='alphanum_area'
+					data-dojo-type='dijit/form/Textarea'></textarea> <input
+				data-dojo-attach-point='date'
+				data-dojo-type='dijit/form/DateTextBox'></input> <input
+				data-dojo-attach-point='time'
+				data-dojo-type='dijit/form/TimeTextBox'></input> <input
+				data-dojo-attach-point='numeric' data-dojo-type='dijit/form/TextBox'></input>
+				<div class='hidden' data-dojo-attach-point='numeric_range'>
+					<input data-dojo-attach-point='numeric_range_from'
+						data-dojo-type='dijit/form/NumberTextBox'></input> - <br /> <input
+						data-dojo-attach-point='mumeric_range_to'
+						data-dojo-type='dijit/form/NumberTextBox'></input>
+				</div>
+				<div class='hidden' data-dojo-attach-point='date_range'>
+					<input data-dojo-attach-point='date_range_from'
+						data-dojo-type='dijit/form/DateTextBox'></input> - <br /> <input
+						data-dojo-attach-point='date_range_to'
+						data-dojo-type='dijit/form/DateTextBox'></input>
+				</div>
+				<div class='hidden' data-dojo-attach-point='time_range'>
+					<input data-dojo-attach-point='time_range_from'
+						data-dojo-type='dijit/form/TimeTextBox'></input> - <br /> <input
+						data-dojo-attach-point='time_range_to'
+						data-dojo-type='dijit/form/DateTextBox'></input>
+				</div></td>			
+		</tr>
+	</table>
+</div>

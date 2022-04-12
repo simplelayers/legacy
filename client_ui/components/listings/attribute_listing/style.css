@@ -1,0 +1,27 @@
+@CHARSET "ISO-8859-1";
+
+
+.gridx {
+	height:100%;
+	
+}
+
+.grid_listing {
+	position:absolute;
+	top:0px;
+	left:0px;
+	right:0px;
+	bottom:0px;		
+}
+
+.listing_container .gridxVScroller {
+	right: 0px !important;
+
+}
+
+
+.gridxMain {
+
+	width: 100%;
+	 margin-right: 18px !important; margin-left: 0px !important;
+}

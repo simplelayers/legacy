@@ -1,0 +1,65 @@
+<fieldset>
+	<div class='groupings'>
+		<div class='grouping' ></div>
+		<div class='grouping' ></div>
+		<div class='grouping' ></div>
+		<div class='grouping'></div>
+	</div>
+	<div class='formitem'>
+		<div class='group'>
+			<div data-dojo-attach-point='lastStatus'></div>
+			<div data-dojo-attach-point='buttonset'>
+				<button title="files" data-dojo-type='sl_components/sl_button/widget'
+					data-bttnIcon='copy_ico' data-bttnSize='small' data-bttLabel=''></button>
+				<button title="links" data-dojo-type='sl_components/sl_button/widget'
+					data-bttnIcon='link' data-bttnSize='small' data-bttLabel=''></button>
+				<button title="notes" 
+					data-dojo-attach-point='notes_button'
+					data-dojo-type='sl_components/sl_button/widget'
+					data-bttnIcon='comment_round' data-bttnSize='small'
+					data-bttLabel=''></button>
+			</div>
+		</div>
+		<div class='group'>
+			<div>
+				<img data-dojo-attach-point='statusIco'
+					 data-dojo-type='sl_components/icon/widget'
+					 data-icon-type='status'></img> 
+					 <span class='problem-title' data-dojo-attach-point='problemTitle'></span>
+			</div>
+			<div>
+				Ref: <a data-dojo-attach-point='problemRef'></a>
+			</div>
+		</div>
+		<div class='group'>
+			<div>
+			<img data-dojo-attach-point='subject_ico' 
+							data-dojo-type='sl_components/icon/widget' 
+							data-icon-type='components'></img>
+					<a data-dojo-attach-point="subjectLink"></a>
+			</div>
+			<div>Context: <span data-dojo-attach-point='context'></span>
+			</div>
+		</div>
+		<div class='group'>
+			<div>
+				<img data-dojo-attach-point='reporter_ico'
+					 data-dojo-type='sl_components/icon/widget'
+					 data-icon-type='people'
+					 data-icon='person'></img>
+				Reporter:
+				 <a data-dojo-attach-point='reporterLink'></a>
+			</div>
+			<div>
+				<img data-dojo-attach-point='victem_type_ico'
+					 data-dojo-type='sl_components/icon/widget'
+					 data-icon-type='people'></img>
+				Victem:  <img data-dojo-attach-point='victemPriv_ico' 
+							data-dojo-type='sl_components/icon/widget' 
+							data-icon-type='permission'></img>
+							<a data-dojo-attach-point='victemLink'></a>
+			</div>
+		</div>
+		
+	</div>
+</fieldset>

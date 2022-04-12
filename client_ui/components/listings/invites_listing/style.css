@@ -1,0 +1,29 @@
+@CHARSET "ISO-8859-1";
+
+.instructions {
+	font-style: italic;
+	max-width:300px;
+}
+.invites_listing .scrollable_listing{
+	max-width:900px !important;
+}
+.new_invite.dialog td p {
+		margin-top:0px;
+}
+
+.new_invite.dialog textarea {
+	min-height: 5em !important;
+}
+
+.viewstates.state_inactive  {
+	display:none !important;
+}
+
+.admin .viewstates.noadmin, .user .viewstates.admin, .nonuser .viewstates.admin {
+	display:none !important;
+}
+
+.invites .dijitInputInner {
+	font-size: 10pt;
+}
+

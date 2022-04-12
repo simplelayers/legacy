@@ -1,0 +1,28 @@
+@CHARSET "ISO-8859-1";
+
+.seat_manager td {
+	vertical-align: middle;
+	
+}
+.
+.plan_seats td:nth-child(3) {
+	padding-left:5px;	
+}
+
+.seat_manager input {
+	padding-left:5px;
+}
+
+.changed label {
+	font-style:italic;
+}
+.last_col {
+	width: 100%;
+}
+.numeric_input {
+	min-width: 4em;
+}
+.plan_seat_name {
+	min-width: 131px;
+}
+

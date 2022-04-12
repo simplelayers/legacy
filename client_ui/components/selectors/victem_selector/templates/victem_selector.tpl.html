@@ -1,0 +1,13 @@
+<fieldset data-dojo-attach-point='victem_selector'>
+<div class='formitem'>
+	<input type='radio' name='${selectorName}' value='Reporter' checked >
+	<span class='label' >Reporter</span>
+	
+</div>
+<div class='formitem'>
+	<input type='radio' name='${selectorName}' value='Public'>
+	<span class='label' >Public User</span>
+</div>
+<div class='formitem'><input type='radio' name='${selectorName}' value='Person'><span class='label' >Contact:</span><span data-dojo-attach-point='user_sel' data-dojo-type='sl_components/selectors/user_selector'></span></div>
+<div class='formitem'><input type='radio' name='${selectorName}' value='Group'><span class='label'>Group:</span><span data-dojo-attach-point='group_sel' data-dojo-type='sl_components/selectors/group_selector'></span></div>
+</fieldset>

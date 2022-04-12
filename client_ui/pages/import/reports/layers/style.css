@@ -1,0 +1,14 @@
+@CHARSET "ISO-8859-1";
+
+.import_report {
+	margin-top: 20px;
+}
+
+.dijitSelect {
+	margin-left:5px !important;
+}
+.dijitSelect td:nth-child(1){
+	
+	min-width:100px !important;
+	padding-left:5px;
+}

@@ -1,0 +1,53 @@
+@CHARSET "ISO-8859-1";
+.property_list {
+	display: table;
+	width:100%;
+}
+
+
+
+.property_list .item_name {
+	font-weight: bold;
+	padding-left:1em;
+	padding-top:5px;
+	
+}
+
+.property_list .item_properties {
+	display: table;
+	width: 100%;
+	
+}
+.property_list .item {
+	display: table-row;
+	width:100%;
+	background: #eee;	
+		
+}
+.property_list .property_value {
+	width:100%;
+}
+
+
+
+.property_list .property {
+	display: table-row;
+	background: #fff;
+	width:100%;
+}
+.proeprty_list .last_property .property_name, .property_list .last_property .property_value
+{
+	padding-bottom:10px;
+}
+.property_list .property_name, .property_list .property_value {
+	display: table-cell;
+	padding-left:2em;
+	padding-right:20px;	
+	
+}
+
+
+.property_list .property_name {
+	padding-right:2em;
+	font-style: italic;
+}

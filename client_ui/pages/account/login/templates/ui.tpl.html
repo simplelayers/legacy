@@ -1,0 +1,60 @@
+<form id="login_form" data-dojo-attach-point='login_form' name="form1" method="post"
+	action="." target="_top">
+	<input name="force" type="hidden" value="1" /> <input name="action"
+		type="hidden" value="handle_login" /> <input name="state"
+		type="hidden" value="<!--{$state}-->" />
+		<input data-dojo-attach-point="return_to" name="go_to" type="hidden" /> 
+
+	<div>
+		<table id="login">
+			<tr>
+				<td>
+					<div class="login_logo">
+						<a data-dojo-attach-point='logo_link'
+							href="http://www.simplelayers.com/"><img
+							data-dojo-attach-point='logo_img' alt='Logo' class='hidden' /></a>
+					</div>
+					<div class='login_header_section'
+						data-dojo-attach-point='login_header'></div>
+
+				</td>
+			</tr>
+			<tr>
+				<td data-dojo-attach-point='disclaimerContainer'
+					class='login_disclaimer hidden' >
+					<iframe 	data-dojo-attach-point='disclaimer' src='#'></iframe>
+					<p>
+					<button class='button' data-dojo-attach-point="accept_bttn"
+										type="button">Accept</button>
+					</p>
+				</td>
+				<td data-dojo-attach-point='loginContainer' class="textblockmid">
+					<table>
+						<tr>
+							<td colspan='2'><div class='login_message'
+									data-dojo-attach-point="login_message"></div></td>
+						</tr>
+						<tr>
+							<td style="text-align: right;">Username:</td>
+							<td><input data-dojo-attach-point='input_username'
+								data-dojo-type='dijit/form/TextBox' name="username"
+								id="username" /></td>
+						</tr>
+						<tr>
+							<td style="text-align: right;">Password:</td>
+							<td><input data-dojo-type='dijit/form/TextBox'
+								type="password" name="password" id="password" /></td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<button class='button' name="login" type="submit">Login</button>
+
+							</td>
+						</tr>
+					</table>
+
+				</td>
+			</tr>
+		</table>
+	</div>
+</form>

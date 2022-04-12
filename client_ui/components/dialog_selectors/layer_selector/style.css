@@ -1,0 +1,32 @@
+@CHARSET "ISO-8859-1";
+.layer_sel_views {
+	margin-bottom:10px;
+}
+.layer_sel_dialog  {
+	
+	width:620px;
+	height:380px;
+	
+}
+.result_container {
+	height:100%;	
+}
+.gridx {
+    min-width: 500px;
+	max-width: 600px;
+	width:100%;
+    margin-right: 10px;
+	
+ }
+ 
+ .gridxRow {
+	padding: 0px; 	
+ 	white-space: nowrap;
+ 	
+ 	
+ }
+.gridxCell {
+	font-size: 10.5pt;
+	line-height: 1em !important;
+	
+}

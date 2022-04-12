@@ -1,0 +1,28 @@
+<div class='workarea' data-editor='plan_editor'>
+	<div class='two_col col1 plans_container'>
+		<div class='hidden' data-dojo-attach-point='selector_pane'>
+			<label>Plan: </label>
+			<div data-dojo-type="sl_components/selectors/plan_selector/widget"
+				data-dojo-attach-point='sel_plans'>
+			</div>
+			<form>
+					<label>Begins: </label> 
+					<input type="text"
+						data-dojo-attach-point="widget_startdate" value=""
+						data-dojo-type="dijit/form/DateTextBox"></input> 
+					<label>Expires: </label>
+					<input type="text" data-dojo-attach-point="widget_expires"
+						value="" data-dojo-type="dijit/form/DateTextBox"></input>
+				</form>
+		</div>
+	
+	<div data-dojo-attach-point='plan_viewer'
+		data-dojo-type='sl_components/listings/plan_viewer/widget'
+		data-state='view' data-displayas='editor' data-editor='plan_editor'></div>
+
+	<div data-dojo-attach-point='footer'
+		data-dojo-type='sl_components/scrollable_listing/footer/widget'></div>
+</div>
+
+
+</div>

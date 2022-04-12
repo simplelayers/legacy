@@ -1,0 +1,37 @@
+@CHARSET "ISO-8859-1";
+.plan_viewer {
+	max-width: 640px;
+	height:auto;
+} 
+.seat_manager td {
+	vertical-align: middle;
+	
+}
+
+.plan_viewer td:nth-child(3) {
+	padding-left:5px;	
+}
+
+.plan_seat_name {
+	min-width: 131px;
+}
+
+
+.plan_viewer.view.viewer input, input[type=text].noneditable {
+	border:none;
+	background: none !important;
+	font-size:12pt;	
+	font-weight: normal;
+	color:#000;
+
+}
+
+.tab1 {
+	padding-left: 25px;
+}
+
+
+
+
+
+

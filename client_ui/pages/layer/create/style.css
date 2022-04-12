@@ -1,0 +1,85 @@
+@CHARSET "ISO-8859-1";
+.pageLayout, .mainContent {
+	
+}
+#page_content {
+	height: 100% !important;
+	
+	
+}
+#page_content td, #page_content {
+	padding:0px !important;
+	margin:0px !important;
+}
+
+.content_panel {
+	padding: 10px 5px 0px 5px;
+	max-width: 5in;
+	margin-right:50pt;
+	float:left;
+	
+}
+.content_panel th {
+	white-space: nowrap;
+}
+
+.workarea {
+	height: 100% !important;
+}
+
+.workarea tr {
+	vertical-align: top;
+}
+.workarea td, .workarea th {
+	vertical-align: top;
+	text-align:left;
+	padding:0px;
+	margin:0px;
+	padding-right: 10pt;
+	font-size: 10pt;
+	line-height:15pt;
+}
+.form_item {
+	min-height:21pt;
+
+}
+
+#page_content tr.form_item  td {
+	padding-bottom: 1.75em !important;
+}
+
+.form_item:after {
+	padding-top:20px;
+}
+.form_panel {
+	max-width: 49%;
+
+}
+.form_item_description {
+	font-size: 10pt;
+	font-style: italic;
+		
+}
+
+.form_item input[type='text'], .form_item select {
+	width: 100%;
+}
+
+.form_item input[type='radio'] {
+	vertical-align:bottom;
+	line-height: 18pt;
+}
+
+.instruction_panel .section_head {
+	font-size:14pt;
+	line-height: 18pt;
+}
+
+.instruction_panel {
+	
+	min-width: 25%;
+	height: 100% !important;
+	font-size: 10pt;
+	line-height: 15pt;
+	font-style: italic;
+}

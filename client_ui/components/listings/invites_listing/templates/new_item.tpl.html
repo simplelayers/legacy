@@ -1,0 +1,49 @@
+<div>
+	<div class='new_invite dialog'
+	 data-dojo-type="dijit/Dialog" data-dojo-id="new_invite"
+		data-dojo-attach-point="dialog_invite" title="Invititation">
+		<table>
+			<tbody>
+				<tr>
+					<td><Label>Contact Name:</Label></td>
+					<td><input data-dojo-type="dijit/form/TextBox" data-dojo-attach-point='textbox_name' type='text'></input></td>
+				</tr>
+				<tr>
+					<td><Label>Organization:</Label></td>
+					<td><input data-dojo-type="dijit/form/TextBox" data-dojo-attach-point='textbox_organization' type='text'></input></td>
+				</tr>
+				<tr>
+					<td><Label>Contact's Title: (optional)</Label></td>
+					<td><input data-dojo-type="dijit/form/TextBox" data-dojo-attach-point='textbox_title'
+						type='text'></input></td>
+				</tr>
+				<tr>
+					<td><Label>Contact's Email:</Label></td>
+					<td><input data-dojo-type="dijit/form/TextBox" data-dojo-attach-point='textbox_email'
+						type='text'></input></td>
+				</tr>
+				<tr>
+					<td><Label>Reason:</Label>
+					<p class='instructions'>Displayed in invitation; the reason you believe this contact may be interested in SimpleLayers.</p>
+					</td>
+					
+					<td><textarea lines="5" data-dojo-type="dijit/form/Textarea" data-dojo-attach-point='textarea_reason' ></textarea></td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+					<td>
+						<button data-dojo-attach-point='submit_item_bttn'
+							data-dojo-type="sl_components/sl_button/widget"
+							data-bttnIcon='plus_round' data-bttnSize='sm' data-bttnLabel='Invite'
+							data-bttnColor='green'></button>
+					</td>				
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<Label>Invitations:</Label>
+	<button data-dojo-attach-point='add_bttn'
+		data-dojo-type="sl_components/sl_button/widget"
+		data-bttnIcon='plus_round' data-bttnSize='sm' data-bttnLabel='Add'
+		data-bttnColor='green'></button>
+</div>

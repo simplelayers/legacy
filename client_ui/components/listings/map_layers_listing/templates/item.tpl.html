@@ -1,0 +1,90 @@
+<tr class='dojoDndItem'>
+	<td>
+		<input
+			class='row_stepper move_target'
+			data-dojo-attach-point='move_stepper' 
+			data-dojo-type="dijit/form/NumberSpinner"
+		    value="0"
+		    data-dojo-props="intermediateChanges:true,smallDelta:1, constraints:{min:0,max:1000,places:0}"
+		    
+	    />
+	    <div class="button_group move_button">
+	    <button
+	    	data-dojo-attach-point='move_bttn'
+			data-dojo-type='sl_components/sl_toggle_button/widget'
+			data-bttnIcon='icos_vmove' data-bttnSize='sm' data-bttnLabel=''
+			data-value='1' title="Move layer"></button>			
+		</div>
+	</td>	
+	<td>
+		<div class='button_group option_buttons'>
+			<button data-dojo-attach-point='visibility_bttn'
+				data-dojo-type='sl_components/sl_toggle_button/widget'
+				data-bttnIcon='icos_visibility' data-bttnSize='sm' data-bttnLabel=''
+				data-value='1' 
+				title="Visible"></button>
+			<button data-dojo-attach-point='labels_bttn'
+				data-dojo-type='sl_components/sl_toggle_button/widget'
+				data-bttnIcon='icos_labels' data-bttnSize='sm' data-bttnLabel=''
+				title="Labels on/off"></button>
+			<button data-dojo-attach-point='tooltip_bttn'
+				data-dojo-type='sl_components/sl_toggle_button/widget'
+				data-bttnIcon='icos_tooltip' data-bttnSize='sm' data-bttnLabel=''
+				title="Tooltip on/off"></button>
+			<button data-dojo-attach-point='searchable_bttn'
+				data-dojo-type='sl_components/sl_toggle_button/widget'
+				data-bttnIcon='icos_searchable' data-bttnSize='sm' data-bttnLabel=''
+				title="Include in searches/queries on/off"></button>
+		</div>
+	</td>
+	<td>	<img data-dojo-attach-point='type_ico' data-dojo-type='sl_components/layer_icon/widget'></img></td>
+	<td >
+		<label data-dojo-attach-point='layer_name'></label>
+
+	</td>
+	<td>
+		<div class='button_group action_buttons'>
+			<button data-dojo-attach-point='sublayers_bttn'
+				data-dojo-type='sl_components/sl_toggle_button/widget'
+				data-bttnIcon='icos_sublayers' data-bttnSize='sm'
+				data-bttnLabel='' data-toggling='off'
+				data-value='0'
+				title="View Sublayers"></button>
+			
+			<button data-dojo-attach-point='classification_edit_bttn'
+				data-dojo-type='sl_components/sl_toggle_button/widget'
+				data-bttnIcon='icos_classification_edit' data-bttnSize='sm'
+				data-bttnLabel='' data-value='0' data-toggling='off'				
+				title="Classify"></button>
+			<button data-dojo-attach-point='classification_from_bttn'
+				data-dojo-type='sl_components/sl_toggle_button/widget'
+				data-bttnIcon='icos_classification_from_default' data-bttnSize='sm'
+				data-bttnLabel='' data-toggling='off'
+				data-value='0'
+				title="Get classification from layer fefaults"></button>
+			<button data-dojo-attach-point='classification_to_default_bttn'
+				data-dojo-type='sl_components/sl_toggle_button/widget'
+				data-bttnIcon='icos_classification_from_default' data-bttnSize='sm'
+				data-bttnLabel='' data-toggling='off'
+				data-value='0'
+				title="Put classification up as layer default"></button>
+			<button data-dojo-attach-point='edit_bttn'
+				data-dojo-type='sl_components/sl_toggle_button/widget'
+				data-bttnIcon='icos_edit' data-bttnSize='sm'
+				data-bttnLabel='' data-toggling='off'
+				data-value='0'
+				title="Edit properties"></button>
+			<button data-dojo-attach-point='delete_bttn'
+				data-dojo-type='sl_components/sl_toggle_button/widget'
+				data-bttnIcon='icos_delete' data-bttnSize='sm'
+				data-bttnLabel='' data-toggling='off'
+				data-offColor="red"
+				data-onColor="red"
+				data-value='0'
+				title="Delete Layer"></button>
+				
+		</div>
+	</td>
+	
+
+</tr>

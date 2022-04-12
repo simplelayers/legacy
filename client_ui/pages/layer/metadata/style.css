@@ -1,0 +1,77 @@
+@CHARSET "ISO-8859-1";
+
+.pageLayout .mainContent {
+    padding-left: 0px !important;
+    bottom:0px;
+}
+.attribute-node label,
+header label {
+    font-weight:bold;
+}
+header label.nothidden::after {
+    content: '';
+
+}
+.attribute-node {
+    margin-left: 1.5em;
+}
+.attribute-node label::before {
+    content: '@ ';
+}
+
+.attribute-node span,
+header span {
+    margin-left: .5em;
+}
+
+.stateful {
+    display: none !important;
+}
+.closed .stateful.req-closed,
+.open .stateful.req-open {
+    display:inherit !important;
+}
+.content {
+    wieght: 100%;
+    height: calc(100vh - 15.25em);
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+}
+.content-body {
+    height: calc(100vh - 16.25em);
+    overflow: auto;
+    padding: 0em .75em .75em .75em;
+}
+.content h1 {
+    padding: .25em;
+    font-size: 1.25rem !important;
+    display: flex;
+    flex-direction: row;
+}
+.content h1 button {
+    margin-left: 1em;
+}
+.content h2 {
+    font-size: 1.125rem !important;
+}
+.content_panel {
+    position: absolute !important;
+    position: relative;
+    top: 255px;
+    bottom: 10px;
+    left: 10px;
+    right: 10px;	
+}
+
+.listing_container {
+    position:absolute;
+    top:0px;
+    left:0px;
+    right:0px;
+    bottom:0px;
+}
+
+
+
+

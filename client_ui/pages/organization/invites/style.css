@@ -1,0 +1,14 @@
+@CHARSET "ISO-8859-1";
+
+.dijitSelect {
+	margin-left:5px !important;
+}
+.dijitSelect td:nth-child(1){
+	
+	min-width:100px !important;
+	padding-left:5px;
+}
+
+.invites_listing {
+	padding-top: 15px;
+}
