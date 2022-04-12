@@ -1,0 +1,7050 @@
+<?php
+Phar::mapPhar('neo4jphp.phar');
+spl_autoload_register(function ($className) {
+	if (strpos($className, 'Everyman\Neo4j\\') !== 0) {
+		return;
+	}
+	$libPath = 'phar://neo4jphp.phar/lib/';
+	$classFile = str_replace('\\',DIRECTORY_SEPARATOR,$className).'.php';
+	$classPath = $libPath.$classFile;
+	if (file_exists($classPath)) {
+		require($classPath);
+	}
+});
+
+if ('cli' === php_sapi_name() && basename(__FILE__) === basename($_SERVER['argv'][0])) {
+	$command = empty($_SERVER['argv'][1]) ? '-help' : $_SERVER['argv'][1];
+	$me = new Phar('neo4jphp.phar');
+	$meta = $me->getMetaData();
+
+	if ($command == '-help') {
+		echo <<<HELP
+Neo4jPHP version {$meta['version']}
+
+{$_SERVER['argv'][0]} [-help|-license|-readme|-version|<host>] <port>
+    -help            Display help text
+    -license         Display software license
+    -readme          Display README
+    -version         Display version information
+    <host> (<port>)  Test connection to Neo4j instance on host (port defaults to 7474)
+
+HELP;
+
+	} else if ($command == '-license') {
+		echo file_get_contents('phar://neo4jphp.phar/LICENSE')."\n\n";
+
+	} else if ($command == '-readme') {
+		echo file_get_contents('phar://neo4jphp.phar/README.md')."\n\n";
+
+	} else if ($command == '-version') {
+		echo "Neo4jPHP version {$meta['version']}\n\n";
+
+	} else {
+		$port = empty($_SERVER['argv'][2]) ? 7474 : $_SERVER['argv'][2];
+		$client = new Everyman\Neo4j\Client(new Everyman\Neo4j\Transport($command, $port));
+		print_r($client->getServerInfo());
+	}
+
+	exit(0);
+}
+__HALT_COMPILER(); ?>
+&#65533;&#65533;G&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;t&#65533;&#65533;&#65533;a:2:{s:7:"version";s:5:"0.1.0";s:7:"authors";a:1:{s:10:"Josh Adell";a:1:{s:5:"email";s:20:"josh.adell@gmail.com";}}}	&#65533;&#65533;&#65533;README.md#
+&#65533;&#65533;Å€™O#
+&#65533;&#65533;˙nú∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Cache.php∆&#65533;&#65533;Å€™O∆&#65533;&#65533;wØ‰∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;#&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Relationship.php&#65533;&#65533;Å€™O&#65533;&#65533;X{Ÿ8∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;&&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Query/ResultSet.php&#65533;&#65533;Å€™O&#65533;&#65533;OPjî∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533; &#65533;&#65533;&#65533;lib/Everyman/Neo4j/Query/Row.php&#65533;&#65533;&#65533;Å€™O&#65533;&#65533;&#65533;YdÇ:∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Node.php*&#65533;&#65533;Å€™O*&#65533;&#65533;é˙3h∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Command.php<	&#65533;&#65533;Å€™O<	&#65533;&#65533;îØë]∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;#&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Cypher/Query.php9&#65533;&#65533;Å€™O9&#65533;&#65533;í˚Ô∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533; &#65533;&#65533;&#65533;lib/Everyman/Neo4j/Transport.phpÕ&#65533;&#65533;Å€™OÕ&#65533;&#65533;€vA)∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;3&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Command/GetRelationshipTypes.phpñ&#65533;&#65533;Å€™Oñ&#65533;&#65533;}≥M˝∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;/&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Command/ExecuteTraversal.php¿&#65533;&#65533;Å€™O¿&#65533;&#65533;ø2|∆∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;1&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Command/ExecuteCypherQuery.php&#65533;&#65533;Å€™O&#65533;&#65533;<™úï∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;*&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Command/DeleteIndex.php¯&#65533;&#65533;Å€™O¯&#65533;&#65533;Ò‹Æ¢∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;.&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Command/RemoveFromIndex.php»
+&#65533;&#65533;Å€™O»
+&#65533;&#65533;áw∑P∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;1&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Command/UpdateRelationship.phpπ&#65533;&#65533;Å€™Oπ&#65533;&#65533;O®K∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;3&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Command/GetNodeRelationships.phpû&#65533;&#65533;Å€™Oû&#65533;&#65533;˜)QZ∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;.&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Command/GetRelationship.php˘&#65533;&#65533;Å€™O˘&#65533;&#65533;+Ì–.∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;)&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Command/QueryIndex.php&#65533;&#65533;Å€™O&#65533;&#65533;wæk∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;4&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Command/ExecutePagedTraversal.php˙&#65533;&#65533;Å€™O˙&#65533;&#65533;•Zõü∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;(&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Command/SaveIndex.php2&#65533;&#65533;Å€™O2&#65533;&#65533;ô≠ñ∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;1&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Command/CreateRelationship.php&#65533;&#65533;Å€™O&#65533;&#65533;⁄k
+±∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;1&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Command/DeleteRelationship.phpò&#65533;&#65533;Å€™Oò&#65533;&#65533;qI˙ø∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;&&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Command/GetNode.phpù&#65533;&#65533;Å€™Où&#65533;&#65533;∫·|π∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;)&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Command/CreateNode.phpA&#65533;&#65533;Å€™OA&#65533;&#65533;8k∂≤∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;)&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Command/UpdateNode.phpm&#65533;&#65533;Å€™Om&#65533;&#65533;˚1ÿ∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;)&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Command/GetIndexes.php&#65533;&#65533;Å€™O&#65533;&#65533;–i•∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;,&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Command/Batch/Command.phpD&#65533;&#65533;Å€™OD&#65533;&#65533;?]5∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;4&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Command/Batch/RemoveFromIndex.php˙&#65533;&#65533;Å€™O˙&#65533;&#65533;¶w[∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;7&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Command/Batch/UpdateRelationship.php[&#65533;&#65533;Å€™O[&#65533;&#65533;I°V∑∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;7&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Command/Batch/CreateRelationship.phpæ&#65533;&#65533;Å€™Oæ&#65533;&#65533;πB∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;7&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Command/Batch/DeleteRelationship.php6&#65533;&#65533;Å€™O6&#65533;&#65533;	G!4∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;+&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Command/Batch/Commit.phpº&#65533;&#65533;Å€™Oº&#65533;&#65533;^WÅd∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;/&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Command/Batch/CreateNode.php&#65533;&#65533;Å€™O&#65533;&#65533;ø—æø∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;/&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Command/Batch/UpdateNode.php&#65533;&#65533;Å€™O&#65533;&#65533;8ÔÈ¿∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;/&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Command/Batch/DeleteNode.php˘&#65533;&#65533;Å€™O˘&#65533;&#65533;Û>ÅŸ∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;/&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Command/Batch/AddToIndex.phpó&#65533;&#65533;Å€™Oó&#65533;&#65533;«Ëõ∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;)&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Command/DeleteNode.phpX&#65533;&#65533;Å€™OX&#65533;&#65533;x∑0V∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;,&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Command/GetServerInfo.php}&#65533;&#65533;Å€™O}&#65533;&#65533;òŸﬁ∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;2&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Command/ExecuteGremlinQuery.php5&#65533;&#65533;Å€™O5&#65533;&#65533;ïπ8∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;)&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Command/AddToIndex.phpW
+&#65533;&#65533;Å€™OW
+&#65533;&#65533;ø
+≠V∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;'&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Command/GetPaths.phpë
+&#65533;&#65533;Å€™Oë
+&#65533;&#65533;Ù
+ç∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;*&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Command/SearchIndex.phpt&#65533;&#65533;Å€™Ot&#65533;&#65533;œ[8ë∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533; &#65533;&#65533;&#65533;lib/Everyman/Neo4j/Exception.phpH&#65533;&#65533;&#65533;Å€™OH&#65533;&#65533;&#65533;Û∞∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;(&#65533;&#65533;&#65533;lib/Everyman/Neo4j/PropertyContainer.phpW
+&#65533;&#65533;Å€™OW
+&#65533;&#65533; 3◊n∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Client.php…0&#65533;&#65533;Å€™O…0&#65533;&#65533;1ßNÑ∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Batch.php`
+&#65533;&#65533;Å€™O`
+&#65533;&#65533;å}è∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;#&#65533;&#65533;&#65533;lib/Everyman/Neo4j/EntityMapper.phpT&#65533;&#65533;Å€™OT&#65533;&#65533;(¸È¢∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Geoff.php˙&#65533;&#65533;Å€™O˙&#65533;&#65533;üv)∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533; &#65533;&#65533;&#65533;lib/Everyman/Neo4j/Traversal.php¥&#65533;&#65533;Å€™O¥&#65533;&#65533;ï.úú∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;!&#65533;&#65533;&#65533;lib/Everyman/Neo4j/PathFinder.php6&#65533;&#65533;Å€™O6&#65533;&#65533;e|«h∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Path.phpë	&#65533;&#65533;Å€™Oë	&#65533;&#65533;&Xéµ∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;.&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Index/NodeFulltextIndex.phpP&#65533;&#65533;Å€™OP&#65533;&#65533;Ô3ö∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;.&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Index/RelationshipIndex.php…&#65533;&#65533;Å€™O…&#65533;&#65533;M<9∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;&&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Index/NodeIndex.php±&#65533;&#65533;Å€™O±&#65533;&#65533;uQ_∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;%&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Geoff/Exporter.phpí&#65533;&#65533;Å€™Oí&#65533;&#65533;(g)Ú∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;%&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Geoff/Importer.phpZ&#65533;&#65533;Å€™OZ&#65533;&#65533;4±æ∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Query.php/&#65533;&#65533;Å€™O/&#65533;&#65533;F„l∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;#&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Batch/Delete.php>&#65533;&#65533;Å€™O>&#65533;&#65533;Ó≥ñ∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;&&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Batch/Operation.php¿&#65533;&#65533;Å€™O¿&#65533;&#65533;ˆÓr
+∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;!&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Batch/Save.phpç&#65533;&#65533;Å€™Oç&#65533;&#65533;ã∞s∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;'&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Batch/RemoveFrom.phpF&#65533;&#65533;Å€™OF&#65533;&#65533;ﬁ+Ü∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;"&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Batch/AddTo.phpî&#65533;&#65533;Å€™Oî&#65533;&#65533;Ïîa∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;$&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Gremlin/Query.php&#65533;&#65533;Å€™O&#65533;&#65533;»È*é∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Pager.phpx&#65533;&#65533;Å€™Ox&#65533;&#65533;„’∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;!&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Cache/Null.phpÿ&#65533;&#65533;Å€™Oÿ&#65533;&#65533;íØ+\∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;(&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Cache/EntityCache.phpî	&#65533;&#65533;Å€™Oî	&#65533;&#65533;Ù’7∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;&&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Cache/Memcached.phpJ&#65533;&#65533;Å€™OJ&#65533;&#65533;™9‘√∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;%&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Cache/Variable.php&#65533;&#65533;Å€™O&#65533;&#65533;i¬Å∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;%&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Cache/Memcache.php@&#65533;&#65533;Å€™O@&#65533;&#65533;€pÁ≥∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;lib/Everyman/Neo4j/Index.phpb&#65533;&#65533;Å€™Ob&#65533;&#65533;>€ÓÚ∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;LICENSEú&#65533;&#65533;Å€™Oú&#65533;&#65533;uS◊„∂&#65533;&#65533;&#65533;&#65533;&#65533;&#65533;Neo4jPHP
+========
+Author: Josh Adell <josh.adell@gmail.com>  
+Copyright (c) 2011-2012
+
+PHP Wrapper for the Neo4j graph database REST interface
+
+In-depth documentation and examples: http://github.com/jadell/neo4jphp/wiki
+
+API documentation: http://jadell.github.com/neo4jphp
+
+Install
+-------
+1. Download latest PHAR from http://github.com/downloads/jadell/neo4jphp/neo4jphp.phar
+2. `require("phar://neo4jphp.phar");`
+
+Connection Test
+---------------
+From the command line, execute the following:
+
+    > php neo4jphp.phar localhost
+
+Change localhost to the host name of your Neo4j instance.  Port defaults to 7474, or can be specified as the second parameter after the host name.
+
+Execute the following to see more command line options:
+
+    > php neo4jphp.phar
+
+
+Contributions
+-------------
+* Jacob Hansson <jacob@voltvoodoo.com> - Cypher query support
+* Nigel Small <nigel@nigelsmall.name> - GEOFF import/export
+  * [http://py2neo.org/](http://py2neo.org/)
+
+
+Changes
+-------
+
+0.1.0
+
+* Cypher and Gremlin results handle nested arrays of nodes/relationships
+* Batch request with no operations succeeds
+* Delete index where index does not exist succeeds
+
+0.0.7-beta
+
+* Retrieve reference node in one operation
+* Find and return only the first matching relationship
+* Optionally use HTTPS and basic authentication
+* Keep index configuration when retrieved from server
+* Add Memcache caching plugin
+* Do not allow use if cUrl is not detected
+* PHAR is uncompressed by default
+
+0.0.6-beta
+
+* Create full-text indexes; easier instantiation of common index types
+* Client can be initialized with a string and port instead of a Transport object
+* Setting a `null` property has the same effect as removing the property
+* Handle scalar values from Gremlin scripts properly
+* Cypher and Gremlin queries can take an array of named parameters
+* Cypher no longer uses positional parameters
+* Use server info to determine Cypher plugin endpoint
+
+0.0.5-beta
+
+* Open a batch on the client to apply to all subsequent data manipulation calls
+* Batch operations correctly set and update locally cached entities
+* Method chaining on node and relationship save, load and delete
+* Instantiate new nodes and relationships from the client
+* Change to cache initialization; new EntityCache object
+
+0.0.4-beta
+
+* Client::getServerInfo() retrieves server information and connection test
+* Add to index brought up to Neo4j server 1.5 specification
+* Return paths from Cypher queries
+* Properly encode URL entities
+* Connection and transport errors throw exceptions
+* Fix "unable to connect" bug from returning false positive
+<?php
+namespace Everyman\Neo4j;
+
+/**
+ * Interface for interacting with a caching backend
+ */
+interface Cache
+{
+	/**
+	 * Delete a value from the cache
+	 *
+	 * @param string $key
+	 * @return boolean true on success
+	 */
+	public function delete($key);
+
+	/**
+	 * Retrieve a value
+	 * Returns false if the key does not
+	 * exist, or the value is false
+	 *
+	 * @param string $key
+	 * @return mixed
+	 */
+	public function get($key);
+
+	/**
+	 * Store a value in the cache
+	 * $expire is specified as an integer:
+	 *   - less than or equal to 2592000 (the number of seconds in 30 days)
+	 *     will be considered an expire time of that many seconds from the
+	 *     current timestamp
+	 *   - Greater than that amount will be considered as literal Unix
+	 *     timestamp values
+	 *   - 0 means "never expire."
+	 *
+	 * @param string $key
+	 * @param mixed $value
+	 * @param integer $expire
+	 * @return boolean true on success
+	 */
+	public function set($key, $value, $expire=0);
+}
+<?php
+namespace Everyman\Neo4j;
+
+/**
+ * Represents a relationship between two nodes
+ */
+class Relationship extends PropertyContainer
+{
+	const DirectionAll       = 'all';
+	const DirectionIn        = 'in';
+	const DirectionOut       = 'out';
+
+	protected $start = null;
+	protected $end = null;
+	protected $type = null;
+
+	/**
+	 * Delete this relationship
+	 *
+	 * @return PropertyContainer
+	 * @throws Exception on failure
+	 */
+	public function delete()
+	{
+		$this->client->deleteRelationship($this);
+		return $this;
+	}
+
+	/**
+	 * Get the end node
+	 *
+	 * @return Node
+	 */
+	public function getEndNode()
+	{
+		$this->loadProperties();
+		return $this->end;
+	}
+
+	/**
+	 * Get the start node
+	 *
+	 * @return Node
+	 */
+	public function getStartNode()
+	{
+		$this->loadProperties();
+		return $this->start;
+	}
+
+	/**
+	 * Get the relationship type
+	 *
+	 * @return string
+	 */
+	public function getType()
+	{
+		$this->loadProperties();
+		return $this->type;
+	}
+
+	/**
+	 * Load this relationship
+	 *
+	 * @return PropertyContainer
+	 * @throws Exception on failure
+	 */
+	public function load()
+	{
+		$this->client->loadRelationship($this);
+		return $this;
+	}
+
+	/**
+	 * Save this node
+	 *
+	 * @return PropertyContainer
+	 * @throws Exception on failure
+	 */
+	public function save()
+	{
+		$this->client->saveRelationship($this);
+		return $this;
+	}
+
+	/**
+	 * Set the end node
+	 *
+	 * @param Node $end
+	 * @return Relationship
+	 */
+	public function setEndNode(Node $end)
+	{
+		$this->end = $end;
+		return $this;
+	}
+
+	/**
+	 * Set the start node
+	 *
+	 * @param Node $start
+	 * @return Relationship
+	 */
+	public function setStartNode(Node $start)
+	{
+		$this->start = $start;
+		return $this;
+	}
+
+	/**
+	 * Set the type
+	 *
+	 * @param string $type
+	 * @return Relationship
+	 */
+	public function setType($type)
+	{
+		$this->type = $type;
+		return $this;
+	}
+}
+<?php
+namespace Everyman\Neo4j\Query;
+
+use Everyman\Neo4j\Client;
+
+/**
+ * This is what you get when you execute a query. Looping
+ * over this will give you {@link Row} instances.
+ */
+class ResultSet implements \Iterator, \Countable, \ArrayAccess
+{
+	protected $client = null;
+
+	protected $rows = array();
+	protected $data = array();
+	protected $columns = array();
+	protected $position = 0;
+
+	/**
+	 * Set the array of results to represent
+	 *
+	 * @param Client $client
+	 * @param array $result
+	 */
+	public function __construct(Client $client, $result)
+	{
+		$this->client = $client;
+		if (is_array($result) && array_key_exists('data', $result)) {
+			$this->data = $result['data'];
+			$this->columns = $result['columns'];
+		}
+	}
+
+	/**
+	 * Return the list of column names
+	 *
+	 * @return array
+	 */
+	public function getColumns()
+	{
+		return $this->columns;
+	}
+
+	// ArrayAccess API
+
+	public function offsetExists($offset)
+	{
+		return isset($this->data[$offset]);
+	}
+
+	public function offsetGet($offset)
+	{
+		if (!isset($this->rows[$offset])) {
+			$this->rows[$offset] = new Row($this->client, $this->columns, $this->data[$offset]);
+		}
+		return $this->rows[$offset];
+	}
+
+	public function offsetSet($offset, $value)
+	{
+		throw new \BadMethodCallException("You cannot modify a query result.");
+	}
+
+	public function offsetUnset($offset)
+	{
+		throw new \BadMethodCallException("You cannot modify a query result.");
+	}
+
+
+	// Countable API
+
+	public function count()
+	{
+		return count($this->data);
+	}
+
+
+	// Iterator API
+
+	public function rewind()
+	{
+		$this->position = 0;
+	}
+
+	public function current()
+	{
+		return $this[$this->position];
+	}
+
+	public function key()
+	{
+		return $this->position;
+	}
+
+	public function next()
+	{
+		++$this->position;
+	}
+
+	public function valid()
+	{
+		return isset($this->data[$this->position]);
+	}
+}
+<?php
+namespace Everyman\Neo4j\Query;
+
+use Everyman\Neo4j\Client;
+
+/**
+ * Represents a single result row from a query.
+ * You can loop over this to get each value, or you can
+ * use array access ($myRow['columnName'] or $myRow[0])
+ * to get specific fields.
+ */
+class Row implements \Iterator, \Countable, \ArrayAccess
+{
+	protected $client = null;
+	protected $raw = null;
+	protected $data = null;
+	protected $columns = null;
+	protected $position = 0;
+
+	/**
+	 * Set the raw result data of this row
+	 *
+	 * @param Client $client
+	 * @param array $columns
+	 * @param array $rowData
+	 */
+	public function __construct(Client $client, $columns, $rowData)
+	{
+		$this->client = $client;
+		$this->raw = $rowData;
+		$this->data = array();
+		$this->columns = $columns;
+	}
+
+	// ArrayAccess API
+
+	public function offsetExists($offset)
+	{
+		if (!is_integer($offset)) {
+			return in_array($offset, $this->columns);
+		}
+
+		return isset($this->raw[$offset]);
+	}
+
+	public function offsetGet($offset)
+	{
+		if (!is_integer($offset)) {
+			$offset = array_search($offset, $this->columns);
+		}
+
+		if (!isset($this->data[$offset])) {
+			$raw = $this->raw[$offset];
+			$data = $this->client->getEntityMapper()->getEntityFor($raw);
+			if (is_array($data)) {
+				$data = new Row($this->client, array_keys($raw), array_values($raw));
+			}
+			$this->data[$offset] = $data;
+		}
+
+		return $this->data[$offset];
+	}
+
+	public function offsetSet($offset, $value)
+	{
+		throw new \BadMethodCallException("You cannot modify a result row.");
+	}
+
+	public function offsetUnset($offset)
+	{
+		throw new \BadMethodCallException("You cannot modify a result row.");
+	}
+
+
+	// Countable API
+
+	public function count()
+	{
+		return count($this->raw);
+	}
+
+
+	// Iterator API
+
+	public function rewind()
+	{
+		$this->position = 0;
+	}
+
+	public function current()
+	{
+		return $this[$this->position];
+	}
+
+	public function key()
+	{
+		return $this->columns[$this->position];
+	}
+
+	public function next()
+	{
+		++$this->position;
+	}
+
+	public function valid()
+	{
+		return isset($this->raw[$this->position]);
+	}
+}
+<?php
+namespace Everyman\Neo4j;
+
+/**
+ * Represents a single node in the database
+ */
+class Node extends PropertyContainer
+{
+	/**
+	 * Delete this node
+	 *
+	 * @return PropertyContainer
+	 * @throws Exception on failure
+	 */
+	public function delete()
+	{
+		$this->client->deleteNode($this);
+		return $this;
+	}
+
+	/**
+	 * Find paths from this node to the given node
+	 *
+	 * @param Node $to
+	 * @param string $type
+	 * @param string $dir
+	 * @return PathFinder
+	 */
+	public function findPathsTo(Node $to, $type=null, $dir=null)
+	{
+		$finder = new PathFinder($this->client);
+		$finder->setStartNode($this);
+		$finder->setEndNode($to);
+		if ($dir) {
+			$finder->setDirection($dir);
+		}
+
+		if ($type) {
+			$finder->setType($type);
+		}
+
+		return $finder;
+	}
+
+	/**
+	 * Get the first relationship of this node that matches the given criteria
+	 *
+	 * @param mixed  $types string or array of strings
+	 * @param string $dir
+	 * @return Relationship
+	 */
+	public function getFirstRelationship($types=array(), $dir=null)
+	{
+		$rels = $this->client->getNodeRelationships($this, $types, $dir);
+		if (count($rels) < 1) {
+			return null;
+		}
+		return $rels[0];
+	}
+
+	/**
+	 * Get relationships of this node
+	 *
+	 * @param mixed  $types string or array of strings
+	 * @param string $dir
+	 * @return array of Relationship
+	 */
+	public function getRelationships($types=array(), $dir=null)
+	{
+		return $this->client->getNodeRelationships($this, $types, $dir);
+	}
+
+	/**
+	 * Load this node
+	 *
+	 * @return PropertyContainer
+	 * @throws Exception on failure
+	 */
+	public function load()
+	{
+		$this->client->loadNode($this);
+		return $this;
+	}
+
+	/**
+	 * Make a new relationship
+	 *
+	 * @param Node $to
+	 * @param string $type
+	 * @return Relationship
+	 */
+	public function relateTo(Node $to, $type)
+	{
+		$rel = $this->client->makeRelationship();
+		$rel->setStartNode($this);
+		$rel->setEndNode($to);
+		$rel->setType($type);
+
+		return $rel;
+	}
+
+	/**
+	 * Save this node
+	 *
+	 * @return PropertyContainer
+	 * @throws Exception on failure
+	 */
+	public function save()
+	{
+		$this->client->saveNode($this);
+		return $this;
+	}
+}
+<?php
+namespace Everyman\Neo4j;
+
+/**
+ * Abstract the parameters needed to make a request and parse the response
+ */
+abstract class Command
+{
+	protected $client;
+
+	/**
+	 * Set the client
+	 *
+	 * @param Client $client
+	 */
+	public function __construct(Client $client)
+	{
+		$this->client = $client;
+	}
+
+	/**
+	 * Return the data to pass
+	 *
+	 * @return mixed
+	 */
+	abstract protected function getData();
+
+	/**
+	 * Return the transport method to call
+	 *
+	 * @return string
+	 */
+	abstract protected function getMethod();
+
+	/**
+	 * Return the path to use
+	 *
+	 * @return string
+	 */
+	abstract protected function getPath();
+
+	/**
+	 * Use the results in some way
+	 *
+	 * @param integer $code
+	 * @param array   $headers
+	 * @param array   $data
+	 * @return mixed
+	 * @throws Exception on failure
+	 */
+	abstract protected function handleResult($code, $headers, $data);
+
+	/**
+	 * Run the command and return a value signalling the result
+	 *
+	 * @return mixed
+	 * @throws Exception on failure
+	 */
+	public function execute()
+	{
+		$method = $this->getMethod();
+		$path = $this->getPath();
+		$data = $this->getData();
+		$result = $this->getTransport()->$method($path, $data);
+
+		$resultCode = isset($result['code']) ? $result['code'] : Client::ErrorUnknown;
+		$resultHeaders = isset($result['headers']) ? $result['headers'] : array();
+		$resultData = isset($result['data']) ? $result['data'] : array();
+		$parseResult = $this->handleResult($resultCode, $resultHeaders, $resultData);
+
+		return $parseResult;
+	}
+
+	/**
+	 * Get the entity cache
+	 *
+	 * @return Cache\EntityCache
+	 */
+	protected function getEntityCache()
+	{
+		return $this->client->getEntityCache();
+	}
+
+	/**
+	 * Get the entity mapper
+	 *
+	 * @return EntityMapper
+	 */
+	protected function getEntityMapper()
+	{
+		return $this->client->getEntityMapper();
+	}
+
+	/**
+	 * Get the transport
+	 *
+	 * @return Transport
+	 */
+	protected function getTransport()
+	{
+		return $this->client->getTransport();
+	}
+
+	/**
+	 * Throw an exception from handling the results
+	 *
+	 * @param string  $message
+	 * @param integer $code
+	 * @param array   $headers
+	 * @param array   $data
+	 * @throws Exception
+	 */
+	protected function throwException($message, $code, $headers, $data)
+	{
+		$message = "{$message} [{$code}]:\nHeaders: " . print_r($headers, true) . "Body: " . print_r($data, true);
+		throw new Exception($message, $code);
+	}
+}
+
+<?php
+namespace Everyman\Neo4j\Cypher;
+
+use Everyman\Neo4j;
+
+/**
+ * Represents a Cypher query string and variables
+ * Query the database using Cypher. For query syntax, please refer
+ * to the Cypher documentation for your server version.
+ *
+ * Latest documentation:
+ * http://docs.neo4j.org/chunked/snapshot/cypher-query-lang.html
+ */
+class Query implements Neo4j\Query
+{
+	protected $client = null;
+	protected $template = null;
+	protected $vars = array();
+
+	protected $result = null;
+
+	/**
+	 * Set the template to use
+	 *
+	 * @param Neo4j\Client $client
+	 * @param string $template A Cypher query string or template
+	 * @param array $vars Replacement vars to inject into the query
+	 */
+	public function __construct(Neo4j\Client $client, $template, $vars=array())
+	{
+		$this->client = $client;
+		$this->template = $template;
+		$this->vars = $vars;
+	}
+
+	/**
+	 * Get the query script
+	 *
+	 * @return string
+	 */
+	public function getQuery()
+	{
+		return $this->template;
+	}
+
+	/**
+	 * Get the template parameters
+	 *
+	 * @return array
+	 */
+	public function getParameters()
+	{
+		return $this->vars;
+	}
+
+	/**
+	 * Retrieve the query results
+	 *
+	 * @return Neo4j\Query\ResultSet
+	 */
+	public function getResultSet()
+	{
+		if ($this->result === null) {
+			$this->result = $this->client->executeCypherQuery($this);
+		}
+
+		return $this->result;
+	}
+}
+<?php
+namespace Everyman\Neo4j;
+
+/**
+ * Class for communicating with an HTTP JSON endpoint
+ */
+class Transport
+{
+	const GET    = 'GET';
+	const POST   = 'POST';
+	const PUT    = 'PUT';
+	const DELETE = 'DELETE';
+
+	protected $scheme = 'http';
+	protected $host = 'localhost';
+	protected $port = 7474;
+	protected $path = '/db/data';
+	protected $username = null;
+	protected $password = null;
+
+	protected $handle = null;
+
+	/**
+	 * Set the host and port of the endpoint
+	 *
+	 * @param string $host
+	 * @param integer $port
+	 */
+	public function __construct($host='localhost', $port=7474)
+	{
+		if (!function_exists('curl_init')) {
+			throw new Exception('cUrl extension not enabled/installed');
+		}
+
+		$this->host = $host;
+		$this->port = $port;
+	}
+
+	/**
+	 * Make sure the curl handle closes when we are done with the Transport
+	 */
+	public function __destruct()
+	{
+		if ($this->handle) {
+			curl_close($this->handle);
+		}
+	}
+
+	/**
+	 * Return the Neo4j REST endpoint
+	 *
+	 * @return string
+	 */
+	public function getEndpoint()
+	{
+		return "{$this->scheme}://{$this->host}:{$this->port}{$this->path}";
+	}
+
+	/**
+	 * Encode data for transport
+	 *
+	 * @param mixed $data
+	 * @return string
+	 */
+	public function encodeData($data)
+	{
+		$encoded = '';
+		if (!is_scalar($data)) {
+			if ($data) {
+				$keys = array_keys($data);
+				$nonNumeric = array_filter($keys, function ($var){
+					return !is_int($var);
+				});
+				if ($nonNumeric) {
+					$data = (object)$data;
+				}
+			} else {
+				$data = (object)$data;
+			}
+		}
+
+		$encoded = json_encode($data);
+		return $encoded;
+	}
+	
+	/**
+	 * Make a request against the endpoint
+	 * Returned array has the following elements:
+	 *   'code' => the HTTP status code returned
+	 *   'headers' => array of HTTP headers, indexed by header name
+	 *   'data' => array return data
+	 *
+	 * @param string $method
+	 * @param string $path
+	 * @param array  $data
+	 * @return array
+	 */
+	public function makeRequest($method, $path, $data=array())
+	{
+		$url = $this->getEndpoint().$path;
+
+		$options = array(
+			CURLOPT_URL => $url,
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_HEADER => true,
+			CURLOPT_HTTPHEADER => array(
+				'Accept: application/json',
+				'Content-type: application/json',
+			),
+			CURLOPT_CUSTOMREQUEST => self::GET,
+			CURLOPT_POST => false,
+			CURLOPT_POSTFIELDS => null,
+		);
+
+		if ($this->username && $this->password) {
+			$options[CURLOPT_HTTPAUTH] = CURLAUTH_BASIC;
+			$options[CURLOPT_USERPWD] = $this->username.':'.$this->password;
+		}
+
+		switch ($method) {
+			case self::DELETE :
+				$options[CURLOPT_CUSTOMREQUEST] = self::DELETE;
+				break;
+
+			case self::POST :
+				$dataString = $this->encodeData($data);
+				$options[CURLOPT_CUSTOMREQUEST] = self::POST;
+				$options[CURLOPT_POST] = true;
+				$options[CURLOPT_POSTFIELDS] = $dataString;
+				$options[CURLOPT_HTTPHEADER][] = 'Content-Length: '.strlen($dataString);
+				break;
+
+			case self::PUT :
+				$dataString = $this->encodeData($data);
+				$options[CURLOPT_CUSTOMREQUEST] = self::PUT;
+				$options[CURLOPT_POSTFIELDS] = $dataString;
+				$options[CURLOPT_HTTPHEADER][] = 'Content-Length: '.strlen($dataString);
+				break;
+		}
+
+		$ch = $this->getHandle();
+		curl_setopt_array($ch, $options);
+
+		$response = curl_exec($ch);
+		$code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		$headerSize = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+
+		if (!$code) {
+			$code = 500;
+			$headerSize = 0;
+			$response = json_encode(array("error"=>curl_error($ch).' ['.curl_errno($ch).']'));
+		}
+
+		$bodyString = substr($response, $headerSize);
+		$bodyData = json_decode($bodyString, true);
+
+		$headerString = substr($response, 0, $headerSize);
+		$headers = explode("\r\n",$headerString);
+		foreach ($headers as $i => $header) {
+			unset($headers[$i]);
+			$parts = explode(':',$header);
+			if (isset($parts[1])) {
+				$name = trim(array_shift($parts));
+				$value = join(':',$parts);
+				$headers[$name] = $value;
+			}
+		}
+
+		return array(
+			'code' => $code,
+			'headers' => $headers,
+			'data' => $bodyData,
+		);
+	}
+
+	/**
+	 * Make a GET request
+	 *
+	 * @param $path
+	 * @param $data
+	 * @return array see 'makeRequest'
+	 */
+	public function get($path, $data=array())
+	{
+		return $this->makeRequest(self::GET, $path, $data);
+	}
+
+	/**
+	 * Make a POST request
+	 *
+	 * @param $path
+	 * @param $data
+	 * @return array see 'makeRequest'
+	 */
+	public function post($path, $data=array())
+	{
+		return $this->makeRequest(self::POST, $path, $data);
+	}
+
+	/**
+	 * Make a PUT request
+	 *
+	 * @param $path
+	 * @param $data
+	 * @return array see 'makeRequest'
+	 */
+	public function put($path, $data=array())
+	{
+		return $this->makeRequest(self::PUT, $path, $data);
+	}
+
+	/**
+	 * Make a DELETE request
+	 *
+	 * @param $path
+	 * @return array see 'makeRequest'
+	 */
+	public function delete($path)
+	{
+		return $this->makeRequest(self::DELETE, $path);
+	}
+
+	/**
+	 * Set username and password to use with HTTP Basic Auth
+	 *
+	 * Returns this Trnasport object
+	 *
+	 * @param string $username
+	 * @param string $password
+	 * @return Transport
+	 */
+	public function setAuth($username=null, $password=null)
+	{
+		$this->username = $username;
+		$this->password = $password;
+		return $this;
+	}
+
+	/**
+	 * Turn HTTPS on or off
+	 *
+	 * Returns this Trnasport object
+	 *
+	 * @param boolean $useHttps
+	 * @return Transport
+	 */
+	public function useHttps($useHttps=true)
+	{
+		$this->scheme = $useHttps ? 'https' : 'http';
+		return $this;
+	}
+
+	/**
+	 * Get the cURL handle
+	 *
+	 * @return resource cURL handle
+	 */
+	protected function getHandle()
+	{
+		if (!$this->handle) {
+			$this->handle = curl_init();
+		}
+		return $this->handle;
+	}
+}
+<?php
+namespace Everyman\Neo4j\Command;
+use Everyman\Neo4j\Command,
+	Everyman\Neo4j\Client;
+
+/**
+ * Get all relationship types known by the server
+ */
+class GetRelationshipTypes extends Command
+{
+	/**
+	 * Return the data to pass
+	 *
+	 * @return mixed
+	 */
+	protected function getData()
+	{
+		return null;
+	}
+
+	/**
+	 * Return the transport method to call
+	 *
+	 * @return string
+	 */
+	protected function getMethod()
+	{
+		return 'get';
+	}
+
+	/**
+	 * Return the path to use
+	 *
+	 * @return string
+	 */
+	protected function getPath()
+	{
+		return '/relationship/types';
+	}
+
+	/**
+	 * Use the results
+	 *
+	 * @param integer $code
+	 * @param array   $headers
+	 * @param array   $data
+	 * @return integer on failure
+	 */
+	protected function handleResult($code, $headers, $data)
+	{
+		if ((int)($code / 100) != 2) {
+			$this->throwException('Unable to retrieve relationship types', $code, $headers, $data);
+		}
+		return $data;
+	}
+}
+
+<?php
+namespace Everyman\Neo4j\Command;
+
+use Everyman\Neo4j\Command,
+	Everyman\Neo4j\Exception,
+	Everyman\Neo4j\Client,
+	Everyman\Neo4j\Traversal,
+	Everyman\Neo4j\Path,
+	Everyman\Neo4j\Node;
+
+/**
+ * Perform a traversal and return the results
+ */
+class ExecuteTraversal extends Command
+{
+	protected $traversal = null;
+	protected $node = null;
+	protected $returnType = null;
+
+	protected $results;
+
+	/**
+	 * Set the traversal to execute
+	 *
+	 * @param Client $client
+	 * @param Traversal $traversal
+	 * @param Node $node
+	 * @param string $returnType
+	 */
+	public function __construct(Client $client, Traversal $traversal, Node $node, $returnType)
+	{
+		parent::__construct($client);
+		$this->traversal = $traversal;
+		$this->node = $node;
+		$this->returnType = $returnType;
+	}
+
+	/**
+	 * Return the data to pass
+	 *
+	 * @return mixed
+	 */
+	protected function getData()
+	{
+		$data = array();
+
+		$order = $this->traversal->getOrder();
+		if ($order) {
+			$data['order'] = $order;
+		}
+
+		$uniqueness = $this->traversal->getUniqueness();
+		if ($uniqueness) {
+			$data['uniqueness'] = $uniqueness;
+		}
+
+		$maxDepth = $this->traversal->getMaxDepth();
+		if ($maxDepth) {
+			$data['max_depth'] = $maxDepth;
+		}
+
+		$relationships = $this->traversal->getRelationships();
+		if (count($relationships) > 0) {
+			$data['relationships'] = $relationships;
+		}
+
+		$prune = $this->traversal->getPruneEvaluator();
+		if ($prune) {
+			if ($prune['language'] == Traversal::Builtin) {
+				$prune['name'] = $prune['body'];
+				unset($prune['body']);
+			}
+			$data['prune_evaluator'] = $prune;
+		}
+
+		$filter = $this->traversal->getReturnFilter();
+		if ($filter) {
+			if ($filter['language'] == Traversal::Builtin) {
+				$filter['name'] = $filter['body'];
+				unset($filter['body']);
+			}
+			$data['return_filter'] = $filter;
+		}
+
+		return $data;
+	}
+
+	/**
+	 * Return the transport method to call
+	 *
+	 * @return string
+	 */
+	protected function getMethod()
+	{
+		return 'post';
+	}
+
+	/**
+	 * Return the path to use
+	 *
+	 * @return string
+	 */
+	protected function getPath()
+	{
+		if (!$this->node->hasId()) {
+			throw new Exception('No node id specified');
+		}
+
+		if ($this->returnType != Traversal::ReturnTypeNode
+			&& $this->returnType != Traversal::ReturnTypeRelationship
+			&& $this->returnType != Traversal::ReturnTypePath
+			&& $this->returnType != Traversal::ReturnTypeFullPath) {
+			throw new Exception('No return type specified for traversal');
+		}
+
+		return '/node/'.$this->node->getId().'/traverse/'.$this->returnType;
+	}
+
+	/**
+	 * Use the results
+	 *
+	 * @param integer $code
+	 * @param array   $headers
+	 * @param array   $data
+	 * @return integer on failure
+	 */
+	protected function handleResult($code, $headers, $data)
+	{
+		if ((int)($code / 100) != 2) {
+			$this->throwException('Unable to execute traversal', $code, $headers, $data);
+		}
+
+		$this->results = array();
+		if ($this->returnType == Traversal::ReturnTypeNode) {
+			$this->handleNodes($data);
+		} else if ($this->returnType == Traversal::ReturnTypeRelationship) {
+			$this->handleRelationships($data);
+		} else if ($this->returnType == Traversal::ReturnTypePath) {
+			$this->handlePaths($data);
+		} else if ($this->returnType == Traversal::ReturnTypeFullPath) {
+			$this->handlePaths($data, true);
+		}
+		return $this->results;
+	}
+
+	/**
+	 * Handle nodes
+	 *
+	 * @param array $data
+	 */
+	protected function handleNodes($data)
+	{
+		foreach ($data as $nodeData) {
+			$this->results[] = $this->getEntityMapper()->makeNode($nodeData);
+		}
+	}
+
+	/**
+	 * Handle relationships
+	 *
+	 * @param array $data
+	 */
+	protected function handleRelationships($data)
+	{
+		foreach ($data as $relData) {
+			$this->results[] = $this->getEntityMapper()->makeRelationship($relData);
+		}
+	}
+
+	/**
+	 * Handle paths
+	 *
+	 * @param array   $data
+	 * @param boolean $full
+	 */
+	protected function handlePaths($data, $full=false)
+	{
+		foreach ($data as $pathData) {
+			foreach ($data as $pathData) {
+				$this->results[] = $this->getEntityMapper()->populatePath(new Path($this->client), $pathData, $full);
+			}
+		}
+	}
+}
+
+<?php
+namespace Everyman\Neo4j\Command;
+
+use Everyman\Neo4j\Exception,
+    Everyman\Neo4j\EntityMapper,
+    Everyman\Neo4j\Command,
+	Everyman\Neo4j\Client,
+	Everyman\Neo4j\Cypher\Query,
+	Everyman\Neo4j\Query\ResultSet;
+
+/**
+ * Perform a query using the Cypher query language and return the results
+ */
+class ExecuteCypherQuery extends Command
+{
+	protected $query = null;
+
+	/**
+	 * Set the query to execute
+	 *
+	 * @param Client $client
+	 * @param Query $query
+	 */
+	public function __construct(Client $client, Query $query)
+	{
+		parent::__construct($client);
+		$this->query = $query;
+	}
+
+	/**
+	 * Return the data to pass
+	 *
+	 * @return mixed
+	 */
+	protected function getData()
+	{
+		$data = array('query' => $this->query->getQuery());
+		$params = $this->query->getParameters();
+		if ($params) {
+			$data['params'] = $params;
+		}
+		return $data;
+	}
+
+	/**
+	 * Return the transport method to call
+	 *
+	 * @return string
+	 */
+	protected function getMethod()
+	{
+		return 'post';
+	}
+
+	/**
+	 * Return the path to use
+	 *
+	 * @return string
+	 */
+	protected function getPath()
+	{
+		$info = $this->client->getServerInfo();
+		if (isset($info['cypher'])) {
+			$url = $info['cypher'];
+		} else if (isset($info['extensions']['CypherPlugin']['execute_query'])) {
+			$url = $info['extensions']['CypherPlugin']['execute_query'];
+		} else {
+			throw new Exception('Cypher unavailable');
+		}
+
+		return str_replace($this->getTransport()->getEndpoint(), '', $url);
+	}
+
+	/**
+	 * Use the results
+	 *
+	 * @param integer $code
+	 * @param array   $headers
+	 * @param array   $data
+	 * @return integer on failure
+	 */
+	protected function handleResult($code, $headers, $data)
+	{
+		if ((int)($code / 100) != 2) {
+			$this->throwException('Unable to execute query', $code, $headers, $data);
+		}
+
+		return new ResultSet($this->client, $data);
+	}
+}
+
+<?php
+namespace Everyman\Neo4j\Command;
+use Everyman\Neo4j\Command,
+	Everyman\Neo4j\Client,
+	Everyman\Neo4j\Exception,
+	Everyman\Neo4j\Index;
+
+/**
+ * Create an index
+ */
+class DeleteIndex extends Command
+{
+	protected $index = null;
+
+	/**
+	 * Set the index to drive the command
+	 *
+	 * @param Client $client
+	 * @param Index $index
+	 */
+	public function __construct(Client $client, Index $index)
+	{
+		parent::__construct($client);
+		$this->index = $index;
+	}
+
+	/**
+	 * Return the data to pass
+	 *
+	 * @return mixed
+	 */
+	protected function getData()
+	{
+		return null;
+	}
+
+	/**
+	 * Return the transport method to call
+	 *
+	 * @return string
+	 */
+	protected function getMethod()
+	{
+		return 'delete';
+	}
+
+	/**
+	 * Return the path to use
+	 *
+	 * @return string
+	 */
+	protected function getPath()
+	{
+		$type = trim((string)$this->index->getType());
+		if ($type != Index::TypeNode && $type != Index::TypeRelationship) {
+			throw new Exception('No type specified for index');
+		}
+
+		$name = trim((string)$this->index->getName());
+		if (!$name) {
+			throw new Exception('No name specified for index');
+		}
+		$name = rawurlencode($name);
+
+		return '/index/'.$type.'/'.$name;
+	}
+
+	/**
+	 * Use the results
+	 *
+	 * @param integer $code
+	 * @param array   $headers
+	 * @param array   $data
+	 * @return integer on failure
+	 */
+	protected function handleResult($code, $headers, $data)
+	{
+		if ((int)($code / 100) != 2 && (int)$code != 404) {
+			$this->throwException('Unable to delete index', $code, $headers, $data);
+		}
+		return true;
+	}
+}
+
+<?php
+namespace Everyman\Neo4j\Command;
+use Everyman\Neo4j\Command,
+	Everyman\Neo4j\Client,
+	Everyman\Neo4j\Exception,
+	Everyman\Neo4j\PropertyContainer,
+	Everyman\Neo4j\Relationship,
+	Everyman\Neo4j\Node,
+	Everyman\Neo4j\Index;
+
+/**
+ * Removes an entity from an index
+ */
+class RemoveFromIndex extends Command
+{
+	protected $index = null;
+	protected $entity = null;
+	protected $key = null;
+	protected $value = null;
+
+	/**
+	 * Remove an entity from an index
+	 * If $value is not given, all reference of the entity for the key
+	 * are removed.
+	 * If $key is not given, all reference of the entity are removed.
+	 *
+	 * @param Client $client
+	 * @param Index $index
+	 * @param PropertyContainer $entity
+	 * @param string $key
+	 * @param string $value
+	 * @return boolean
+	 */
+	public function __construct(Client $client, Index $index, PropertyContainer $entity, $key=null, $value=null)
+	{
+		parent::__construct($client);
+		$this->index = $index;
+		$this->entity = $entity;
+		$this->key = $key;
+		$this->value = $value;
+	}
+
+	/**
+	 * Return the data to pass
+	 *
+	 * @return mixed
+	 */
+	protected function getData()
+	{
+		return null;
+	}
+
+	/**
+	 * Return the transport method to call
+	 *
+	 * @return string
+	 */
+	protected function getMethod()
+	{
+		return 'delete';
+	}
+
+	/**
+	 * Return the path to use
+	 *
+	 * @return string
+	 */
+	protected function getPath()
+	{
+		if (!$this->entity || !$this->entity->hasId()) {
+			throw new Exception('No entity to index specified');
+		}
+
+		$type = trim((string)$this->index->getType());
+		if ($type != Index::TypeNode && $type != Index::TypeRelationship) {
+			throw new Exception('No type specified for index');
+		} else if ($type == Index::TypeNode && !($this->entity instanceof Node)) {
+			throw new Exception('Cannot remove a node from a non-node index');
+		} else if ($type == Index::TypeRelationship && !($this->entity instanceof Relationship)) {
+			throw new Exception('Cannot remove a relationship from a non-relationship index');
+		}
+
+		$name = trim((string)$this->index->getName());
+		if (!$name) {
+			throw new Exception('No name specified for index');
+		}
+
+		$name = rawurlencode($name);
+		$key = trim((string)$this->key);
+		$value = trim((string)$this->value);
+
+		$uri = '/index/'.$type.'/'.$name.'/';
+		if ($key) {
+			$uri .= rawurlencode($key).'/';
+			if ($value) {
+				$uri .= rawurlencode($value).'/';
+			}
+		}
+		$uri .= $this->entity->getId();
+
+		return $uri;
+	}
+
+	/**
+	 * Use the results
+	 *
+	 * @param integer $code
+	 * @param array   $headers
+	 * @param array   $data
+	 * @return integer on failure
+	 */
+	protected function handleResult($code, $headers, $data)
+	{
+		if ((int)($code / 100) != 2) {
+			$this->throwException('Unable to remove entity from index', $code, $headers, $data);
+		}
+		return true;
+	}
+}
+
+<?php
+namespace Everyman\Neo4j\Command;
+use Everyman\Neo4j\Command,
+	Everyman\Neo4j\Client,
+	Everyman\Neo4j\Exception,
+	Everyman\Neo4j\Relationship;
+
+/**
+ * Update a relationship's properties
+ */
+class UpdateRelationship extends Command
+{
+	protected $rel = null;
+
+	/**
+	 * Set the relationship to drive the command
+	 *
+	 * @param Client $client
+	 * @param Relationship $rel
+	 */
+	public function __construct(Client $client, Relationship $rel)
+	{
+		parent::__construct($client);
+		$this->rel = $rel;
+	}
+
+	/**
+	 * Return the data to pass
+	 *
+	 * @return mixed
+	 */
+	protected function getData()
+	{
+		return $this->rel->getProperties();
+	}
+
+	/**
+	 * Return the transport method to call
+	 *
+	 * @return string
+	 */
+	protected function getMethod()
+	{
+		return 'put';
+	}
+
+	/**
+	 * Return the path to use
+	 *
+	 * @return string
+	 */
+	protected function getPath()
+	{
+		if (!$this->rel->hasId()) {
+			throw new Exception('No relationship id specified');
+		}
+		return '/relationship/'.$this->rel->getId().'/properties';
+	}
+
+	/**
+	 * Use the results
+	 *
+	 * @param integer $code
+	 * @param array   $headers
+	 * @param array   $data
+	 * @return boolean true on success
+	 * @throws Exception on failure
+	 */
+	protected function handleResult($code, $headers, $data)
+	{
+		if ((int)($code / 100) == 2) {
+			$this->getEntityCache()->setCachedEntity($this->rel);
+			return true;
+		} else {
+			$this->throwException('Unable to update relationship', $code, $headers, $data);
+		}
+	}
+}
+
+<?php
+namespace Everyman\Neo4j\Command;
+use Everyman\Neo4j\Command,
+	Everyman\Neo4j\Client,
+	Everyman\Neo4j\Exception,
+	Everyman\Neo4j\Relationship,
+	Everyman\Neo4j\Node;
+
+/**
+ * Find relationships on a node
+ */
+class GetNodeRelationships extends Command
+{
+	protected $node  = null;
+	protected $types = null;
+	protected $dir   = null;
+
+	/**
+	 * Set the parameters to search
+	 *
+	 * @param Client $client
+	 * @param Node   $node
+	 * @param mixed  $types a string or array of strings
+	 * @param string $dir
+	 */
+	public function __construct(Client $client, Node $node, $types=array(), $dir=null)
+	{
+		parent::__construct($client);
+
+		if (empty($dir)) {
+			$dir = Relationship::DirectionAll;
+		}
+		if (empty($types)) {
+			$types = array();
+		} else if (!is_array($types)) {
+			$types = array($types);
+		}
+
+		$this->node = $node;
+		$this->dir = $dir;
+		$this->types = $types;
+	}
+
+	/**
+	 * Return the data to pass
+	 *
+	 * @return mixed
+	 */
+	protected function getData()
+	{
+		return null;
+	}
+
+	/**
+	 * Return the transport method to call
+	 *
+	 * @return string
+	 */
+	protected function getMethod()
+	{
+		return 'get';
+	}
+
+	/**
+	 * Return the path to use
+	 *
+	 * @return string
+	 */
+	protected function getPath()
+	{
+		if (!$this->node->hasId()) {
+			throw new Exception('No node id specified');
+		}
+
+		$path = '/node/'.$this->node->getId().'/relationships/'.$this->dir;
+		if (!empty($this->types)) {
+			$path .= '/'.join('&', $this->types);
+		}
+
+		return $path;
+	}
+
+	/**
+	 * Use the results
+	 *
+	 * @param integer $code
+	 * @param array   $headers
+	 * @param array   $data
+	 * @return integer on failure
+	 */
+	protected function handleResult($code, $headers, $data)
+	{
+		if ((int)($code / 100) == 2) {
+			$rels = array();
+			foreach ($data as $relData) {
+				$rels[] = $this->getEntityMapper()->makeRelationship($relData);
+			}
+			return $rels;
+		} else {
+			$this->throwException('Unable to retrieve node relationships', $code, $headers, $data);
+		}
+	}
+}
+
+<?php
+namespace Everyman\Neo4j\Command;
+use Everyman\Neo4j\Command,
+	Everyman\Neo4j\Client,
+	Everyman\Neo4j\Exception,
+	Everyman\Neo4j\Relationship,
+	Everyman\Neo4j\Node;
+
+/**
+ * Get and populate a relationship
+ */
+class GetRelationship extends Command
+{
+	protected $rel = null;
+
+	/**
+	 * Set the relationship to drive the command
+	 *
+	 * @param Client $client
+	 * @param Relationship $rel
+	 */
+	public function __construct(Client $client, Relationship $rel)
+	{
+		parent::__construct($client);
+		$this->rel = $rel;
+	}
+
+	/**
+	 * Return the data to pass
+	 *
+	 * @return mixed
+	 */
+	protected function getData()
+	{
+		return null;
+	}
+
+	/**
+	 * Return the transport method to call
+	 *
+	 * @return string
+	 */
+	protected function getMethod()
+	{
+		return 'get';
+	}
+
+	/**
+	 * Return the path to use
+	 *
+	 * @return string
+	 */
+	protected function getPath()
+	{
+		if (!$this->rel->hasId()) {
+			throw new Exception('No relationship id specified');
+		}
+		return '/relationship/'.$this->rel->getId();
+	}
+
+	/**
+	 * Use the results
+	 *
+	 * @param integer $code
+	 * @param array   $headers
+	 * @param array   $data
+	 * @return boolean true on success
+	 * @throws Exception on failure
+	 */
+	protected function handleResult($code, $headers, $data)
+	{
+		if ((int)($code / 100) == 2) {
+			$this->rel = $this->getEntityMapper()->populateRelationship($this->rel, $data);
+			$this->getEntityCache()->setCachedEntity($this->rel);
+			return true;
+		} else {
+			$this->throwException('Unable to retrieve relationship', $code, $headers, $data);
+		}
+	}
+}
+
+<?php
+namespace Everyman\Neo4j\Command;
+use Everyman\Neo4j\Command,
+	Everyman\Neo4j\Client,
+	Everyman\Neo4j\Exception,
+	Everyman\Neo4j\Relationship,
+	Everyman\Neo4j\Node,
+	Everyman\Neo4j\Index;
+
+/**
+ * Queries for entities in an index
+ */
+class QueryIndex extends SearchIndex
+{
+	/**
+	 * Set the index to drive the command
+	 *
+	 * @param Client $client
+	 * @param Index $index
+	 * @param string $query
+	 */
+	public function __construct(Client $client, Index $index, $query)
+	{
+		parent::__construct($client, $index, $query, null);
+	}
+
+	/**
+	 * Return the path to use
+	 *
+	 * @return string
+	 */
+	protected function getPath()
+	{
+		$path = parent::getPath();
+		$path = join('/', array_slice(explode('/', $path), 0,4));
+		$query = rawurlencode($this->key);
+		return $path . '?query=' . $query;
+	}
+}
+
+<?php
+namespace Everyman\Neo4j\Command;
+
+use Everyman\Neo4j\Client,
+	Everyman\Neo4j\Pager;
+
+/**
+ * Perform a paged traversal and return the results
+ */
+class ExecutePagedTraversal extends ExecuteTraversal
+{
+	protected $pager = null;
+
+	/**
+	 * Set the pager to execute
+	 *
+	 * @param Client $client
+	 * @param Pager $pager
+	 */
+	public function __construct(Client $client, Pager $pager)
+	{
+		parent::__construct($client, $pager->getTraversal(), $pager->getStartNode(), $pager->getReturnType());
+		$this->pager = $pager;
+	}
+
+	/**
+	 * Return the data to pass
+	 *
+	 * @return mixed
+	 */
+	protected function getData()
+	{
+		return $this->pager->getId() ? null : parent::getData();
+	}
+
+	/**
+	 * Return the transport method to call
+	 *
+	 * @return string
+	 */
+	protected function getMethod()
+	{
+		return $this->pager->getId() ? 'get' : parent::getMethod();
+	}
+
+	/**
+	 * Return the path to use
+	 *
+	 * @return string
+	 */
+	protected function getPath()
+	{
+		$path = parent::getPath();
+		$path = str_replace('traverse','paged/traverse', $path);
+
+		$id = $this->pager->getId();
+		if ($id) {
+			$path .= "/{$id}";
+		} else {
+			$queryParams = array();
+			$pageSize = $this->pager->getPageSize();
+			$leaseTime = $this->pager->getLeaseTime();
+			if ($pageSize) {
+				$queryParams['pageSize'] = $pageSize;
+			}
+			if ($leaseTime) {
+				$queryParams['leaseTime'] = $leaseTime;
+			}
+			$queryString = http_build_query($queryParams);
+			$path .= $queryString ? "?{$queryString}" : '';
+		}
+
+		return $path;
+	}
+
+	/**
+	 * Use the results
+	 *
+	 * @param integer $code
+	 * @param array   $headers
+	 * @param array   $data
+	 * @return integer on failure
+	 */
+	protected function handleResult($code, $headers, $data)
+	{
+		if (isset($headers['Location'])) {
+			$traversalId = $this->getEntityMapper()->getIdFromUri($headers['Location']);
+			$this->pager->setId($traversalId);
+		}
+
+		// No results found or end of result set indicated by not found
+		if ($code == Client::ErrorNotFound) {
+			return null;
+		}
+		return parent::handleResult($code, $headers, $data);
+	}
+}
+
+<?php
+namespace Everyman\Neo4j\Command;
+use Everyman\Neo4j\Command,
+	Everyman\Neo4j\Client,
+	Everyman\Neo4j\Exception,
+	Everyman\Neo4j\Index;
+
+/**
+ * Create an index
+ */
+class SaveIndex extends Command
+{
+	protected $index = null;
+
+	/**
+	 * Set the index to drive the command
+	 *
+	 * @param Client $client
+	 * @param Index $index
+	 */
+	public function __construct(Client $client, Index $index)
+	{
+		parent::__construct($client);
+		$this->index = $index;
+	}
+
+	/**
+	 * Return the data to pass
+	 *
+	 * @return mixed
+	 */
+	protected function getData()
+	{
+		$name = trim((string)$this->index->getName());
+		if (!$name) {
+			throw new Exception('No name specified for index');
+		}
+		$data = array('name' => $name);
+
+		$config = $this->index->getConfig();
+		if ($config) {
+			$data['config'] = $config;
+		}
+
+		return $data;
+	}
+
+	/**
+	 * Return the transport method to call
+	 *
+	 * @return string
+	 */
+	protected function getMethod()
+	{
+		return 'post';
+	}
+
+	/**
+	 * Return the path to use
+	 *
+	 * @return string
+	 */
+	protected function getPath()
+	{
+		$type = trim((string)$this->index->getType());
+		if ($type != Index::TypeNode && $type != Index::TypeRelationship) {
+			throw new Exception('No type specified for index');
+		}
+
+		return '/index/'.$type;
+	}
+
+	/**
+	 * Use the results
+	 *
+	 * @param integer $code
+	 * @param array   $headers
+	 * @param array   $data
+	 * @return integer on failure
+	 */
+	protected function handleResult($code, $headers, $data)
+	{
+		if ((int)($code / 100) != 2) {
+			$this->throwException('Unable to save index', $code, $headers, $data);
+		}
+		return true;
+	}
+}
+
+<?php
+namespace Everyman\Neo4j\Command;
+use Everyman\Neo4j\Command,
+	Everyman\Neo4j\Client,
+	Everyman\Neo4j\Exception,
+	Everyman\Neo4j\Relationship,
+	Everyman\Neo4j\Node;
+
+/**
+ * Create a relationship
+ */
+class CreateRelationship extends Command
+{
+	protected $rel = null;
+
+	/**
+	 * Set the relationship to drive the command
+	 *
+	 * @param Client $client
+	 * @param Relationship $rel
+	 */
+	public function __construct(Client $client, Relationship $rel)
+	{
+		parent::__construct($client);
+		$this->rel = $rel;
+	}
+
+	/**
+	 * Return the data to pass
+	 *
+	 * @return mixed
+	 */
+	protected function getData()
+	{
+		$end = $this->rel->getEndNode();
+		$type = $this->rel->getType();
+		if (!$end || !$end->hasId()) {
+			throw new Exception('No relationship end node specified');
+		} else if (!$type) {
+			throw new Exception('No relationship type specified');
+		}
+
+		$endUri = $this->getTransport()->getEndpoint().'/node/'.$end->getId();
+		$data = array(
+			'type' => $type,
+			'to'   => $endUri,
+		);
+
+		$properties = $this->rel->getProperties();
+		if ($properties) {
+			$data['data'] = $properties;
+		}
+
+		return $data;
+	}
+
+	/**
+	 * Return the transport method to call
+	 *
+	 * @return string
+	 */
+	protected function getMethod()
+	{
+		return 'post';
+	}
+
+	/**
+	 * Return the path to use
+	 *
+	 * @return string
+	 */
+	protected function getPath()
+	{
+		$start = $this->rel->getStartNode();
+		if (!$start || !$start->hasId()) {
+			throw new Exception('No relationship start node specified');
+		}
+		return '/node/'.$start->getId().'/relationships';
+	}
+
+	/**
+	 * Use the results
+	 *
+	 * @param integer $code
+	 * @param array   $headers
+	 * @param array   $data
+	 * @return boolean true on success
+	 * @throws Exception on failure
+	 */
+	protected function handleResult($code, $headers, $data)
+	{
+		if ((int)($code / 100) != 2) {
+			$this->throwException('Unable to create relationship', $code, $headers, $data);
+		}
+
+		$relId = $this->getEntityMapper()->getIdFromUri($headers['Location']);
+		$this->rel->setId($relId);
+		$this->getEntityCache()->setCachedEntity($this->rel);
+		return true;
+	}
+}
+
+<?php
+namespace Everyman\Neo4j\Command;
+use Everyman\Neo4j\Command,
+	Everyman\Neo4j\Client,
+	Everyman\Neo4j\Exception,
+	Everyman\Neo4j\Relationship;
+
+/**
+ * Delete a relationship
+ */
+class DeleteRelationship extends Command
+{
+	protected $rel = null;
+
+	/**
+	 * Set the relationship to drive the command
+	 *
+	 * @param Client $client
+	 * @param Relationship $rel
+	 */
+	public function __construct(Client $client, Relationship $rel)
+	{
+		parent::__construct($client);
+		$this->rel = $rel;
+	}
+
+	/**
+	 * Return the data to pass
+	 *
+	 * @return mixed
+	 */
+	protected function getData()
+	{
+		return null;
+	}
+
+	/**
+	 * Return the transport method to call
+	 *
+	 * @return string
+	 */
+	protected function getMethod()
+	{
+		return 'delete';
+	}
+
+	/**
+	 * Return the path to use
+	 *
+	 * @return string
+	 */
+	protected function getPath()
+	{
+		if (!$this->rel->hasId()) {
+			throw new Exception('No relationship id specified for delete');
+		}
+		return '/relationship/'.$this->rel->getId();
+	}
+
+	/**
+	 * Use the results
+	 *
+	 * @param integer $code
+	 * @param array   $headers
+	 * @param array   $data
+	 * @return boolean true on success
+	 * @throws Exception on failure
+	 */
+	protected function handleResult($code, $headers, $data)
+	{
+		if ((int)($code / 100) == 2) {
+			$this->getEntityCache()->deleteCachedEntity($this->rel);
+			return true;
+		} else {
+			$this->throwException('Unable to delete relationship', $code, $headers, $data);
+		}
+	}
+}
+
+<?php
+namespace Everyman\Neo4j\Command;
+use Everyman\Neo4j\Command,
+	Everyman\Neo4j\Client,
+	Everyman\Neo4j\Exception,
+	Everyman\Neo4j\Node;
+
+/**
+ * Get and populate a node
+ */
+class GetNode extends Command
+{
+	protected $node = null;
+
+	/**
+	 * Set the node to drive the command
+	 *
+	 * @param Client $client
+	 * @param Node $node
+	 */
+	public function __construct(Client $client, Node $node)
+	{
+		parent::__construct($client);
+		$this->node = $node;
+	}
+
+	/**
+	 * Return the data to pass
+	 *
+	 * @return mixed
+	 */
+	protected function getData()
+	{
+		return null;
+	}
+
+	/**
+	 * Return the transport method to call
+	 *
+	 * @return string
+	 */
+	protected function getMethod()
+	{
+		return 'get';
+	}
+
+	/**
+	 * Return the path to use
+	 *
+	 * @return string
+	 */
+	protected function getPath()
+	{
+		if (!$this->node->hasId()) {
+			throw new Exception('No node id specified');
+		}
+		return '/node/'.$this->node->getId();
+	}
+
+	/**
+	 * Use the results
+	 *
+	 * @param integer $code
+	 * @param array   $headers
+	 * @param array   $data
+	 * @return boolean true on success
+	 * @throws Exception on failure
+	 */
+	protected function handleResult($code, $headers, $data)
+	{
+		if ((int)($code / 100) == 2) {
+			$this->node = $this->getEntityMapper()->populateNode($this->node, $data);
+			$this->getEntityCache()->setCachedEntity($this->node);
+			return true;
+		} else {
+			$this->throwException('Unable to retrieve node', $code, $headers, $data);
+		}
+	}
+}
+
+<?php
+namespace Everyman\Neo4j\Command;
+use Everyman\Neo4j\Command,
+	Everyman\Neo4j\Client,
+	Everyman\Neo4j\Node;
+
+/**
+ * Create a node
+ */
+class CreateNode extends Command
+{
+	protected $node = null;
+
+	/**
+	 * Set the node to drive the command
+	 *
+	 * @param Client $client
+	 * @param Node $node
+	 */
+	public function __construct(Client $client, Node $node)
+	{
+		parent::__construct($client);
+		$this->node = $node;
+	}
+
+	/**
+	 * Return the data to pass
+	 *
+	 * @return mixed
+	 */
+	protected function getData()
+	{
+		return $this->node->getProperties() ?: null;
+	}
+
+	/**
+	 * Return the transport method to call
+	 *
+	 * @return string
+	 */
+	protected function getMethod()
+	{
+		return 'post';
+	}
+
+	/**
+	 * Return the path to use
+	 *
+	 * @return string
+	 */
+	protected function getPath()
+	{
+		return '/node';
+	}
+
+	/**
+	 * Use the results
+	 *
+	 * @param integer $code
+	 * @param array   $headers
+	 * @param array   $data
+	 * @return boolean true on success
+	 * @throws Exception on failure
+	 */
+	protected function handleResult($code, $headers, $data)
+	{
+		if ((int)($code / 100) != 2) {
+			$this->throwException('Unable to create node', $code, $headers, $data);
+		}
+
+		$nodeId = $this->getEntityMapper()->getIdFromUri($headers['Location']);
+		$this->node->setId($nodeId);
+		$this->getEntityCache()->setCachedEntity($this->node);
+		return true;
+	}
+}
+
+<?php
+namespace Everyman\Neo4j\Command;
+use Everyman\Neo4j\Command,
+	Everyman\Neo4j\Client,
+	Everyman\Neo4j\Exception,
+	Everyman\Neo4j\Node;
+
+/**
+ * Update a node
+ */
+class UpdateNode extends Command
+{
+	protected $node = null;
+
+	/**
+	 * Set the node to drive the command
+	 *
+	 * @param Client $client
+	 * @param Node $node
+	 */
+	public function __construct(Client $client, Node $node)
+	{
+		parent::__construct($client);
+		$this->node = $node;
+	}
+
+	/**
+	 * Return the data to pass
+	 *
+	 * @return mixed
+	 */
+	protected function getData()
+	{
+		return $this->node->getProperties();
+	}
+
+	/**
+	 * Return the transport method to call
+	 *
+	 * @return string
+	 */
+	protected function getMethod()
+	{
+		return 'put';
+	}
+
+	/**
+	 * Return the path to use
+	 *
+	 * @return string
+	 */
+	protected function getPath()
+	{
+		if (!$this->node->hasId()) {
+			throw new Exception('No node id specified');
+		}
+		return '/node/'.$this->node->getId().'/properties';
+	}
+
+	/**
+	 * Use the results
+	 *
+	 * @param integer $code
+	 * @param array   $headers
+	 * @param array   $data
+	 * @return boolean true on success
+	 * @throws Exception on failure
+	 */
+	protected function handleResult($code, $headers, $data)
+	{
+		if ((int)($code / 100) == 2) {
+			$this->getEntityCache()->setCachedEntity($this->node);
+			return true;
+		} else {
+			$this->throwException('Unable to update node', $code, $headers, $data);
+		}
+	}
+}
+
+<?php
+namespace Everyman\Neo4j\Command;
+use Everyman\Neo4j\Command,
+	Everyman\Neo4j\Client,
+	Everyman\Neo4j\Index,
+	Everyman\Neo4j\Exception;
+
+/**
+ * Get all indexes of the requested type known by the server
+ */
+class GetIndexes extends Command
+{
+	protected $type = null;
+
+	/**
+	 * Set the type of index to retrieve
+	 *
+	 * @param Client $client
+	 * @param string $type
+	 */
+	public function __construct(Client $client, $type)
+	{
+		parent::__construct($client);
+		$this->type = $type;
+	}
+
+	/**
+	 * Return the data to pass
+	 *
+	 * @return mixed
+	 */
+	protected function getData()
+	{
+		return null;
+	}
+
+	/**
+	 * Return the transport method to call
+	 *
+	 * @return string
+	 */
+	protected function getMethod()
+	{
+		return 'get';
+	}
+
+	/**
+	 * Return the path to use
+	 *
+	 * @return string
+	 */
+	protected function getPath()
+	{
+		$type = trim((string)$this->type);
+		if ($type != Index::TypeNode && $type != Index::TypeRelationship) {
+			throw new Exception('No type specified for index');
+		}
+
+		return '/index/'.$type;
+	}
+
+	/**
+	 * Use the results
+	 *
+	 * @param integer $code
+	 * @param array   $headers
+	 * @param array   $data
+	 * @return integer on failure
+	 */
+	protected function handleResult($code, $headers, $data)
+	{
+		if ((int)($code / 100) != 2) {
+			$this->throwException('Unable to retrieve indexes', $code, $headers, $data);
+		}
+
+		if (!$data) {
+			$data = array();
+		}
+
+		$indexes = array();
+		foreach ($data as $name => $indexData) {
+			$indexes[] = new Index($this->client, $this->type, $name, $indexData);
+		}
+		return $indexes;
+	}
+}
+<?php
+namespace Everyman\Neo4j\Command\Batch;
+use Everyman\Neo4j\Command as SingleCommand,
+	Everyman\Neo4j\Client;
+
+/**
+ * A single command executed in a batch
+ */
+abstract class Command extends SingleCommand
+{
+	protected $base = null;
+	protected $opId = null;
+
+	/**
+	 * Set the operation to drive the command
+	 *
+	 * @param Client $client
+	 * @param SingleCommand $base
+	 * @param integer $opId
+	 */
+	public function __construct(Client $client, SingleCommand $base, $opId)
+	{
+		parent::__construct($client);
+		$this->base = $base;
+		$this->opId = $opId;
+	}
+	
+	/**
+	 * Return the transport method to call
+	 *
+	 * @return string
+	 */
+	protected function getMethod()
+	{
+		return 'post';
+	}
+
+	/**
+	 * Return the path to use
+	 *
+	 * @return string
+	 */
+	protected function getPath()
+	{
+		return '/batch';
+	}
+
+	/**
+	 * Use the results
+	 *
+	 * @param integer $code
+	 * @param array   $headers
+	 * @param array   $data
+	 * @return mixed
+	 * @throws Exception on failure
+	 */
+	protected function handleResult($code, $headers, $data)
+	{
+		if ((int)($code / 100) != 2) {
+			$this->throwException('Unable to commit batch', $code, $headers, $data);
+		}
+
+		foreach ($data as $result) {
+			$this->handleSingleResult($result);
+		}
+		return true;
+	}
+
+	/**
+	 * Handle a single result from the batch of results
+	 *
+	 * @param array $result
+	 * @return mixed
+	 * @throws Exception on failure
+	 */
+	protected function handleSingleResult($result)
+	{
+		$headers = array();
+		if (isset($result['location'])) {
+			$headers['Location'] = $result['location'];
+		}
+		return $this->base->handleResult(200, $headers, $result);
+	}
+}
+
+<?php
+namespace Everyman\Neo4j\Command\Batch;
+use Everyman\Neo4j\Client,
+	Everyman\Neo4j\Index,
+	Everyman\Neo4j\Batch,
+	Everyman\Neo4j\PropertyContainer,
+	Everyman\Neo4j\Command\RemoveFromIndex as SingleRemoveFromIndex;
+
+/**
+ * Remove the given entity from the index
+ */
+class RemoveFromIndex extends Command
+{
+	/**
+	 * Set the operation to drive the command
+	 *
+	 * @param Client $client
+	 * @param Index $index
+	 * @param PropertyContainer $entity
+	 * @param string $key
+	 * @param string $value
+	 * @param integer $opId
+	 */
+	public function __construct(Client $client, Index $index, PropertyContainer $entity, $key=null, $value=null, $opId)
+	{
+		parent::__construct($client, new SingleRemoveFromIndex($client, $index, $entity, $key, $value), $opId);
+	}
+
+	/**
+	 * Return the data to pass
+	 *
+	 * @return array
+	 */
+	protected function getData()
+	{
+		$opData = array(array(
+			'method' => strtoupper($this->base->getMethod()),
+			'to' => $this->base->getPath(),
+			'id' => $this->opId,
+		));
+		return $opData;
+	}
+}
+
+<?php
+namespace Everyman\Neo4j\Command\Batch;
+use Everyman\Neo4j\Client,
+	Everyman\Neo4j\Relationship,
+	Everyman\Neo4j\Command\UpdateRelationship as SingleUpdateRelationship;
+
+/**
+ * Update a relationship in a batch
+ */
+class UpdateRelationship extends Command
+{
+	/**
+	 * Set the operation to drive the command
+	 *
+	 * @param Client $client
+	 * @param Relationship $rel
+	 * @param integer $opId
+	 */
+	public function __construct(Client $client, Relationship $rel, $opId)
+	{
+		parent::__construct($client, new SingleUpdateRelationship($client, $rel), $opId);
+	}
+
+	/**
+	 * Return the data to pass
+	 *
+	 * @return array
+	 */
+	protected function getData()
+	{
+		$opData = array(array(
+			'method' => strtoupper($this->base->getMethod()),
+			'to' => $this->base->getPath(),
+			'body' => $this->base->getData(),
+			'id' => $this->opId,
+		));
+		return $opData;
+	}
+}
+
+<?php
+namespace Everyman\Neo4j\Command\Batch;
+use Everyman\Neo4j\Client,
+	Everyman\Neo4j\Batch,
+	Everyman\Neo4j\Relationship,
+	Everyman\Neo4j\Command\CreateRelationship as SingleCreateRelationship;
+
+/**
+ * Create a relationship in a batch
+ * Also creates the endpoint nodes if necessary
+ */
+class CreateRelationship extends Command
+{
+	protected $batch = null;
+	protected $rel = null;
+
+	/**
+	 * Set the operation to drive the command
+	 *
+	 * @param Client $client
+	 * @param Relationship $rel
+	 * @param integer $opId
+	 * @param Batch $batch
+	 */
+	public function __construct(Client $client, Relationship $rel, $opId, Batch $batch)
+	{
+		parent::__construct($client, new SingleCreateRelationship($client, $rel), $opId);
+		$this->batch = $batch;
+		$this->rel = $rel;
+	}
+
+	/**
+	 * Return the data to pass
+	 *
+	 * @return array
+	 */
+	protected function getData()
+	{
+		$opData = array();
+
+		// Prevent the command from throwing an Exception if an unsaved start node
+		$startNode = $this->rel->getStartNode();
+		if (!$startNode->hasId()) {
+			$startId = $this->batch->save($startNode);
+			$reserved = $this->batch->reserve($startId);
+			if ($reserved) {
+				$opData = array_merge($opData, $reserved->getCommand()->getData());
+			}
+			$start = "{{$startId}}/relationships";
+		} else {
+			$start = $this->base->getPath();
+		}
+
+		// Prevent the command from throwing an Exception if an unsaved end node
+		$endNode = $this->rel->getEndNode();
+		if (!$endNode->hasId()) {
+			$endId = $this->batch->save($endNode);
+			$reserved = $this->batch->reserve($endId);
+			if ($reserved) {
+				$opData = array_merge($opData, $reserved->getCommand()->getData());
+			}
+			$endNode->setId('temp');
+			$data = $this->base->getData();
+			$endNode->setId(null);
+			$data['to'] = "{{$endId}}";
+		} else {
+			$data = $this->base->getData();
+		}
+
+		$opData[] = array(
+			'method' => strtoupper($this->base->getMethod()),
+			'to' => $start,
+			'body' => $data,
+			'id' => $this->opId,
+		);
+		return $opData;
+	}
+}
+
+<?php
+namespace Everyman\Neo4j\Command\Batch;
+use Everyman\Neo4j\Client,
+	Everyman\Neo4j\Relationship,
+	Everyman\Neo4j\Command\DeleteRelationship as SingleDeleteRelationship;
+
+/**
+ * Delete a relationship in a batch
+ */
+class DeleteRelationship extends Command
+{
+	/**
+	 * Set the operation to drive the command
+	 *
+	 * @param Client $client
+	 * @param Relationship $rel
+	 * @param integer $opId
+	 */
+	public function __construct(Client $client, Relationship $rel, $opId)
+	{
+		parent::__construct($client, new SingleDeleteRelationship($client, $rel), $opId);
+	}
+
+	/**
+	 * Return the data to pass
+	 *
+	 * @return array
+	 */
+	protected function getData()
+	{
+		$opData = array(array(
+			'method' => strtoupper($this->base->getMethod()),
+			'to' => $this->base->getPath(),
+			'id' => $this->opId,
+		));
+		return $opData;
+	}
+}
+
+<?php
+namespace Everyman\Neo4j\Command\Batch;
+use Everyman\Neo4j\Client,
+	Everyman\Neo4j\Batch;
+
+/**
+ * Commit a batch operation
+ * @todo: Handle the case of empty body or body\data needing to be objects not arrays
+ * @todo: Is this really a batch command in itself, or something different?
+ */
+class Commit extends Command
+{
+	protected $batch = null;
+
+	/**
+	 * Set the batch to drive the command
+	 *
+	 * @param Client $client
+	 * @param Batch $batch
+	 */
+	public function __construct(Client $client, Batch $batch)
+	{
+		parent::__construct($client, $this, null);
+		$this->batch = $batch;
+	}
+	
+	/**
+	 * Return the data to pass
+	 *
+	 * @return mixed
+	 */
+	protected function getData()
+	{
+		$operations = $this->batch->getOperations();
+		$data = array();
+		foreach ($operations as $op) {
+			if ($op->reserve()) {
+				$opData = $op->getCommand()->getData();
+				foreach ($opData as $datum) {
+					$data[] = $datum;
+				}
+			}
+		}
+		return $data;
+	}
+
+	/**
+	 * Use the results
+	 *
+	 * @param array $result
+	 */
+	protected function handleSingleResult($result)
+	{
+		$operations = $this->batch->getOperations();
+		$command = $operations[$result['id']]->getCommand();
+		return $command->handleSingleResult($result);
+	}
+}
+
+<?php
+namespace Everyman\Neo4j\Command\Batch;
+use Everyman\Neo4j\Client,
+	Everyman\Neo4j\Node,
+	Everyman\Neo4j\Command\CreateNode as SingleCreateNode;
+
+/**
+ * Create a node in a batch
+ */
+class CreateNode extends Command
+{
+	/**
+	 * Set the operation to drive the command
+	 *
+	 * @param Client $client
+	 * @param Node $node
+	 * @param integer $opId
+	 */
+	public function __construct(Client $client, Node $node, $opId)
+	{
+		parent::__construct($client, new SingleCreateNode($client, $node), $opId);
+	}
+
+	/**
+	 * Return the data to pass
+	 *
+	 * @return array
+	 */
+	protected function getData()
+	{
+		$opData = array(array(
+			'method' => strtoupper($this->base->getMethod()),
+			'to' => $this->base->getPath(),
+			'body' => $this->base->getData(),
+			'id' => $this->opId,
+		));
+		return $opData;
+	}
+}
+
+<?php
+namespace Everyman\Neo4j\Command\Batch;
+use Everyman\Neo4j\Client,
+	Everyman\Neo4j\Node,
+	Everyman\Neo4j\Command\UpdateNode as SingleUpdateNode;
+
+/**
+ * Update a node in a batch
+ */
+class UpdateNode extends Command
+{
+	/**
+	 * Set the operation to drive the command
+	 *
+	 * @param Client $client
+	 * @param Node $node
+	 * @param integer $opId
+	 */
+	public function __construct(Client $client, Node $node, $opId)
+	{
+		parent::__construct($client, new SingleUpdateNode($client, $node), $opId);
+	}
+
+	/**
+	 * Return the data to pass
+	 *
+	 * @return array
+	 */
+	protected function getData()
+	{
+		$opData = array(array(
+			'method' => strtoupper($this->base->getMethod()),
+			'to' => $this->base->getPath(),
+			'body' => $this->base->getData(),
+			'id' => $this->opId,
+		));
+		return $opData;
+	}
+}
+
+<?php
+namespace Everyman\Neo4j\Command\Batch;
+use Everyman\Neo4j\Client,
+	Everyman\Neo4j\Node,
+	Everyman\Neo4j\Command\DeleteNode as SingleDeleteNode;
+
+/**
+ * Delete a node in a batch
+ */
+class DeleteNode extends Command
+{
+	/**
+	 * Set the operation to drive the command
+	 *
+	 * @param Client $client
+	 * @param Node $node
+	 * @param integer $opId
+	 */
+	public function __construct(Client $client, Node $node, $opId)
+	{
+		parent::__construct($client, new SingleDeleteNode($client, $node), $opId);
+	}
+
+	/**
+	 * Return the data to pass
+	 *
+	 * @return array
+	 */
+	protected function getData()
+	{
+		$opData = array(array(
+			'method' => strtoupper($this->base->getMethod()),
+			'to' => $this->base->getPath(),
+			'id' => $this->opId,
+		));
+		return $opData;
+	}
+}
+
+<?php
+namespace Everyman\Neo4j\Command\Batch;
+use Everyman\Neo4j\Client,
+	Everyman\Neo4j\Index,
+	Everyman\Neo4j\Batch,
+	Everyman\Neo4j\PropertyContainer,
+	Everyman\Neo4j\Command\AddToIndex as SingleAddToIndex;
+
+/**
+ * Add the given entity to the index
+ * Also creates the entity if necessary
+ */
+class AddToIndex extends Command
+{
+	protected $batch = null;
+	protected $entity = null;
+
+	/**
+	 * Set the operation to drive the command
+	 *
+	 * @param Client $client
+	 * @param Index $index
+	 * @param PropertyContainer $entity
+	 * @param string $key
+	 * @param string $value
+	 * @param integer $opId
+	 * @param Batch $batch
+	 */
+	public function __construct(Client $client, Index $index, PropertyContainer $entity, $key, $value, $opId, Batch $batch)
+	{
+		parent::__construct($client, new SingleAddToIndex($client, $index, $entity, $key, $value), $opId);
+		$this->batch = $batch;
+		$this->entity = $entity;
+	}
+
+	/**
+	 * Return the data to pass
+	 *
+	 * @return array
+	 */
+	protected function getData()
+	{
+		$opData = array();
+
+		// Prevent the command from throwing an Exception if an unsaved entity
+		if (!$this->entity->hasId()) {
+			$entityId = $this->batch->save($this->entity);
+			$reserved = $this->batch->reserve($entityId);
+			if ($reserved) {
+				$opData = array_merge($opData, $reserved->getCommand()->getData());
+			}
+			$this->entity->setId(-1);
+			$body = $this->base->getData();
+			$this->entity->setId(null);
+			$body['uri'] = "{{$entityId}}";
+		} else {
+			$body = $this->base->getData();
+		}
+
+		$opData[] = array(
+			'method' => strtoupper($this->base->getMethod()),
+			'to' => $this->base->getPath(),
+			'body' => $body,
+			'id' => $this->opId,
+		);
+		return $opData;
+	}
+}
+
+<?php
+namespace Everyman\Neo4j\Command;
+use Everyman\Neo4j\Command,
+	Everyman\Neo4j\Client,
+	Everyman\Neo4j\Exception,
+	Everyman\Neo4j\Node;
+
+/**
+ * Delete a node
+ */
+class DeleteNode extends Command
+{
+	protected $node = null;
+
+	/**
+	 * Set the node to drive the command
+	 *
+	 * @param Client $client
+	 * @param Node $node
+	 */
+	public function __construct(Client $client, Node $node)
+	{
+		parent::__construct($client);
+		$this->node = $node;
+	}
+
+	/**
+	 * Return the data to pass
+	 *
+	 * @return mixed
+	 */
+	protected function getData()
+	{
+		return null;
+	}
+
+	/**
+	 * Return the transport method to call
+	 *
+	 * @return string
+	 */
+	protected function getMethod()
+	{
+		return 'delete';
+	}
+
+	/**
+	 * Return the path to use
+	 *
+	 * @return string
+	 */
+	protected function getPath()
+	{
+		if (!$this->node->hasId()) {
+			throw new Exception('No node id specified for delete');
+		}
+		return '/node/'.$this->node->getId();
+	}
+
+	/**
+	 * Use the results
+	 *
+	 * @param integer $code
+	 * @param array   $headers
+	 * @param array   $data
+	 * @return boolean true on success
+	 * @throws Exception on failure
+	 */
+	protected function handleResult($code, $headers, $data)
+	{
+		if ((int)($code / 100) == 2) {
+			$this->getEntityCache()->deleteCachedEntity($this->node);
+			return true;
+		} else {
+			$this->throwException('Unable to delete node', $code, $headers, $data);
+		}
+	}
+}
+
+<?php
+namespace Everyman\Neo4j\Command;
+use Everyman\Neo4j\Command,
+	Everyman\Neo4j\Client;
+
+/**
+ * Get information about the server
+ */
+class GetServerInfo extends Command
+{
+	/**
+	 * Return the data to pass
+	 *
+	 * @return mixed
+	 */
+	protected function getData()
+	{
+		return null;
+	}
+
+	/**
+	 * Return the transport method to call
+	 *
+	 * @return string
+	 */
+	protected function getMethod()
+	{
+		return 'get';
+	}
+
+	/**
+	 * Return the path to use
+	 *
+	 * @return string
+	 */
+	protected function getPath()
+	{
+		return '/';
+	}
+
+	/**
+	 * Use the results
+	 *
+	 * @param integer $code
+	 * @param array   $headers
+	 * @param array   $data
+	 * @return integer on failure
+	 */
+	protected function handleResult($code, $headers, $data)
+	{
+		if ((int)($code / 100) != 2) {
+			$this->throwException('Unable to retrieve server info', $code, $headers, $data);
+		}
+		$data['version'] = $this->parseVersion($data['neo4j_version']);
+		return $data;
+	}
+
+	/**
+	 * Parse the version into usable bits
+	 *
+	 * @param string $fullVersion
+	 * @return array
+	 */
+	protected function parseVersion($fullVersion)
+	{
+		$parts = explode('.', $fullVersion);
+		$versionInfo = array(
+			'full'  => $fullVersion,
+			'major' => $parts[0],
+			'minor' => $parts[1],
+		);
+		if (empty($parts[2])) {
+			$versionInfo['release'] = 'GA';
+		} else {
+			$versionInfo['release'] = current(explode('-', $parts[2], 2));
+		}
+		return $versionInfo;
+	}
+}
+
+<?php
+namespace Everyman\Neo4j\Command;
+
+use Everyman\Neo4j\EntityMapper,
+    Everyman\Neo4j\Command,
+	Everyman\Neo4j\Client,
+	Everyman\Neo4j\Gremlin\Query,
+	Everyman\Neo4j\Query\ResultSet;
+
+/**
+ * Perform a query using the Gremlin DSL and return the results
+ */
+class ExecuteGremlinQuery extends Command
+{
+	protected $query = null;
+
+	/**
+	 * Set the query to execute
+	 *
+	 * @param Client $client
+	 * @param Query $query
+	 */
+	public function __construct(Client $client, Query $query)
+	{
+		parent::__construct($client);
+		$this->query = $query;
+	}
+
+	/**
+	 * Return the data to pass
+	 *
+	 * @return mixed
+	 */
+	protected function getData()
+	{
+		$data = array('script' => $this->query->getQuery());
+		$params = $this->query->getParameters();
+		if ($params) {
+			$data['params'] = $params;
+		}
+		return $data;
+	}
+
+	/**
+	 * Return the transport method to call
+	 *
+	 * @return string
+	 */
+	protected function getMethod()
+	{
+		return 'post';
+	}
+
+	/**
+	 * Return the path to use
+	 *
+	 * @return string
+	 */
+	protected function getPath()
+	{
+		return '/ext/GremlinPlugin/graphdb/execute_script';
+	}
+
+	/**
+	 * Use the results
+	 *
+	 * @param integer $code
+	 * @param array   $headers
+	 * @param array   $data
+	 * @return integer on failure
+	 */
+	protected function handleResult($code, $headers, $data)
+	{
+		if ((int)($code / 100) != 2) {
+			$this->throwException('Unable to execute query', $code, $headers, $data);
+		}
+
+		return new ResultSet($this->client, $this->normalizeData($data));
+	}
+
+	/**
+	 * Normalize the data so a proper ResultSet can be built
+	 * Normalized data has 'data' and 'columns' keys for result set.
+	 *
+	 * @param array $data
+	 * @return array 
+	 */
+	protected function normalizeData($data)
+	{
+		if (is_scalar($data)) {
+			$data = array($data);
+		}
+
+		if (!array_key_exists('columns', $data)) {
+			$columns = array(0);
+
+			if (array_key_exists('self', $data)) {
+				$data = array(array($data));
+			} else {
+				foreach ($data as $i => $entity) {
+					$data[$i] = array($entity);
+				}
+			}
+
+			$data = array(
+				'columns' => $columns,
+				'data' => $data
+			);
+		}
+
+		return $data;
+	}
+}
+
+<?php
+namespace Everyman\Neo4j\Command;
+use Everyman\Neo4j\Command,
+	Everyman\Neo4j\Client,
+	Everyman\Neo4j\Exception,
+	Everyman\Neo4j\PropertyContainer,
+	Everyman\Neo4j\Relationship,
+	Everyman\Neo4j\Node,
+	Everyman\Neo4j\Index;
+
+/**
+ * Add an entity to an index
+ */
+class AddToIndex extends Command
+{
+	protected $index = null;
+	protected $entity = null;
+	protected $key = null;
+	protected $value = null;
+
+	/**
+	 * Set the index to drive the command
+	 *
+	 * @param Client $client
+	 * @param Index $index
+	 * @param PropertyContainer $entity
+	 * @param string $key
+	 * @param string $value
+	 */
+	public function __construct(Client $client, Index $index, PropertyContainer $entity, $key, $value)
+	{
+		parent::__construct($client);
+		$this->index = $index;
+		$this->entity = $entity;
+		$this->key = $key;
+		$this->value = $value;
+	}
+
+	/**
+	 * Return the data to pass
+	 *
+	 * @return mixed
+	 */
+	protected function getData()
+	{
+		if (!$this->entity || !$this->entity->hasId()) {
+			throw new Exception('No entity to index specified');
+		}
+
+		$data = array();
+
+		$type = trim((string)$this->index->getType());
+		$data['uri'] = $this->getTransport()->getEndpoint().'/'.$type.'/'.$this->entity->getId();
+
+
+		$key = trim((string)$this->key);
+		if (!$key) {
+			throw new Exception('No key specified to add to index');
+		}
+		$data['key'] = $key;
+		$data['value'] = $this->value;
+
+		return $data;
+	}
+
+	/**
+	 * Return the transport method to call
+	 *
+	 * @return string
+	 */
+	protected function getMethod()
+	{
+		return 'post';
+	}
+
+	/**
+	 * Return the path to use
+	 *
+	 * @return string
+	 */
+	protected function getPath()
+	{
+		$type = trim((string)$this->index->getType());
+		if ($type != Index::TypeNode && $type != Index::TypeRelationship) {
+			throw new Exception('No type specified for index');
+		} else if ($type == Index::TypeNode && !($this->entity instanceof Node)) {
+			throw new Exception('Cannot add a node to a non-node index');
+		} else if ($type == Index::TypeRelationship && !($this->entity instanceof Relationship)) {
+			throw new Exception('Cannot add a relationship to a non-relationship index');
+		}
+
+		$name = trim((string)$this->index->getName());
+		if (!$name) {
+			throw new Exception('No name specified for index');
+		}
+		$name = rawurlencode($name);
+
+		return '/index/'.$type.'/'.$name;
+	}
+
+	/**
+	 * Use the results
+	 *
+	 * @param integer $code
+	 * @param array   $headers
+	 * @param array   $data
+	 * @return integer on failure
+	 */
+	protected function handleResult($code, $headers, $data)
+	{
+		if ((int)($code / 100) != 2) {
+			$this->throwException('Unable to add entity to index', $code, $headers, $data);
+		}
+		return true;
+	}
+}
+
+<?php
+namespace Everyman\Neo4j\Command;
+use Everyman\Neo4j\Command,
+	Everyman\Neo4j\Client,
+	Everyman\Neo4j\Exception,
+	Everyman\Neo4j\PathFinder,
+	Everyman\Neo4j\Path;
+
+/**
+ * Find paths from one node to another
+ */
+class GetPaths extends Command
+{
+	protected $finder = null;
+
+	/**
+	 * Set the parameters to search
+	 *
+	 * @param Client     $client
+	 * @param PathFinder $finder
+	 */
+	public function __construct(Client $client, PathFinder $finder)
+	{
+		parent::__construct($client);
+
+		$this->finder = $finder;
+	}
+
+	/**
+	 * Return the data to pass
+	 *
+	 * @return mixed
+	 */
+	protected function getData()
+	{
+		$data = array();
+		
+		$end = $this->finder->getEndNode();
+		if (!$end || !$end->hasId()) {
+			throw new Exception('No end node id specified');
+		}
+
+		$endUri = $this->getTransport()->getEndpoint().'/node/'.$end->getId();
+		$data['to'] = $endUri;
+
+		$algo = $this->finder->getAlgorithm();
+		if ($algo == PathFinder::AlgoDijkstra) {
+			$property = $this->finder->getCostProperty();
+			if (!$property) {
+				throw new Exception('No cost property specified for Dijkstra path search');
+			}
+			$data['cost_property'] = $property;
+			$data['cost property'] = $property;
+
+			$cost = $this->finder->getDefaultCost();
+			if ($cost) {
+				$data['default_cost'] = $cost;
+				$data['default cost'] = $cost;
+			}
+		}
+		$data['algorithm'] = $algo;
+				
+
+
+		$max = $this->finder->getMaxDepth();
+		if (!$max) {
+			$max = 1;
+		}
+		$data['max_depth'] = $max;
+		$data['max depth'] = $max;
+		
+		$type = $this->finder->getType();
+		$dir = $this->finder->getDirection();
+		if ($dir && !$type) {
+			throw new Exception('No relationship type specified');
+		} else if ($type) {
+			$rel = array('type'=>$type);
+			if ($dir) {
+				$rel['direction'] = $dir;
+			}
+			$data['relationships'] = $rel;
+		}
+		
+		return $data;
+	}
+
+	/**
+	 * Return the transport method to call
+	 *
+	 * @return string
+	 */
+	protected function getMethod()
+	{
+		return 'post';
+	}
+
+	/**
+	 * Return the path to use
+	 *
+	 * @return string
+	 */
+	protected function getPath()
+	{
+		$start = $this->finder->getStartNode();
+		if (!$start || !$start->hasId()) {
+			throw new Exception('No start node id specified');
+		}
+
+		return '/node/'.$start->getId().'/paths';
+	}
+
+	/**
+	 * Use the results
+	 *
+	 * @param integer $code
+	 * @param array   $headers
+	 * @param array   $data
+	 * @return integer on failure
+	 */
+	protected function handleResult($code, $headers, $data)
+	{
+		if ((int)($code / 100) != 2) {
+			$this->throwException('Unable to retrieve paths', $code, $headers, $data);
+		}
+
+		$paths = array();
+		foreach ($data as $pathData) {
+			$paths[] = $this->getEntityMapper()->populatePath(new Path($this->client), $pathData);
+		}
+		return $paths;
+	}
+}
+
+<?php
+namespace Everyman\Neo4j\Command;
+use Everyman\Neo4j\Command,
+	Everyman\Neo4j\Client,
+	Everyman\Neo4j\Exception,
+	Everyman\Neo4j\Relationship,
+	Everyman\Neo4j\Node,
+	Everyman\Neo4j\Index;
+
+/**
+ * Search for entities in an index
+ */
+class SearchIndex extends Command
+{
+	protected $index = null;
+	protected $key = null;
+	protected $value = null;
+
+	/**
+	 * Set the index to drive the command
+	 *
+	 * @param Client $client
+	 * @param Index $index
+	 * @param string $key
+	 * @param string $value
+	 */
+	public function __construct(Client $client, Index $index, $key, $value)
+	{
+		parent::__construct($client);
+		$this->index = $index;
+		$this->key = $key;
+		$this->value = $value;
+	}
+
+	/**
+	 * Return the data to pass
+	 *
+	 * @return mixed
+	 */
+	protected function getData()
+	{
+		return null;
+	}
+
+	/**
+	 * Return the transport method to call
+	 *
+	 * @return string
+	 */
+	protected function getMethod()
+	{
+		return 'get';
+	}
+
+	/**
+	 * Return the path to use
+	 *
+	 * @return string
+	 */
+	protected function getPath()
+	{
+		$type = trim((string)$this->index->getType());
+		if ($type != Index::TypeNode && $type != Index::TypeRelationship) {
+			throw new Exception('No type specified for index');
+		}
+
+		$name = trim((string)$this->index->getName());
+		if (!$name) {
+			throw new Exception('No name specified for index');
+		}
+
+		$key = trim((string)$this->key);
+		if (!$key) {
+			throw new Exception('No key specified to search index');
+		}
+
+		$name = rawurlencode($name);
+		$key = rawurlencode($key);
+		$value = rawurlencode($this->value);
+
+		return '/index/'.$type.'/'.$name.'/'.$key.'/'.$value;
+	}
+
+	/**
+	 * Use the results
+	 *
+	 * @param integer $code
+	 * @param array   $headers
+	 * @param array   $data
+	 * @return integer on failure
+	 */
+	protected function handleResult($code, $headers, $data)
+	{
+		if ((int)($code / 100) != 2) {
+			$this->throwException('Unable to search index', $code, $headers, $data);
+		}
+
+		$buildMethod = $this->index->getType() == Index::TypeNode ? 'makeNode' : 'makeRelationship';
+		$results = array();
+		foreach ($data as $entityData) {
+			$results[] = $this->getEntityMapper()->$buildMethod($entityData);
+		}
+		return $results;
+	}
+}
+
+<?php
+namespace Everyman\Neo4j;
+
+class Exception extends \Exception
+{
+}
+<?php
+namespace Everyman\Neo4j;
+
+/**
+ * Represents an entity that is a collection of properties
+ */
+abstract class PropertyContainer
+{
+	protected $id = null;
+	protected $client = null;
+	protected $properties = null;
+
+	protected $lazyLoad = true;
+
+	/**
+	 * Build the container and set its client
+	 *
+	 * @param Client $client
+	 */
+	public function __construct(Client $client)
+	{
+		$this->setClient($client);
+	}
+
+	/**
+	 * Delete this entity
+	 *
+	 * @return PropertyContainer
+	 * @throws Exception on failure
+	 */
+	abstract public function delete();
+
+	/**
+	 * Load this entity
+	 *
+	 * @return PropertyContainer
+	 * @throws Exception on failure
+	 */
+	abstract public function load();
+
+	/**
+	 * Save this entity
+	 *
+	 * @return PropertyContainer
+	 * @throws Exception on failure
+	 */
+	abstract public function save();
+
+	/**
+	 * Get the entity's client
+	 *
+	 * @return Client
+	 */
+	public function getClient()
+	{
+		return $this->client;
+	}
+
+	/**
+	 * Get the entity's id
+	 *
+	 * @return integer
+	 */
+	public function getId()
+	{
+		return $this->id;
+	}
+
+	/**
+	 * Return all properties
+	 *
+	 * @return array
+	 */
+	public function getProperties()
+	{
+		$this->loadProperties();
+		return $this->properties;
+	}
+
+	/**
+	 * Return the named property
+	 *
+	 * @param string $property
+	 * @return mixed
+	 */
+	public function getProperty($property)
+	{
+		$this->loadProperties();
+		return (isset($this->properties[$property])) ? $this->properties[$property] : null;
+	}
+
+	/**
+	 * Is this entity identified?
+	 *
+	 * @return boolean
+	 */
+	public function hasId()
+	{
+		return $this->getId() !== null;
+	}
+
+	/**
+	 * Remove a property set on the entity
+	 *
+	 * @param string $property
+	 * @return PropertyContainer
+	 */
+	public function removeProperty($property)
+	{
+		$this->loadProperties();
+		unset($this->properties[$property]);
+		return $this;
+	}
+
+	/**
+	 * Set the entity's client
+	 *
+	 * @param Client $client
+	 * @return PropertyContainer
+	 */
+	public function setClient(Client $client)
+	{
+		$this->client = $client;
+		return $this;
+	}
+
+	/**
+	 * Set the entity's id
+	 *
+	 * @param integer $id
+	 * @return PropertyContainer
+	 */
+	public function setId($id)
+	{
+		$this->id = $id === null ? null : (int)$id;
+		return $this;
+	}
+
+	/**
+	 * Set multiple properties on the entity
+	 *
+	 * @param array $properties
+	 * @return PropertyContainer
+	 */
+	public function setProperties($properties)
+	{
+		$this->loadProperties();
+		foreach ($properties as $property => $value) {
+			$this->setProperty($property, $value);
+		}
+		return $this;
+	}
+
+	/**
+	 * Set a property on the entity
+	 *
+	 * @param string $property
+	 * @param mixed $value
+	 * @return PropertyContainer
+	 */
+	public function setProperty($property, $value)
+	{
+		$this->loadProperties();
+		if ($value === null) {
+			$this->removeProperty($property);
+		} else {
+			$this->properties[$property] = $value;
+		}
+		return $this;
+	}
+
+	/**
+	 * Should this entity be lazy-loaded if necessary?
+	 *
+	 * @param boolean $lazyLoad
+	 * @return PropertyContainer
+	 */
+	public function useLazyLoad($lazyLoad)
+	{
+		$this->lazyLoad = (bool)$lazyLoad;
+		return $this;
+	}
+
+	/**
+	 * Set up the properties array the first time we need it
+	 *
+	 * This includes loading the properties from the server
+	 * if we can get them.
+	 */
+	protected function loadProperties()
+	{
+		if ($this->properties === null) {
+			$this->properties = array();
+			if ($this->hasId() && $this->lazyLoad) {
+				$this->load();
+			}
+		}
+	}
+}
+<?php
+namespace Everyman\Neo4j;
+
+/**
+ * Point of interaction between client and neo4j server
+ */
+class Client
+{
+	const ErrorUnknown       = 500;
+	const ErrorBadRequest    = 400;
+	const ErrorNotFound      = 404;
+	const ErrorConflict      = 409;
+
+	const RefNodeId = 0;
+
+	protected $transport = null;
+	protected $entityMapper = null;
+	protected $entityCache = null;
+	protected $serverInfo = null;
+	protected $openBatch = null;
+
+	/**
+	 * Initialize the client
+	 *
+	 * @param mixed $transport Transport object or string hostname
+	 * @param integer $port Ignored unless $transport is a hostname
+	 */
+	public function __construct($transport=null, $port=7474)
+	{
+		if ($transport === null) {
+			$transport = new Transport();
+		} elseif (is_string($transport)) {
+			$transport = new Transport($transport, $port);
+		}
+
+		$this->setTransport($transport);
+	}
+
+	/**
+	 * Add an entity to an index
+	 *
+	 * @param Index $index
+	 * @param PropertyContainer $entity
+	 * @param string $key
+	 * @param string $value
+	 * @return boolean
+	 */
+	public function addToIndex(Index $index, PropertyContainer $entity, $key, $value)
+	{
+		if ($this->openBatch) {
+			$this->openBatch->addToIndex($index, $entity, $key, $value);
+			return true;
+		}
+
+		return $this->runCommand(new Command\AddToIndex($this, $index, $entity, $key, $value));
+	}
+
+	/**
+	 * Commit a batch of operations
+	 *
+	 * @param Batch $batch
+	 * @return boolean true on success
+	 */
+	public function commitBatch(Batch $batch=null)
+	{
+		if (!$batch) {
+			if (!$this->openBatch) {
+				throw new Exception('No open batch to commit.');
+			}
+			$batch = $this->openBatch;
+		}
+
+		if ($batch === $this->openBatch) {
+			$this->endBatch();
+		}
+
+		if (count($batch->getOperations()) < 1) {
+			return true;
+		}
+
+		return $this->runCommand(new Command\Batch\Commit($this, $batch));
+	}
+
+	/**
+	 * Delete the given index
+	 *
+	 * @param Index $index
+	 * @return boolean
+	 */
+	public function deleteIndex(Index $index)
+	{
+		return $this->runCommand(new Command\DeleteIndex($this, $index));
+	}
+
+	/**
+	 * Delete the given node
+	 *
+	 * @param Node $node
+	 * @return boolean
+	 */
+	public function deleteNode(Node $node)
+	{
+		if ($this->openBatch) {
+			$this->openBatch->delete($node);
+			return true;
+		}
+
+		return $this->runCommand(new Command\DeleteNode($this, $node));
+	}
+
+	/**
+	 * Delete the given relationship
+	 *
+	 * @param Relationship $relationship
+	 * @return boolean
+	 */
+	public function deleteRelationship(Relationship $relationship)
+	{
+		if ($this->openBatch) {
+			$this->openBatch->delete($relationship);
+			return true;
+		}
+		return $this->runCommand(new Command\DeleteRelationship($this, $relationship));
+	}
+
+	/**
+	 * Detach the current open batch.
+	 *
+	 * The batch can still be committed via the batch returned
+	 * by Client::startBatch()
+	 *
+	 * @return Client
+	 */
+	public function endBatch()
+	{
+		$this->openBatch = null;
+		return $this;
+	}
+
+	/**
+	 * Execute the given Cypher query and return the result
+	 *        
+	 * @param Cypher\Query $query A Cypher query, or a query template.
+	 * @return Query\ResultSet
+	 */
+	public function executeCypherQuery(Cypher\Query $query)
+	{
+		$command = new Command\ExecuteCypherQuery($this, $query);
+		return $this->runCommand($command);
+	}
+
+	/**
+	 * Execute the given Gremlin query and return the result
+	 *        
+	 * @param Gremlin\Query $query
+	 * @return Query\ResultSet
+	 */
+	public function executeGremlinQuery(Gremlin\Query $query)
+	{
+		$command = new Command\ExecuteGremlinQuery($this, $query);
+		return $this->runCommand($command);
+	}
+
+	/**
+	 * Execute a paged traversal and return the result
+	 *        
+	 * @param Pager $pager
+	 * @return array
+	 */
+	public function executePagedTraversal(Pager $pager)
+	{
+		$command = new Command\ExecutePagedTraversal($this, $pager);
+		return $this->runCommand($command);
+	}
+
+	/**
+	 * Execute the given traversal and return the result
+	 *        
+	 * @param Traversal $traversal
+	 * @param Node $startNode
+	 * @param string $returnType
+	 * @return array
+	 */
+	public function executeTraversal(Traversal $traversal, Node $startNode, $returnType)
+	{
+		$command = new Command\ExecuteTraversal($this, $traversal, $startNode, $returnType);
+		return $this->runCommand($command);
+	}
+
+	/**
+	 * Get the cache
+	 *
+	 * @return Cache\EntityCache
+	 */
+	public function getEntityCache()
+	{
+		if ($this->entityCache === null) {
+			$this->setEntityCache(new Cache\EntityCache($this));
+		}
+		return $this->entityCache;
+	}
+
+	/**
+	 * Get the entity mapper
+	 *
+	 * @return EntityMapper
+	 */
+	public function getEntityMapper()
+	{
+		if ($this->entityMapper === null) {
+			$this->setEntityMapper(new EntityMapper($this));
+		}
+		return $this->entityMapper;
+	}
+
+	/**
+	 * Get all indexes of the given type
+	 *
+	 * @param string $type
+	 * @return mixed false on error, else an array of Index objects
+	 */
+	public function getIndexes($type)
+	{
+		$command = new Command\GetIndexes($this, $type);
+		return $this->runCommand($command);
+	}
+
+	/**
+	 * Get the requested node
+	 * Using the $force option disables the check
+	 * of whether or not the node exists and will
+	 * return a Node with the given id even if it
+	 * does not. 
+	 *
+	 * @param integer $id
+	 * @param boolean $force
+	 * @return Node
+	 */
+	public function getNode($id, $force=false)
+	{
+		$cached = $this->getEntityCache()->getCachedEntity($id, 'node');
+		if ($cached) {
+			return $cached;
+		}
+
+		$node = $this->makeNode();
+		$node->setId($id);
+
+		if ($force) {
+			return $node;
+		}
+
+		try {
+			$result = $this->loadNode($node);
+		} catch (Exception $e) {
+			if ($e->getCode() == self::ErrorNotFound) {
+				return null;
+			} else {
+				throw $e;
+			}
+		}
+		return $node;
+	}
+
+	/**
+	 * Get all relationships on a node matching the criteria
+	 *
+	 * @param Node   $node
+	 * @param mixed  $types a string or array of strings
+	 * @param string $dir
+	 * @return mixed false on error, else an array of Relationship objects
+	 */
+	public function getNodeRelationships(Node $node, $types=array(), $dir=null)
+	{
+		$command = new Command\GetNodeRelationships($this, $node, $types, $dir);
+		return $this->runCommand($command);
+	}
+
+	/**
+	 * Get an array of paths matching the finder's criteria
+	 *
+	 * @param PathFinder $finder
+	 * @return array
+	 */
+	public function getPaths(PathFinder $finder)
+	{
+		$command = new Command\GetPaths($this, $finder);
+		return $this->runCommand($command);
+	}
+	
+	/**
+	 * Retrieve the reference node (id: 0) from the server
+	 *
+	 * @return Node
+	 */
+	public function getReferenceNode()
+	{
+		return $this->getNode(self::RefNodeId);
+	}
+
+	/**
+	 * Get the requested relationship
+	 * Using the $force option disables the check
+	 * of whether or not the relationship exists and will
+	 * return a Relationship with the given id even if it
+	 * does not. 
+	 *
+	 * @param integer $id
+	 * @param boolean $force
+	 * @return Relationship
+	 */
+	public function getRelationship($id, $force=false)
+	{
+		$cached = $this->getEntityCache()->getCachedEntity($id, 'relationship');
+		if ($cached) {
+			return $cached;
+		}
+
+		$rel = $this->makeRelationship();
+		$rel->setId($id);
+
+		if ($force) {
+			return $rel;
+		}
+
+
+		try {
+			$result = $this->loadRelationship($rel);
+		} catch (Exception $e) {
+			if ($e->getCode() == self::ErrorNotFound) {
+				return null;
+			} else {
+				throw $e;
+			}
+		}
+		return $rel;
+	}
+
+	/**
+	 * Get a list of all relationship types on the server
+	 *
+	 * @return array
+	 */
+	public function getRelationshipTypes()
+	{
+		$command = new Command\GetRelationshipTypes($this);
+		return $this->runCommand($command);
+	}
+
+	/**
+	 * Retrieve information about the server
+	 *
+	 * @param boolean $force Don't use previous results
+	 * @return array
+	 */
+	public function getServerInfo($force=false)
+	{
+		if ($this->serverInfo === null || $force) {
+			$command = new Command\GetServerInfo($this);
+			$this->serverInfo = $this->runCommand($command);
+		}
+		return $this->serverInfo;
+	}
+
+	/**
+	 * Get the transport
+	 *
+	 * @return Transport
+	 */
+	public function getTransport()
+	{
+		return $this->transport;
+	}
+
+	/**
+	 * Load the given node with data from the server
+	 *
+	 * @param Node $node
+	 * @return boolean
+	 */
+	public function loadNode(Node $node)
+	{
+		$cached = $this->getEntityCache()->getCachedEntity($node->getId(), 'node');
+		if ($cached) {
+			$node->setProperties($cached->getProperties());
+			return true;
+		}
+
+		return $this->runCommand(new Command\GetNode($this, $node));
+	}
+
+	/**
+	 * Load the given relationship with data from the server
+	 *
+	 * @param Relationship $rel
+	 * @return boolean
+	 */
+	public function loadRelationship(Relationship $rel)
+	{
+		$cached = $this->getEntityCache()->getCachedEntity($rel->getId(), 'relationship');
+		if ($cached) {
+			$rel->setProperties($cached->getProperties());
+			return true;
+		}
+
+		return $this->runCommand(new Command\GetRelationship($this, $rel));
+	}
+
+	/**
+	 * Create a new node object bound to this client
+	 *
+	 * @return Node
+	 */
+	public function makeNode()
+	{
+		$node = new Node($this);
+		return $node;
+	}
+
+	/**
+	 * Create a new relationship object bound to this client
+	 *
+	 * @return Relationship
+	 */
+	public function makeRelationship()
+	{
+		$rel = new Relationship($this);
+		return $rel;
+	}
+
+	/**
+	 * Query an index using a query string.
+	 * The default query language in Neo4j is Lucene
+	 *
+	 * @param Index $index
+	 * @param string $query
+	 * @return array
+	 */
+	public function queryIndex(Index $index, $query)
+	{
+		$command = new Command\QueryIndex($this, $index, $query);
+		return $this->runCommand($command);
+	}
+
+	/**
+	 * Remove an entity from an index
+	 * If $value is not given, all reference of the entity for the key
+	 * are removed.
+	 * If $key is not given, all reference of the entity are removed.
+	 *
+	 * @param Index $index
+	 * @param PropertyContainer $entity
+	 * @param string $key
+	 * @param string $value
+	 * @return boolean
+	 */
+	public function removeFromIndex(Index $index, PropertyContainer $entity, $key=null, $value=null)
+	{
+		if ($this->openBatch) {
+			$this->openBatch->removeFromIndex($index, $entity, $key, $value);
+			return true;
+		}
+
+		return $this->runCommand(new Command\RemoveFromIndex($this, $index, $entity, $key, $value));
+	}
+
+	/**
+	 * Save the given index
+	 *
+	 * @param Index $index
+	 * @return boolean
+	 */
+	public function saveIndex(Index $index)
+	{
+		return $this->runCommand(new Command\SaveIndex($this, $index));
+	}
+
+	/**
+	 * Save the given node
+	 *
+	 * @param Node $node
+	 * @return boolean
+	 */
+	public function saveNode(Node $node)
+	{
+		if ($this->openBatch) {
+			$this->openBatch->save($node);
+			return true;
+		}
+
+		if ($node->hasId()) {
+			return $this->runCommand(new Command\UpdateNode($this, $node));
+		} else {
+			return $this->runCommand(new Command\CreateNode($this, $node));
+		}
+	}
+
+	/**
+	 * Save the given relationship
+	 *
+	 * @param Relationship $rel
+	 * @return boolean
+	 */
+	public function saveRelationship(Relationship $rel)
+	{
+		if ($this->openBatch) {
+			$this->openBatch->save($rel);
+			return true;
+		}
+
+		if ($rel->hasId()) {
+			return $this->runCommand(new Command\UpdateRelationship($this, $rel));
+		} else {
+			return $this->runCommand(new Command\CreateRelationship($this, $rel));
+		}
+	}
+
+	/**
+	 * Search an index for matching entities
+	 *
+	 * @param Index $index
+	 * @param string $key
+	 * @param string $value
+	 * @return array
+	 */
+	public function searchIndex(Index $index, $key, $value)
+	{
+		$command = new Command\SearchIndex($this, $index, $key, $value);
+		return $this->runCommand($command);
+	}
+
+	/**
+	 * Set the cache to use
+	 *
+	 * @param Cache\EntityCache $cache
+	 */
+	public function setEntityCache(Cache\EntityCache $cache)
+	{
+		$this->entityCache = $cache;
+	}
+
+	/**
+	 * Set the entity mapper to use
+	 *
+	 * @param EntityMapper $mapper
+	 */
+	public function setEntityMapper(EntityMapper $mapper)
+	{
+		$this->entityMapper = $mapper;
+	}
+
+	/**
+	 * Set the transport to use
+	 *
+	 * @param Transport $transport
+	 */
+	public function setTransport(Transport $transport)
+	{
+		$this->transport = $transport;
+	}
+
+	/**
+	 * Start an implicit batch
+	 *
+	 * Any data manipulation calls that occur between this call
+	 * and the subsequent Client::commitBatch() call will be
+	 * wrapped in a batch operation.
+	 *
+	 * @return Batch
+	 */
+	public function startBatch()
+	{
+		if (!$this->openBatch) {
+			$this->openBatch = new Batch($this);
+		}
+		return $this->openBatch;
+	}
+
+	/**
+	 * Run a command that will talk to the transport
+	 *
+	 * @param Command $command
+	 * @return mixed
+	 */
+	protected function runCommand(Command $command)
+	{
+		$result = $command->execute();
+		return $result;
+	}
+}
+<?php
+namespace Everyman\Neo4j;
+
+/**
+ * A set of operations expected to succeed (or fail) atomically
+ */
+class Batch
+{
+    protected $client = null;
+
+	protected $committed = false;
+	protected $operations = array();
+	protected $matches = array();
+
+	/**
+	 * Build the batch and set its client
+	 *
+	 * @param Client $client
+	 */
+	public function __construct(Client $client)
+	{
+		$this->client = $client;
+	}
+
+	/**
+	 * Add the given entity to the given index with the given key/value
+	 *
+	 * @param Index $index
+	 * @param PropertyContainer $entity
+	 * @param string $key
+	 * @param string $value
+	 * @return integer
+	 */
+	public function addToIndex(Index $index, PropertyContainer $entity, $key, $value)
+	{
+		return $this->addOperation(new Batch\AddTo($this, $index, $entity, $key, $value, $this->nextId()));
+	}
+
+	/**
+	 * Commit the batch to the server
+	 *
+	 * @return boolean
+	 */
+	public function commit()
+	{
+		if ($this->committed) {
+			throw new Exception('Cannot commit the same batch more than once.');
+		}
+		$this->committed = true;
+	
+		return $this->client->commitBatch($this);
+	}
+
+	/**
+	 * Add an entity to the batch to delete
+	 *
+	 * @param PropertyContainer $entity
+	 * @return integer
+	 */
+	public function delete(PropertyContainer $entity)
+	{
+		return $this->addOperation(new Batch\Delete($this, $entity, $this->nextId()));
+	}
+
+	/**
+	 * Get the batch's client
+	 *
+	 * @return Client
+	 */
+	public function getClient()
+	{
+		return $this->client;
+	}
+	
+	/**
+	 * Return the list of operations in this batch
+	 *
+	 * @return array
+	 */
+	public function getOperations()
+	{
+		return $this->operations;
+	}
+
+	/**
+	 * Remove the given entity from the given index with the given key/value
+	 *
+	 * @param Index $index
+	 * @param PropertyContainer $entity
+	 * @param string $key
+	 * @param string $value
+	 * @return integer
+	 */
+	public function removeFromIndex(Index $index, PropertyContainer $entity, $key=null, $value=null)
+	{
+		return $this->addOperation(new Batch\RemoveFrom($this, $index, $entity, $key, $value, $this->nextId()));
+	}
+
+	/**
+	 * Reserve an operation to prevent it from being double-committed
+	 * Once an operation has been reserved, future reserve calls will
+	 * return false, indicating it has already been reserved.
+	 * This is mostly useful during commit to prevent an operation being
+	 * sent twice
+	 *
+	 * @param integer $opId
+	 * @return mixed array operation if not yet reserved, false otherwise
+	 */
+	public function reserve($opId)
+	{
+		if (isset($this->operations[$opId]) && $this->operations[$opId]->reserve()) {
+			return $this->operations[$opId];
+		}
+		return false;
+	}
+
+	/**
+	 * Add an entity to the batch to save
+	 *
+	 * @param PropertyContainer $entity
+	 * @return integer
+	 */
+	public function save(PropertyContainer $entity)
+	{
+		return $this->addOperation(new Batch\Save($this, $entity, $this->nextId()));
+	}
+	
+	/**
+	 * Add an operation to the batch
+	 *
+	 * @param Batch\Operation $operation
+	 * @return integer operation index
+	 */
+	protected function addOperation(Batch\Operation $operation)
+	{
+		$opId = $operation->getId();
+		$matchId = $operation->matchId();
+
+		if (isset($this->matches[$matchId])) {
+			return $this->matches[$matchId]->getId();
+		}
+
+		$this->operations[$opId] = $operation;
+		$this->matches[$matchId] = $operation;
+		return $opId;
+	}
+
+	/**
+	 * Get the next unused id
+	 *
+	 * @return integer
+	 */
+	protected function nextId()
+	{
+		return count($this->operations);
+	}
+}
+<?php
+namespace Everyman\Neo4j;
+
+/**
+ * Used to convert arbitrary arrays into Nodes and Relationships
+ * where appropriate. 
+ */
+class EntityMapper
+{
+	protected $client = null;
+
+	/**
+	 * Set the client for retrieving related entities
+	 *
+	 * @param Client $client
+	 */
+	public function __construct(Client $client)
+	{
+		$this->client = $client;
+	}
+
+	/**
+	 * Given any object, see if it fulfills the contract
+	 * for being a path, node or relationship data returned by the
+	 * server. If so, return a full Path, Node or Relationship instance.
+	 * Else, return the value untainted.
+	 *
+	 * @param mixed $value
+	 * @return mixed
+	 */
+	public function getEntityFor($value)
+	{
+		if (is_array($value)) {
+			if (array_key_exists('self', $value)) {
+				if (array_key_exists('type', $value)) {
+					$value = $this->makeRelationship($value);
+				} else {
+					$value = $this->makeNode($value);
+				}
+			} else if (array_key_exists('nodes', $value) && array_key_exists('relationships', $value)) {
+				$value = $this->populatePath(new Path($this->client), $value);
+			}
+		}
+		return $value;
+	}
+
+	/**
+	 * Get an id from a URI
+	 *
+	 * @param string $uri
+	 * @return mixed
+	 */
+	public function getIdFromUri($uri)
+	{
+		$uriParts = explode('/', $uri);
+		return array_pop($uriParts);
+	}
+
+	/**
+	 * Generate and populate a node from the given data
+	 *
+	 * @param array $data
+	 * @return Node
+	 */
+	public function makeNode($data)
+	{
+		$node = $this->getNodeFromUri($data['self']);
+		return $this->populateNode($node, $data);
+	}
+
+	/**
+	 * Generate and populate a relationship from the given data
+	 *
+	 * @param array $data
+	 * @return Relationship
+	 */
+	public function makeRelationship($data)
+	{
+		$rel = $this->getRelationshipFromUri($data['self']);
+		return $this->populateRelationship($rel, $data);
+	}
+
+	/**
+	 * Fill a node with data
+	 *
+	 * @param Node $node
+	 * @param array $data
+	 * @return Node
+	 */
+	public function populateNode(Node $node, $data)
+	{
+		$node->useLazyLoad(false);
+		$node->setProperties($data['data']);
+		return $node;
+	}
+
+	/**
+	 * Fill a path with data
+	 *
+	 * @param Path $path
+	 * @param array $data
+	 * @param boolean $full
+	 * @return Path
+	 */
+	public function populatePath(Path $path, $data, $full=false)
+	{
+		foreach ($data['relationships'] as $relData) {
+			$relUri = $full ? $relData['self'] : $relData;
+			$rel = $this->getRelationshipFromUri($relUri);
+			if ($full) {
+				$rel = $this->populateRelationship($rel, $relData);
+			}
+			$path->appendRelationship($rel);
+		}
+
+		foreach ($data['nodes'] as $nodeData) {
+			$nodeUri = $full ? $nodeData['self'] : $nodeData;
+			$node = $this->getNodeFromUri($nodeUri);
+			if ($full) {
+				$node = $this->populateNode($node, $nodeData);
+			}
+			$path->appendNode($node);
+		}
+
+		return $path;
+	}
+
+	/**
+	 * Fill a relationship with data
+	 *
+	 * @param Relationship $rel
+	 * @param array $data
+	 * @return Relationship
+	 */
+	public function populateRelationship(Relationship $rel, $data)
+	{
+		$rel->useLazyLoad(false);
+		$rel->setProperties($data['data']);
+		$rel->setType($data['type']);
+
+		$rel->setStartNode($this->getNodeFromUri($data['start']));
+		$rel->setEndNode($this->getNodeFromUri($data['end']));
+
+		return $rel;
+	}
+
+	/**
+	 * Retrieve a node by it's 'self' uri
+	 *
+	 * @param string $uri
+	 * @return Node
+	 */
+	protected function getNodeFromUri($uri)
+	{
+		$nodeId = $this->getIdFromUri($uri);
+		return $this->client->getNode($nodeId, true);
+	}
+
+	/**
+	 * Retrieve a relationship by it's 'self' uri
+	 *
+	 * @param string $uri
+	 * @return Relationship
+	 */
+	protected function getRelationshipFromUri($uri)
+	{
+		$relId = $this->getIdFromUri($uri);
+		return $this->client->getRelationship($relId, true);
+	}
+}
+<?php
+namespace Everyman\Neo4j;
+
+/**
+ * Implementation of GEOFF - Graph Export Object File Format
+ * From http://py2neo.org/geoff
+ * Available at http://github.com/nigelsmall/py2neo
+ */
+class Geoff
+{
+	protected $client = null;
+
+	/**
+	 * Build the importer/exported
+	 *
+	 * @param Client $client
+	 */
+	public function __construct(Client $client)
+	{
+		$this->client = $client;
+	}
+
+	/**
+	 * Dump path information to a GEOFF string or file
+	 *
+	 * @param mixed $paths a single Path object or an array of Path objects
+	 * @param stream $handle
+	 * @return mixed stream or string
+	 */
+	public function dump($paths, $handle=null)
+	{
+		$returnString = false;
+		if (!$handle) {
+			$returnString = true;
+			$handle = fopen('data:text/plain,', 'w+');
+		}
+
+		$exporter = new Geoff\Exporter();
+		$exporter->dump($paths, $handle);
+
+		if ($returnString) {
+			return stream_get_contents($handle, -1, 0);
+		}
+		return $handle;
+	}
+
+	/**
+	 * Load a GEOFF string or file
+	 *
+	 * @param mixed $handle
+	 * @param Batch $batch
+	 * @return Batch
+	 */
+	public function load($handle, Batch $batch=null)
+	{
+		if (is_string($handle)) {
+			$handle = fopen('data:text/plain,'.urlencode($handle), 'r');
+		}
+
+		$importer = new Geoff\Importer($this->client);
+		return $importer->load($handle, $batch);
+	}
+}
+<?php
+namespace Everyman\Neo4j;
+
+/**
+ * Holds the parameters for running a traversal
+ */
+class Traversal
+{
+	const ReturnTypeNode = 'node';
+	const ReturnTypeRelationship = 'relationship';
+	const ReturnTypePath = 'path';
+	const ReturnTypeFullPath = 'fullpath';
+
+	const OrderDepthFirst = 'depth_first';
+	const OrderBreadthFirst = 'breadth_first';
+
+	const UniquenessNone = 'none';
+	const UniquenessNodeGlobal = 'node_global';
+	const UniquenessRelationshipGlobal = 'relationship_global';
+	const UniquenessNodePath = 'node_path';
+	const UniquenessRelationshipPath = 'relationship_path';
+
+	const Builtin = 'builtin';
+
+	const PruneNone = 'none';
+
+	const ReturnAll = 'all';
+	const ReturnAllButStart = 'all_but_start_node';
+
+	protected $client = null;
+
+	protected $order = null;
+	protected $uniqueness = null;
+	protected $maxDepth = null;
+	protected $relationships = array();
+
+	protected $pruneEvaluator = null;
+	protected $returnFilter = null;
+
+	/**
+	 * Build the traversal and set its client
+	 *
+	 * @param Client $client
+	 */
+	public function __construct(Client $client)
+	{
+		$this->client = $client;
+	}
+
+	/**
+	 * Add a relationship type and direction
+	 *
+	 * @param string $type
+	 * @param string $direction
+	 * @return Traversal
+	 */
+	public function addRelationship($type, $direction=null)
+	{
+		$relationship = array('type'=>$type);
+		if ($direction) {
+			$relationship['direction'] = $direction;
+		}
+
+		$this->relationships[] = $relationship;
+		return $this;
+	}
+
+	/**
+	 * Get the finder's client
+	 *
+	 * @return Client
+	 */
+	public function getClient()
+	{
+		return $this->client;
+	}
+
+	/**
+	 * Get the maximum allowed path length
+	 *
+	 * @return integer
+	 */
+	public function getMaxDepth()
+	{
+		return $this->maxDepth;
+	}
+
+	/**
+	 * Return the order in which to traverse
+	 *
+	 * @return string
+	 */
+	public function getOrder()
+	{
+		return $this->order;
+	}
+
+	/**
+	 * Get the prune evaluator
+	 *
+	 * @return array ('language'=>..., 'body'=>...)
+	 */
+	public function getPruneEvaluator()
+	{
+		return $this->pruneEvaluator;
+	}
+
+	/**
+	 * Get the relationship type and description
+	 *
+	 * @return array ('type'=>..., 'direction'=>...)
+	 */
+	public function getRelationships()
+	{
+		return $this->relationships;
+	}
+
+	/**
+	 * Run the traversal, and return the results
+	 *
+	 * @param Node $startNode
+	 * @param string $returnType
+	 * @return array
+	 */
+	public function getResults(Node $startNode, $returnType)
+	{
+		return $this->client->executeTraversal($this, $startNode, $returnType);
+	}
+
+	/**
+	 * Get the return filter
+	 *
+	 * @return array ('language'=>..., 'body'=>...)
+	 */
+	public function getReturnFilter()
+	{
+		return $this->returnFilter;
+	}
+
+	/**
+	 * Run the traversal, and return the first result
+	 *
+	 * @param Node $startNode
+	 * @param string $returnType
+	 * @return mixed
+	 */
+	public function getSingleResult(Node $startNode, $returnType)
+	{
+		$results = $this->getResults($startNode, $returnType);
+		return $results ? $results[0] : null;
+	}
+
+	/**
+	 * Return the uniqueness of the traversal
+	 *
+	 * @return string
+	 */
+	public function getUniqueness()
+	{
+		return $this->uniqueness;
+	}
+
+	/**
+	 * Set the maximum allowed path length
+	 *
+	 * @param integer $max
+	 * @return Traversal
+	 */
+	public function setMaxDepth($max)
+	{
+		$this->maxDepth = $max;
+		return $this;
+	}
+
+	/**
+	 * Set the order in which to traverse
+	 *
+	 * @param string $order
+	 * @return Traversal
+	 */
+	public function setOrder($order)
+	{
+		$this->order = $order;
+		return $this;
+	}
+
+	/**
+	 * Set the prune evaluator
+	 * If language is one of the special builtin self::Prune* constants,
+	 * the evaluator language will be set to 'builtin' and the body
+	 * will be set to the value of the constant.
+	 *
+	 * @param string $language
+	 * @param string $body
+	 * @return Traversal
+	 */
+	public function setPruneEvaluator($language=null, $body=null)
+	{
+		if (!$language) {
+			$this->pruneEvaluator = null;
+		} else if ($language == self::PruneNone) {
+			$this->pruneEvaluator = array(
+				'language' => self::Builtin,
+				'body' => $language,
+			);
+		} else {
+			$this->pruneEvaluator = array(
+				'language' => $language,
+				'body' => $body,
+			);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Set the return filter
+	 * If language is one of the special builtin self::Return* constants,
+	 * the filter language will be set to 'builtin' and the body
+	 * will be set to the value of the constant.
+	 *
+	 * @param string $language
+	 * @param string $body
+	 * @return Traversal
+	 */
+	public function setReturnFilter($language=null, $body=null)
+	{
+		if (!$language) {
+			$this->returnFilter = null;
+		} else if ($language == self::ReturnAll || $language == self::ReturnAllButStart) {
+			$this->returnFilter = array(
+				'language' => self::Builtin,
+				'body' => $language,
+			);
+		} else {
+			$this->returnFilter = array(
+				'language' => $language,
+				'body' => $body,
+			);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Set the uniquenss
+	 *
+	 * @param string $uniqueness
+	 * @return Traversal
+	 */
+	public function setUniqueness($uniqueness)
+	{
+		$this->uniqueness = $uniqueness;
+		return $this;
+	}
+}
+<?php
+namespace Everyman\Neo4j;
+
+/**
+ * Holds the parameters for finding a path between two nodes
+ */
+class PathFinder
+{
+	const AlgoShortest  = 'shortestPath';
+	const AlgoAll       = 'allPaths';
+	const AlgoAllSimple = 'allSimplePaths';
+	const AlgoDijkstra  = 'dijkstra';
+
+	protected $client = null;
+
+	protected $start = null;
+	protected $end = null;
+	protected $type = null;
+	protected $maxDepth = null;
+	protected $dir = null;
+	protected $algo = self::AlgoShortest;
+	protected $costProperty = null;
+	protected $defaultCost = null;
+
+	/**
+	 * Build the finder and set its client
+	 *
+	 * @param Client $client
+	 */
+	public function __construct(Client $client)
+	{
+		$this->client = $client;
+	}
+
+	/**
+	 * Get the current path finding algorithm
+	 *
+	 * @return string
+	 */
+	public function getAlgorithm()
+	{
+		return $this->algo;
+	}	
+
+	/**
+	 * Get the finder's client
+	 *
+	 * @return Client
+	 */
+	public function getClient()
+	{
+		return $this->client;
+	}
+
+	/**
+	 * Get the cost property name for the Dijkstra search
+	 *
+	 * @return string
+	 */
+	public function getCostProperty()
+	{
+		return $this->costProperty;
+	}
+
+	/**
+	 * Get the default relationship cost for the Dijkstra search
+	 *
+	 * @return numeric
+	 */
+	public function getDefaultCost()
+	{
+		return $this->defaultCost;
+	}
+
+	/**
+	 * Get the path direction type
+	 *
+	 * @return string
+	 */
+	public function getDirection()
+	{
+		return $this->dir;
+	}
+
+	/**
+	 * Get the end node
+	 *
+	 * @return Node
+	 */
+	public function getEndNode()
+	{
+		return $this->end;
+	}
+
+	/**
+	 * Get the maximum allowed path length
+	 *
+	 * @return integer
+	 */
+	public function getMaxDepth()
+	{
+		return $this->maxDepth;
+	}
+
+	/**
+	 * Find paths
+	 *
+	 * @return array of Path
+	 */
+	public function getPaths()
+	{
+		return $this->client->getPaths($this);
+	}
+
+	/**
+	 * Get a single path
+	 *
+	 * @return Path
+	 */
+	public function getSinglePath()
+	{
+		$paths = $this->getPaths();
+		return $paths ? $paths[0] : null;
+	}
+
+	/**
+	 * Get the start node
+	 *
+	 * @return Node
+	 */
+	public function getStartNode()
+	{
+		return $this->start;
+	}
+
+	/**
+	 * Get the relationship type
+	 *
+	 * @return string
+	 */
+	public function getType()
+	{
+		return $this->type;
+	}
+
+	/**
+	 * Set the algorithm to use
+	 *
+	 * @param string $algo
+	 * @return PathFinder
+	 */
+	public function setAlgorithm($algo)
+	{
+		$this->algo = $algo;
+		return $this;
+	}
+
+	/**
+	 * Set the cost property name for the Dijkstra search
+	 *
+	 * @param string $property
+	 * @return PathFinder
+	 */
+	public function setCostProperty($property)
+	{
+		$this->costProperty = $property;
+		return $this;
+	}
+
+	/**
+	 * Set the default relationship cost for the Dijkstra search
+	 *
+	 * @param numeric $cost
+	 * @return PathFinder
+	 */
+	public function setDefaultCost($cost)
+	{
+		$this->defaultCost = $cost;
+		return $this;
+	}
+
+	/**
+	 * Set the direction of the path
+	 *
+	 * @param string $dir
+	 * @return PathFinder
+	 */
+	public function setDirection($dir)
+	{
+		$this->dir = $dir;
+		return $this;
+	}
+
+	/**
+	 * Set the end node
+	 *
+	 * @param Node $end
+	 * @return PathFinder
+	 */
+	public function setEndNode(Node $end)
+	{
+		$this->end = $end;
+		return $this;
+	}
+
+	/**
+	 * Set the maximum allowed path length
+	 *
+	 * @param integer $max
+	 * @return PathFinder
+	 */
+	public function setMaxDepth($max)
+	{
+		$this->maxDepth = $max;
+		return $this;
+	}
+
+	/**
+	 * Set the start node
+	 *
+	 * @param Node $start
+	 * @return PathFinder
+	 */
+	public function setStartNode(Node $start)
+	{
+		$this->start = $start;
+		return $this;
+	}
+
+	/**
+	 * Set the type
+	 *
+	 * @param string $type
+	 * @return PathFinder
+	 */
+	public function setType($type)
+	{
+		$this->type = $type;
+		return $this;
+	}
+}
+<?php
+namespace Everyman\Neo4j;
+
+/**
+ * Represents collection of relationships joining two nodes
+ */
+class Path implements \Countable, \IteratorAggregate
+{
+	const ContextNode = 'node';
+	const ContextRelationship = 'relationship';
+
+	protected $relationships = array();
+	protected $nodes = array();
+	protected $context = self::ContextNode;
+
+	/**
+	 * Add another node to the end of this path
+	 *
+	 * @param Node $node
+	 * @return Path
+	 */
+	public function appendNode(Node $node)
+	{
+		$this->nodes[] = $node;
+	}
+
+	/**
+	 * Add another relationship to the end of this path
+	 *
+	 * @param Relationship $rel
+	 * @return Path
+	 */
+	public function appendRelationship(Relationship $rel)
+	{
+		$this->relationships[] = $rel;
+	}
+
+	/**
+	 * Get the number of relationships in this path
+	 *
+	 * @return integer
+	 */
+	public function count()
+	{
+		return $this->context == self::ContextNode ? count($this->nodes) : count($this->relationships);
+	}
+
+	/**
+	 * Get the current context for iteration
+	 *
+	 * @return string
+	 */
+	public function getContext()
+	{
+		return $this->context;
+	}
+	
+	/**
+	 * Get the end node
+	 *
+	 * @return Node
+	 */
+	public function getEndNode()
+	{
+		$length = count($this->nodes);
+		if ($length) {
+			return $this->nodes[$length-1];
+		}
+		return null;
+	}
+
+	/**
+	 * Get the number of relationships in this path
+	 *
+	 * @return integer
+	 */
+	public function getLength()
+	{
+		return $this->count();
+	}
+
+	/**
+	 * Return an iterator for iterating through the path
+	 *
+	 * @return Iterator
+	 */
+	public function getIterator()
+	{
+		return $this->context == self::ContextNode ? new \ArrayIterator($this->nodes) : new \ArrayIterator($this->relationships);
+	}
+
+	/**
+	 * Get the list of nodes that make up this path
+	 *
+	 * @return array
+	 */
+	public function getNodes()
+	{
+		return $this->nodes;
+	}
+
+	/**
+	 * Get the list of relationships that make up this path
+	 *
+	 * @return array
+	 */
+	public function getRelationships()
+	{
+		return $this->relationships;
+	}
+
+	/**
+	 * Get the start node
+	 *
+	 * @return Node
+	 */
+	public function getStartNode()
+	{
+		$length = count($this->nodes);
+		if ($length) {
+			return $this->nodes[0];
+		}
+		return null;
+	}
+	
+	/**
+	 * Set the context for iteration
+	 *
+	 * @param string $context
+	 * @return Path
+	 */
+	public function setContext($context)
+	{
+		if ($context != self::ContextNode && $context != self::ContextRelationship) {
+			$context = self::ContextNode;
+		}
+		$this->context = $context;
+		return $this;
+	}
+}
+<?php
+namespace Everyman\Neo4j\Index;
+
+use Everyman\Neo4j\Client,
+    Everyman\Neo4j\Index\NodeIndex;
+
+/**
+ * Represents a fulltext node index in the database
+ */
+class NodeFulltextIndex extends NodeIndex
+{
+	/**
+	 * Initialize the index
+	 *
+	 * @param Client $client
+	 * @param string $name
+	 * @param array  $config
+	 */
+	public function __construct(Client $client, $name, $config=array())
+	{
+		if (empty($config['type'])) {
+			$config['type'] = 'fulltext';
+		}
+		if (empty($config['provider'])) {
+			$config['provider'] = 'lucene';
+		}
+
+		parent::__construct($client, $name, $config);
+	}
+}
+<?php
+namespace Everyman\Neo4j\Index;
+
+use Everyman\Neo4j\Client,
+    Everyman\Neo4j\Index;
+
+/**
+ * Represents a relationship index in the database
+ */
+class RelationshipIndex extends Index
+{
+	/**
+	 * Initialize the index
+	 *
+	 * @param Client $client
+	 * @param string $name
+	 * @param array  $config
+	 */
+	public function __construct(Client $client, $name, $config=array())
+	{
+		parent::__construct($client, Index::TypeRelationship, $name, $config);
+	}
+}
+<?php
+namespace Everyman\Neo4j\Index;
+
+use Everyman\Neo4j\Client,
+    Everyman\Neo4j\Index;
+
+/**
+ * Represents a node index in the database
+ */
+class NodeIndex extends Index
+{
+	/**
+	 * Initialize the index
+	 *
+	 * @param Client $client
+	 * @param string $name
+	 * @param array  $config
+	 */
+	public function __construct(Client $client, $name, $config=array())
+	{
+		parent::__construct($client, Index::TypeNode, $name, $config);
+	}
+}
+<?php
+namespace Everyman\Neo4j\Geoff;
+use Everyman\Neo4j\Exception,
+	Everyman\Neo4j\Path;
+
+/**
+ * Export an array of Paths to a file
+ */
+class Exporter
+{
+	/**
+	 * Dump an array of Paths
+	 *
+	 * @param mixed $paths a single Path object or an array of Path objects
+	 * @param stream $handle
+	 */
+	public function dump($paths, $handle)
+	{
+		if (!is_resource($handle) || get_resource_type($handle) != 'stream') {
+			throw new Exception("Not a stream resource");
+		}
+
+		if (!is_array($paths)) {
+			$paths = array($paths);
+		}
+
+		$nodes = array();
+		$rels = array();
+		foreach ($paths as $path) {
+			if (!($path instanceof Path)) {
+				throw new Exception("Not a Path");
+			}
+
+			$pathNodes = $path->getNodes();
+			foreach ($pathNodes as $node) {
+				$nodes[$node->getId()] = $node;
+			}
+
+			$pathRels = $path->getRelationships();
+			foreach ($pathRels as $rel) {
+				$rels[$rel->getId()] = $rel;
+			}
+		}
+
+		foreach ($nodes as $id => $node) {
+			$properties = $node->getProperties();
+			$format = $properties ? "(%s)\t%s\n" : "(%s)\n";
+			fprintf($handle, $format,
+				$id,
+				json_encode($properties));
+		}
+
+		foreach ($rels as $id => $rel) {
+			$properties = $rel->getProperties();
+			$format = "(%s)-[%s:%s]->(%s)";
+			$format .= $properties ? "\t%s\n" : "\n";
+			fprintf($handle, $format,
+				$rel->getStartNode()->getId(),
+				$id,
+				$rel->getType(),
+				$rel->getEndNode()->getId(),
+				json_encode($properties));
+		}
+	}
+}<?php
+namespace Everyman\Neo4j\Geoff;
+use Everyman\Neo4j\Client,
+	Everyman\Neo4j\Exception,
+	Everyman\Neo4j\Node,
+	Everyman\Neo4j\Relationship,
+	Everyman\Neo4j\Index,
+	Everyman\Neo4j\Batch;
+
+/**
+ * Import a GEOFF file into a batch
+ */
+class Importer
+{
+	protected $client = null;
+
+	/**
+	 * Build the importer
+	 *
+	 * @param Client $client
+	 */
+	public function __construct(Client $client)
+	{
+		$this->client = $client;
+	}
+
+
+	/**
+	 * Load a GEOFF string from a stream
+	 * If a batch is provided, append imported data to it,
+	 * else, create and return a new batch
+	 *
+	 * @param stream $handle
+	 * @param Batch $batch
+	 * @return Batch
+	 */
+	public function load($handle, Batch $batch=null)
+	{
+		if (!is_resource($handle) || get_resource_type($handle) != 'stream') {
+			throw new Exception("Not a stream resource");
+		}
+
+		if (!$batch) {
+			$batch = new Batch($this->client);
+		}
+
+		$i = 0;
+		$nodes = array();
+		$rels = array();
+		while (($line = fgets($handle)) !== false) {
+			$this->loadLine($line, $batch, $i, $nodes, $rels);
+			$i++;
+		}
+
+		return $batch;
+	}
+	
+	/**
+	 * Load a single line into the batch
+	 *
+	 * @param string $line
+	 * @param Batch $batch
+	 * @param integer $lineNum
+	 * @param array $nodes
+	 * @param array $rels
+	 */
+	protected function loadLine($line, Batch $batch, $lineNum, &$nodes, &$rels)
+	{
+		$descriptorPattern = "/^(
+			\((\w+)\)	            # node identifier or relationship start node
+			(                       # next two sub expressions signify a relationship line
+				-\[(\w*):(\w+)\]    # relationship identifier and type
+				->\((\w+)\)         # relationship end node
+		)?)(
+			\s+(.*)                 # properties
+		)?/x";
+
+		$indexPattern = "/^(
+			\{(\w+)\}               # index name
+			->(\(|\[)				# ( indicates node index, [ indicates relationship index
+				(\w+)               # node identifier to index
+			(\)|\])                 # must match opening ( or [
+		)(
+			\s+(.*)                 # keys:values to index
+		)?/x";
+
+		$line = trim($line);
+		if (!$line || $line[0]  == '#') {
+			return;
+		}
+
+		$matches = array();
+		$descriptorMatch = preg_match($descriptorPattern, $line, $matches);
+
+		if ($descriptorMatch && !empty($matches[3])) {
+			$startNodeId = $matches[2];
+			$relId = $matches[4];
+			$type = $matches[5];
+			$endNodeId = $matches[6];
+			if (!isset($nodes[$startNodeId]) || !isset($nodes[$endNodeId])) {
+				throw new Exception("Invalid node reference on line {$lineNum}: $line");
+			} else if (!empty($relId) && isset($rels[$relId])) {
+				throw new Exception("Duplicate relationship on line {$lineNum}: $line");
+			}
+			$properties = !empty($matches[8]) ? json_decode($matches[8]) : false;
+			$rel = $this->client->makeRelationship();
+			$rel->setProperties($properties ?: array())
+				->setType($type)
+				->setStartNode($nodes[$startNodeId])
+				->setEndNode($nodes[$endNodeId]);
+			if (!empty($relId)) {
+				$rels[$relId] = $rel;
+			}
+			$batch->save($rel);
+			return;
+
+		} else if ($descriptorMatch) {
+			$nodeId = $matches[2];
+			if (isset($nodes[$nodeId])) {
+				throw new Exception("Duplicate node on line {$lineNum}: $line");
+			}
+			$properties = !empty($matches[7]) ? json_decode($matches[7]) : false;
+			$node = $this->client->makeNode();
+			$node->setProperties($properties ?: array());
+			$nodes[$nodeId] = $node;
+			$batch->save($node);
+			return;
+		}
+
+		$matches = array();
+		$indexMatch = preg_match($indexPattern, $line, $matches);
+		if ($indexMatch) {
+			$name = $matches[2];
+			$openBrace = $matches[3];
+			$closeBrace = $matches[5];
+			$entityId = $matches[4];
+			$properties = !empty($matches[7]) ? json_decode($matches[7]) : false;
+			if ($properties) {
+				$type = null;
+				if ($openBrace == '(' && $closeBrace == ')') {
+					if (!isset($nodes[$entityId])) {
+						throw new Exception("Invalid node reference on line {$lineNum}: $line");
+					}
+					$entity = $nodes[$entityId];
+					$type = Index::TypeNode;
+				} else  if ($openBrace == '[' && $closeBrace == ']') {
+					if (!isset($rels[$entityId])) {
+						throw new Exception("Invalid relationship reference on line {$lineNum}: $line");
+					}
+					$entity = $rels[$entityId];
+					$type = Index::TypeRelationship;
+				}
+
+				if ($type) {
+					$index = new Index($this->client, $type, $name);
+					foreach ($properties as $key => $value) {
+						$batch->addToIndex($index, $entity, $key, $value);
+					}
+					return;
+				}
+			}
+		}
+
+		throw new Exception("Cannot parse line {$lineNum}: $line");
+	}
+}<?php
+namespace Everyman\Neo4j;
+
+/**
+ * Represents a query (e. g. Gremlin or Cypher)
+ */
+interface Query
+{
+	/**
+	 * Get the query script
+	 *
+	 * @return string
+	 */
+	public function getQuery();
+
+	/**
+	 * Retrieve the query results
+	 *
+	 * @return Query\ResultSet
+	 */
+	public function getResultSet();
+}
+<?php
+namespace Everyman\Neo4j\Batch;
+
+use Everyman\Neo4j\Batch,
+	Everyman\Neo4j\Command\Batch as Command,
+	Everyman\Neo4j\Node,
+	Everyman\Neo4j\Relationship,
+	Everyman\Neo4j\PropertyContainer;
+
+/**
+ * A delete operation
+ */
+class Delete extends Operation
+{
+	protected $command = null;
+
+	/**
+	 * Build the operation
+	 *
+	 * @param Batch $batch
+	 * @param PropertyContainer $entity
+	 * @param integer $opId
+	 */
+	public function __construct(Batch $batch, PropertyContainer $entity, $opId)
+	{
+		parent::__construct($batch, 'delete', $entity, $opId);
+	}
+
+	/**
+	 * Get the command that represents this operation
+	 *
+	 * @return Batch\Command
+	 */
+	public function getCommand()
+	{
+		if (!$this->command) {
+			$entity = $this->entity;
+			$command = null;
+			if ($entity instanceof Node) {
+				$command = new Command\DeleteNode($this->batch->getClient(), $entity, $this->opId);
+			} else if ($entity instanceof Relationship) {
+				$command = new Command\DeleteRelationship($this->batch->getClient(), $entity, $this->opId);
+			}
+
+			$this->command = $command;
+		}
+		return $this->command;
+	}
+}
+<?php
+namespace Everyman\Neo4j\Batch;
+
+use Everyman\Neo4j\Batch,
+	Everyman\Neo4j\PropertyContainer;
+
+/**
+ * A single operation in a batch
+ */
+abstract class Operation
+{
+    protected $batch = null;
+    protected $operation = null;
+    protected $entity = null;
+    protected $opId = null;
+
+    protected $reserved = false;
+
+	/**
+	 * Build the operation
+	 *
+	 * @param Batch $batch
+	 * @param string $operation
+	 * @param PropertyContainer $entity
+	 * @param integer $opId
+	 */
+	public function __construct(Batch $batch, $operation, PropertyContainer $entity, $opId)
+	{
+		$this->batch = $batch;
+		$this->operation = $operation;
+		$this->entity = $entity;
+		$this->opId = $opId;
+	}
+
+	/**
+	 * Get the underlying batch command for this operation
+	 *
+	 * @return Batch\Command
+	 */
+	abstract public function getCommand();
+
+	/**
+	 * Return the associated entity
+	 *
+	 * @return PropertyContainer
+	 */
+	public function getEntity()
+	{
+		return $this->entity;
+	}
+
+	/**
+	 * Get the operation id
+	 *
+	 * @return integer
+	 */
+	public function getId()
+	{
+		return $this->opId;
+	}
+
+	/**
+	 * Based on this operations parameters, generate a consistent id
+	 *
+	 * @return mixed
+	 */
+	public function matchId()
+	{
+		return $this->operation . spl_object_hash($this->entity);
+	}
+
+	/**
+	 * Reserve this operation to prevent it from being double-committed
+	 * Once an operation has been reserved, future reserve calls will
+	 * return false, indicating it has already been reserved.
+	 * This is mostly useful during commit to prevent an operation being
+	 * sent twice
+	 *
+	 * @return boolean true if reservation succeeded
+	 */
+	public function reserve()
+	{
+		if (!$this->reserved) {
+			$this->reserved = true;
+			return true;
+		}
+		return false;
+	}
+}
+<?php
+namespace Everyman\Neo4j\Batch;
+
+use Everyman\Neo4j\Batch,
+	Everyman\Neo4j\Command\Batch as Command,
+	Everyman\Neo4j\Node,
+	Everyman\Neo4j\Relationship,
+	Everyman\Neo4j\PropertyContainer;
+
+/**
+ * A save operation
+ */
+class Save extends Operation
+{
+	protected $command = null;
+
+	/**
+	 * Build the operation
+	 *
+	 * @param Batch $batch
+	 * @param PropertyContainer $entity
+	 * @param integer $opId
+	 */
+	public function __construct(Batch $batch, PropertyContainer $entity, $opId)
+	{
+		parent::__construct($batch, 'save', $entity, $opId);
+	}
+
+	/**
+	 * Get the command that represents this operation
+	 *
+	 * @return Batch\Command
+	 */
+	public function getCommand()
+	{
+		if (!$this->command) {
+			$entity = $this->entity;
+			$command = null;
+			if (!$entity->hasId()) {
+				if ($entity instanceof Node) {
+					$command = new Command\CreateNode($this->batch->getClient(), $entity, $this->opId);
+				} else if ($entity instanceof Relationship) {
+					$command = new Command\CreateRelationship($this->batch->getClient(), $entity, $this->opId, $this->batch);
+				}
+			} else {
+				if ($entity instanceof Node) {
+					$command = new Command\UpdateNode($this->batch->getClient(), $entity, $this->opId);
+				} else if ($entity instanceof Relationship) {
+					$command = new Command\UpdateRelationship($this->batch->getClient(), $entity, $this->opId);
+				}
+			}
+
+			$this->command = $command;
+		}
+		return $this->command;
+	}
+}
+<?php
+namespace Everyman\Neo4j\Batch;
+
+use Everyman\Neo4j\Batch,
+	Everyman\Neo4j\Command\Batch as Command,
+	Everyman\Neo4j\Index,
+	Everyman\Neo4j\PropertyContainer;
+
+/**
+ * A remove-from-index operation
+ */
+class RemoveFrom extends Operation
+{
+	protected $command = null;
+	protected $index = null;
+	protected $key = null;
+	protected $value = null;
+
+	/**
+	 * Build the operation
+	 *
+	 * @param Batch $batch
+	 * @param Index $index
+	 * @param PropertyContainer $entity
+	 * @param string $key
+	 * @param string $value
+ * @param integer $opId
+	 */
+	public function __construct(Batch $batch, Index $index, PropertyContainer $entity, $key=null, $value=null, $opId)
+	{
+		parent::__construct($batch, 'removefrom', $entity, $opId);
+		$this->index = $index;
+		$this->key = $key;
+		$this->value = $value;
+	}
+
+	/**
+	 * Get the command that represents this operation
+	 *
+	 * @return Batch\Command
+	 */
+	public function getCommand()
+	{
+		if (!$this->command) {
+			$this->command = new Command\RemoveFromIndex($this->batch->getClient(),
+				$this->index, $this->entity, $this->key, $this->value, $this->opId);
+		}
+		return $this->command;
+	}
+	
+	/**
+	 * Based on this operations parameters, generate a consistent id
+	 *
+	 * @return mixed
+	 */
+	public function matchId()
+	{
+		return parent::matchId() . spl_object_hash($this->index) . $this->key . $this->value;
+	}
+}
+<?php
+namespace Everyman\Neo4j\Batch;
+
+use Everyman\Neo4j\Batch,
+	Everyman\Neo4j\Command\Batch as Command,
+	Everyman\Neo4j\Index,
+	Everyman\Neo4j\PropertyContainer;
+
+/**
+ * An add-to-index operation
+ */
+class AddTo extends Operation
+{
+	protected $command = null;
+	protected $index = null;
+	protected $key = null;
+	protected $value = null;
+
+	/**
+	 * Build the operation
+	 *
+	 * @param Batch $batch
+	 * @param Index $index
+	 * @param PropertyContainer $entity
+	 * @param string $key
+	 * @param string $value
+ * @param integer $opId
+	 */
+	public function __construct(Batch $batch, Index $index, PropertyContainer $entity, $key, $value, $opId)
+	{
+		parent::__construct($batch, 'addto', $entity, $opId);
+		$this->index = $index;
+		$this->key = $key;
+		$this->value = $value;
+	}
+
+	/**
+	 * Get the command that represents this operation
+	 *
+	 * @return Batch\Command
+	 */
+	public function getCommand()
+	{
+		if (!$this->command) {
+			$this->command = new Command\AddToIndex($this->batch->getClient(),
+				$this->index, $this->entity, $this->key, $this->value, $this->opId, $this->batch);
+		}
+		return $this->command;
+	}
+	
+	/**
+	 * Get the index
+	 *
+	 * @return Index
+	 */
+	public function getIndex()
+	{
+		return $this->index;
+	}
+	
+	/**
+	 * Get the key being indexed
+	 *
+	 * @return string
+	 */
+	public function getKey()
+	{
+		return $this->key;
+	}
+	
+	/**
+	 * Get the value being indexed
+	 *
+	 * @return mixed
+	 */
+	public function getValue()
+	{
+		return $this->value;
+	}
+
+	/**
+	 * Based on this operations parameters, generate a consistent id
+	 *
+	 * @return mixed
+	 */
+	public function matchId()
+	{
+		return parent::matchId() . spl_object_hash($this->index) . $this->key . $this->value;
+	}
+}
+<?php
+namespace Everyman\Neo4j\Gremlin;
+
+use Everyman\Neo4j;
+
+/**
+ * Represents a Gremlin query
+ * Query the database using Gremlin syntax. For query syntax, please refer
+ * to the Gremlin documentation for your server version.
+ *
+ * Latest documentation:
+ * http://docs.neo4j.org/chunked/snapshot/gremlin-plugin.html
+ */
+class Query implements Neo4j\Query
+{
+	protected $client = null;
+	protected $script = null;
+	protected $vars = array();
+
+	protected $result = null;
+
+	/**
+	 * Set the query script to use
+	 *
+	 * @param Neo4j\Client $client
+	 * @param string $script A Gremlin query script
+	 * @param array $vars Replacement vars to inject into the query
+	 */
+	public function __construct(Neo4j\Client $client, $script, $vars=array())
+	{
+		$this->client = $client;
+		$this->script = $script;
+		$this->vars = $vars;
+	}
+
+	/**
+	 * Get the query script
+	 *
+	 * @return string
+	 */
+	public function getQuery()
+	{
+		return $this->script;
+	}
+
+	/**
+	 * Get the template parameters
+	 *
+	 * @return array
+	 */
+	public function getParameters()
+	{
+		return $this->vars;
+	}
+
+	/**
+	 * Retrieve the query results
+	 *
+	 * @return Neo4j\Query\ResultSet
+	 */
+	public function getResultSet()
+	{
+		if ($this->result === null) {
+			$this->result = $this->client->executeGremlinQuery($this);
+		}
+
+		return $this->result;
+	}
+}
+<?php
+namespace Everyman\Neo4j;
+
+/**
+ * Holds the parameters for running a paged traversal
+ */
+class Pager
+{
+	protected $traversal = null;
+	protected $startNode = null;
+	protected $returnType = null;
+
+	protected $id = null;
+	protected $leaseTime = null;
+	protected $pageSize = null;	
+
+	/**
+	 * Set the traversal to paginate
+	 *
+	 * @param Traversal $traversal
+	 * @param Node $startNode
+	 * @param string $returnType
+	 */
+	public function __construct(Traversal $traversal, Node $startNode, $returnType)
+	{
+		$this->traversal = $traversal;
+		$this->startNode = $startNode;
+		$this->returnType = $returnType;
+	}
+
+	/**
+	 * Get the paged traversal id
+	 *
+	 * @return string
+	 */
+	public function getId()
+	{
+		return $this->id;
+	}
+
+	/**
+	 * Get the lease time, in secods
+	 *
+	 * @return integer
+	 */
+	public function getLeaseTime()
+	{
+		return $this->leaseTime;
+	}
+
+	/**
+	 * Get the next page of results
+	 * If the traversal hasn't been run yet, this will run it
+	 *
+	 * @return array
+	 */
+	public function getNextResults()
+	{
+		return $this->traversal->getClient()->executePagedTraversal($this);
+	}
+
+	/**
+	 * Get the maximum result page set size
+	 *
+	 * @return integer
+	 */
+	public function getPageSize()
+	{
+		return $this->pageSize;
+	}
+
+	/**
+	 * Get the return type
+	 *
+	 * @return string
+	 */
+	public function getReturnType()
+	{
+		return $this->returnType;
+	}
+
+	/**
+	 * Return the start node of the traversal
+	 *
+	 * @return Node
+	 */
+	public function getStartNode()
+	{
+		return $this->startNode;
+	}
+
+	/**
+	 * Get the traversal being paginated
+	 *
+	 * @return Traversal
+	 */
+	public function getTraversal()
+	{
+		return $this->traversal;
+	}
+
+	/**
+	 * Set the paged traversal id
+	 *
+	 * @param string $id
+	 * @return Traversal
+	 */
+	public function setId($id)
+	{
+		$this->id = $id;
+		return $this;
+	}
+
+	/**
+	 * Set the lease time
+	 *
+	 * @param integer $leaseTime
+	 * @return Traversal
+	 */
+	public function setLeaseTime($leaseTime)
+	{
+		$this->leaseTime = $leaseTime;
+		return $this;
+	}
+
+	/**
+	 * Set the page size
+	 *
+	 * @param integer $pageSize
+	 * @return Traversal
+	 */
+	public function setPageSize($pageSize)
+	{
+		$this->pageSize = $pageSize;
+		return $this;
+	}
+}
+<?php
+namespace Everyman\Neo4j\Cache;
+
+use Everyman\Neo4j\Cache;
+
+/**
+ * Cache that always indicates success but does not store anything
+ */
+class Null implements Cache
+{
+	/**
+	 * Delete always succeeds
+	 *
+	 * @param string $key
+	 * @return boolean true on success
+	 */
+	public function delete($key)
+	{
+		return true;
+	}
+
+	/**
+	 * Always false, since no value is stored
+	 *
+	 * @param string $key
+	 * @return mixed
+	 */
+	public function get($key)
+	{
+		return false;
+	}
+
+	/**
+	 * Always indicates success, but does not actually store value
+	 *
+	 * @param string $key
+	 * @param mixed $value
+	 * @param integer $expire
+	 * @return boolean true on success
+	 */
+	public function set($key, $value, $expire=0)
+	{
+		return true;
+	}
+}
+<?php
+namespace Everyman\Neo4j\Cache;
+
+use Everyman\Neo4j\Client,
+    Everyman\Neo4j\Exception,
+    Everyman\Neo4j\PropertyContainer,
+    Everyman\Neo4j\Node,
+    Everyman\Neo4j\Relationship,
+    Everyman\Neo4j\Cache;
+
+/**
+ * Store and retrieve cached entities without hitting the server
+ */
+class EntityCache
+{
+	protected $client = null;
+	protected $cache = null;
+	protected $cacheTimeout = null;
+
+	/**
+	 * Set the client and caching plugin to use
+	 *
+	 * @param Client $client
+	 * @param Cache $cache
+	 * @param integer $cacheTimeout
+	 */
+	public function __construct(Client $client, Cache $cache=null, $cacheTimeout=null)
+	{
+		$this->client = $client;
+		$this->setCache($cache, $cacheTimeout);
+	}
+
+	/**
+	 * Delete an entity from the cache
+	 *
+	 * @param PropertyContainer $entity
+	 */
+	public function deleteCachedEntity(PropertyContainer $entity)
+	{
+		$this->getCache()->delete($this->getEntityCacheKey($entity));
+	}
+
+	/**
+	 * Get an entity from the cache
+	 *
+	 * @param integer $id
+	 * @param string $type
+	 */
+	public function getCachedEntity($id, $type)
+	{
+		if ($type != 'node' && $type != 'relationship') {
+			throw new Exception('Unknown entity type: '.$type);
+		}
+
+		$entity = $this->getCache()->get("{$type}-{$id}");
+		if ($entity) {
+			$entity->setClient($this->client);
+		}
+		return $entity;
+	}
+
+	/**
+	 * Set the cache to use
+	 *
+	 * @param Cache $cache
+	 * @param integer $cacheTimeout
+	 */
+	public function setCache(Cache $cache=null, $cacheTimeout=null)
+	{
+		$this->cache = $cache;
+		$this->cacheTimeout = (int)$cacheTimeout;
+	}
+
+	/**
+	 * Set an entity in the cache
+	 *
+	 * @param PropertyContainer $entity
+	 */
+	public function setCachedEntity(PropertyContainer $entity)
+	{
+		$this->getCache()->set($this->getEntityCacheKey($entity), $entity, $this->cacheTimeout);
+	}
+
+	/**
+	 * Get the cache plugin
+	 *
+	 * @return Cache
+	 */
+	protected function getCache()
+	{
+		if ($this->cache === null) {
+			$this->setCache(new Cache\Null(), $this->cacheTimeout);
+		}
+		return $this->cache;
+	}
+
+	/**
+	 * Determine the cache key used to retrieve the given entity from the cache
+	 *
+	 * @param PropertyContainer $entity
+	 * @return string 
+	 */
+	protected function getEntityCacheKey(PropertyContainer $entity)
+	{
+		if ($entity instanceof Node) {
+			return 'node-'.$entity->getId();
+		} else if ($entity instanceof Relationship) {
+			return 'relationship-'.$entity->getId();
+		}
+		throw new Exception('Unknown entity type: '.get_class($entity));
+	}
+}
+<?php
+namespace Everyman\Neo4j\Cache;
+
+use Everyman\Neo4j\Cache;
+
+/**
+ * Use the Memcached extension
+ */
+class Memcached implements Cache
+{
+	protected $memcached = null;
+
+	/**
+	 * Initialize the Memcached connection
+	 *
+	 * @param Memcached $memcached
+	 */
+	public function __construct(\Memcached $memcached)
+	{
+		$this->memcached = $memcached;
+	}
+
+	/**
+	 * Delete a value from the cache
+	 *
+	 * @param string $key
+	 * @return boolean true on success
+	 */
+	public function delete($key)
+	{
+		return $this->memcached->delete($key);
+	}
+
+	/**
+	 * Retrieve a value
+	 * Returns false if the key does not
+	 * exist, or the value is false
+	 *
+	 * @param string $key
+	 * @return mixed
+	 */
+	public function get($key)
+	{
+		return $this->memcached->get($key);
+	}
+
+	/**
+	 * Store a value in the cache
+	 * $expire is specified as an integer:
+	 *   - less than or equal to 2592000 (the number of seconds in 30 days)
+	 *     will be considered an expire time of that many seconds from the
+	 *     current timestamp
+	 *   - Greater than that amount will be considered as literal Unix
+	 *     timestamp values
+	 *   - 0 means "never expire."
+	 *
+	 * @param string $key
+	 * @param mixed $value
+	 * @param integer $expire
+	 * @return boolean true on success
+	 */
+	public function set($key, $value, $expire=0)
+	{
+		return $this->memcached->set($key, $value, $expire);
+	}
+}
+
+<?php
+namespace Everyman\Neo4j\Cache;
+
+use Everyman\Neo4j\Cache;
+
+/**
+ * Cache everything locally to the process
+ * Values cached this way are not persisted
+ * when the process or request ends.
+ */
+class Variable implements Cache
+{
+	protected $items = array();
+
+	/**
+	 * Delete a value from the cache
+	 *
+	 * @param string $key
+	 * @return boolean true on success
+	 */
+	public function delete($key)
+	{
+		unset($this->items[$key]);
+		return true;
+	}
+
+	/**
+	 * Retrieve a value
+	 * Returns false if the key does not
+	 * exist, or the value is false
+	 *
+	 * @param string $key
+	 * @return mixed
+	 */
+	public function get($key)
+	{
+		$value = false;
+		if (isset($this->items[$key])) {
+			if ($this->items[$key]['expire'] >= time()) {
+				$value = $this->items[$key]['value'];
+			} else {
+				$this->delete($key);
+			}
+		}
+
+		return $value;
+	}
+
+	/**
+	 * Store a value in the cache
+	 * $expire is specified as an integer:
+	 *   - less than or equal to 2592000 (the number of seconds in 30 days)
+	 *     will be considered an expire time of that many seconds from the
+	 *     current timestamp
+	 *   - Greater than that amount will be considered as literal Unix
+	 *     timestamp values
+	 *   - 0 means "never expire."
+	 *
+	 * @param string $key
+	 * @param mixed $value
+	 * @param integer $expire
+	 * @return boolean true on success
+	 */
+	public function set($key, $value, $expire=0)
+	{
+		$expire = $this->calculateExpiration($expire);
+
+		$this->items[$key] = array(
+			'value' => $value,
+			'expire' => $expire,
+		);
+		return true;
+	}
+
+	/**
+	 * Determine the expiration timestamp
+	 *
+	 * @param integer $expire
+	 * @return integer
+	 */
+	protected function calculateExpiration($expire)
+	{
+		if ($expire <= 2592000) {
+			$expire = time() + $expire;
+		} else if (!$expire) {
+			$expire = PHP_INT_MAX;
+		}
+		return $expire;
+	}
+}
+<?php
+namespace Everyman\Neo4j\Cache;
+
+use Everyman\Neo4j\Cache;
+
+/**
+ * Use the Memcache extension
+ */
+class Memcache implements Cache
+{
+	protected $memcache = null;
+
+	/**
+	 * Initialize the Memcache connection
+	 *
+	 * @param Memcache $memcache
+	 */
+	public function __construct(\Memcache $memcache)
+	{
+		$this->memcache = $memcache;
+	}
+
+	/**
+	 * Delete a value from the cache
+	 *
+	 * @param string $key
+	 * @return boolean true on success
+	 */
+	public function delete($key)
+	{
+		return $this->memcache->delete($key);
+	}
+
+	/**
+	 * Retrieve a value
+	 * Returns false if the key does not
+	 * exist, or the value is false
+	 *
+	 * @param string $key
+	 * @return mixed
+	 */
+	public function get($key)
+	{
+		return $this->memcache->get($key);
+	}
+
+	/**
+	 * Store a value in the cache
+	 * $expire is specified as an integer:
+	 *   - less than or equal to 2592000 (the number of seconds in 30 days)
+	 *     will be considered an expire time of that many seconds from the
+	 *     current timestamp
+	 *   - Greater than that amount will be considered as literal Unix
+	 *     timestamp values
+	 *   - 0 means "never expire."
+	 *
+	 * @param string $key
+	 * @param mixed $value
+	 * @param integer $expire
+	 * @return boolean true on success
+	 */
+	public function set($key, $value, $expire=0)
+	{
+		return $this->memcache->set($key, $value, 0, $expire);
+	}
+}
+
+<?php
+namespace Everyman\Neo4j;
+
+/**
+ * Represents an index in the database
+ */
+class Index
+{
+	const TypeNode = 'node';
+	const TypeRelationship = 'relationship';
+
+	protected $client = null;
+	protected $type = self::TypeNode;
+	protected $name = null;
+	protected $config = array();
+
+	/**
+	 * Initialize the index
+	 *
+	 * @param Client $client
+	 * @param string $type
+	 * @param string $name
+	 * @param array  $config
+	 */
+	public function __construct(Client $client, $type, $name, $config=array())
+	{
+		$this->client = $client;
+		$this->type = $type;
+		$this->name = $name;
+		$this->config = $config;
+	}
+
+	/**
+	 * Add an entity to the index
+	 *
+	 * @param PropertyContainer $entity
+	 * @param string $key
+	 * @param string $value
+	 * @return boolean
+	 */
+	public function add($entity, $key, $value)
+	{
+		return $this->client->addToIndex($this, $entity, $key, $value);
+	}
+
+	/**
+	 * Delete this index
+	 *
+	 * @return boolean
+	 */
+	public function delete()
+	{
+		return $this->client->deleteIndex($this);
+	}
+
+	/**
+	 * Find entities
+	 *
+	 * @param string $key
+	 * @param string $value
+	 * @return array
+	 */
+	public function find($key, $value)
+	{
+		return $this->client->searchIndex($this, $key, $value);
+	}
+
+	/**
+	 * Find a single entity
+	 *
+	 * @param string $key
+	 * @param string $value
+	 * @return PropertyContainer
+	 */
+	public function findOne($key, $value)
+	{
+		$entities = $this->client->searchIndex($this, $key, $value);
+		return $entities ? $entities[0] : null;
+	}
+
+	/**
+	 * Get the configuration options for this index
+	 *
+	 * Configuration options are only used during index creation,
+	 * see `save`
+	 *
+	 * @return array
+	 */
+	public function getConfig()
+	{
+		return $this->config;
+	}
+
+	/**
+	 * Get the index name
+	 *
+	 * @return string
+	 */
+	public function getName()
+	{
+		return $this->name;
+	}
+
+	/**
+	 * Get the index type
+	 *
+	 * @return string
+	 */
+	public function getType()
+	{
+		return $this->type;
+	}
+
+	/**
+	 * Query index to find entities
+	 *
+	 * @param string $query
+	 * @return array
+	 */
+	public function query($query)
+	{
+		return $this->client->queryIndex($this, $query);
+	}
+
+	/**
+	 * Query index to find a single entity
+	 *
+	 * @param string $query
+	 * @return PropertyContainer
+	 */
+	public function queryOne($query)
+	{
+		$entities = $this->client->queryIndex($this, $query);
+		return $entities ? $entities[0] : null;
+	}
+
+	/**
+	 * Remove an entity from the index
+	 * If $value is not given, all reference of the entity for the key
+	 * are removed.
+	 * If $key is not given, all reference of the entity are removed.
+	 *
+	 * @param PropertyContainer $entity
+	 * @param string $key
+	 * @param string $value
+	 * @return boolean
+	 */
+	public function remove($entity, $key=null, $value=null)
+	{
+		return $this->client->removeFromIndex($this, $entity, $key, $value);
+	}
+
+	/**
+	 * Save this index
+	 *
+	 * @return boolean
+	 */
+	public function save()
+	{
+		return $this->client->saveIndex($this);
+	}
+}
+All project code is licensed under the MIT License
+http://www.opensource.org/licenses/mit-license.php
+
+Copyright (c) 2011 Josh Adell <josh.adell@gmail.com>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+π<È˚¬£®ÖèˆN¿NWΩD≈0&#65533;&#65533;&#65533;GBMB
