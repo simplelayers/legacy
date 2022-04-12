@@ -1,0 +1,17 @@
+aea,Albers Equal Area,http://en.wikipedia.org/wiki/Albers_projection
+cass,Cassini-Soldner,http://resources.arcgis.com/en/help/main/10.1/index.html#/Cassini_Soldner/003r0000001v000000/
+cea,Cylindrical Equal Area,http://resources.arcgis.com/en/help/main/10.1/index.html#/Cylindrical_Equal_Area/003r00000021000000/
+eqc,Equirectangular,http://resources.arcgis.com/en/help/main/10.1/index.html#/Equirectangular/003r0000002n000000/
+krovak,Krovak,http://resources.arcgis.com/en/help/main/10.1/index.html#//003r00000032000000
+laea,Lambert Azimuthal Equal Area,http://resources.arcgis.com/en/help/main/10.1/index.html#/Lambert_Azimuthal_Equal_Area/003r00000033000000/
+lcc,Lambert Conic Conformal,http://resources.arcgis.com/en/help/main/10.1/index.html#/Lambert_Conformal_Conic/003r00000034000000/
+longlat,Longitude / Lattitude,
+merc,Mercator,http://resources.arcgis.com/en/help/main/10.1/index.html#/Mercator/003r00000038000000/
+nzmg,New Zealand Map Grid,http://resources.arcgis.com/en/help/main/10.1/index.html#/New_Zealand_National_Grid/003r0000003n000000/
+omerc,Oblique Mercator,http://resources.arcgis.com/en/help/main/10.1/index.html#/Hotine_Oblique_Mercator/003r00000031000000/
+poly,Polyconic,http://resources.arcgis.com/en/help/main/10.1/index.html#/Polyconic/003r0000003t000000/
+somerc,Swiss Oblique Mercator,http://en.wikipedia.org/wiki/Swiss_coordinate_system
+stere,Sterographic (legacy),http://resources.arcgis.com/en/help/main/10.1/index.html#/Stereographic/003r00000044000000/
+sterea,Steorgraphic,http://resources.arcgis.com/en/help/main/10.1/index.html#/Stereographic/003r00000044000000/
+tmerc,Transverse Mercator,http://resources.arcgis.com/en/help/main/10.1/index.html#/Transverse_Mercator/003r00000046000000/
+utm,Universal Transverse Mercator (UTM),http://resources.arcgis.com/en/help/main/10.1/index.html#/Universal_Transverse_Mercator/003r00000049000000/
