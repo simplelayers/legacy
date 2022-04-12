@@ -1,0 +1,35 @@
+#invoice{
+	width:7.5in;
+	border:1px solid #000;
+	color:#000;
+	margin:0 auto;
+}
+#invoice td.invoice_name{
+	font-size:18pt;
+	vertical-align:bottom;
+}
+#invoice td.invoice_head{
+	text-align:right;
+	font-size:28pt;
+	vertical-align:bottom;
+	font-weight:700;
+}
+#invoice td{
+	font-size:12pt;
+	vertical-align:top;
+}
+#invoice table{
+	width:7in;
+	color:#000;
+	margin:0 auto;
+	border-collapse: collapse;
+}
+#invoice table td, #invoice table th{
+	border-left:1px solid #000;
+	border-right:1px solid #000;
+	background:none;
+}
+#invoice table th, #invoice table td.subtotal{
+	border-top:1px solid #000;
+	border-bottom:1px solid #000;
+}

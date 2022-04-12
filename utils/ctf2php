@@ -1,0 +1,20 @@
+#!/usr/bin/env perl
+# This utility reads a file in CTF (coloscheme transfer format) and outputs
+# a PHP structure suitable for insertion into colorschemes.
+
+# Usage: cat input.ctf | ctf2php > new_schemes.php
+
+# CTF is a format listing a color scheme on each line.
+# Each line is a three-part scheme name, a colon, and a comma-joined list of #RRGGBB colors
+# The scheme name is the name, how many colors are in it, and the scheme's type,
+# joined by _ characters.
+# Example:
+# RedNGreens_6_qualitative : #FF0000, #00FF00, #0000FF
+
+while (<>) {
+   my($schemestring,$colors) = (m/^(\w+)\s*:\s*(.+)/);
+   my ($schemename,$schemesize,$schemetype) = split('_',$schemestring);
+   my $colors = join(',', map {"'$_'"} split(/\s*,\s*/,$colors));
+   next unless $colors; next unless $schemetype;
+   print "@\$COLORSCHEMES['$schemetype'][$schemesize]['$schemename'] = array($colors);\n";
+}

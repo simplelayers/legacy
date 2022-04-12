@@ -1,0 +1,51 @@
+.leftColumn {
+	float: left;
+	width: 50%;
+}
+
+.leftColumn div{ 
+	padding-left:10px;
+	padding-right:15px;
+}
+
+.leftColumn H1{ 
+	font-size: 13pt;
+	font-weight: bold;
+}
+
+.leftColumn P{ 
+	font-style:italic;
+}
+
+
+
+.rightColumn {
+	float: right;
+	width: 50%;
+}
+
+.rightColumn div{ 
+	padding-left:10px;
+	padding-right:15px;
+}
+
+.rightColumn H1{ 
+	font-size: 13pt;
+	font-weight: bold;
+}
+
+.rightColumn P{ 
+	font-style:italic;
+}
+
+.center{ 
+	clear:both;
+	text-align:center;
+	width:100%;
+}
+
+.body{ 
+	padding:0;
+	margin:0;
+	
+}

@@ -1,0 +1,109 @@
+@CHARSET "ISO-8859-1";
+
+.header.main {
+	min-width:400px;
+	zoom: 1;
+	padding: 5px;
+	margin: 0;
+	height:82px;
+	background-color: #ccc;
+	background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,1)), to(rgba(255,255,255,0))),
+                   url('../media/images/empty.png');
+	background-image: -webkit-linear-gradient(top, rgba(255,255,255,1), rgba(255,255,255,0)),
+	               url('../media/images/empty.png');
+	background-image: -moz-linear-gradient(top, rgba(255,255,255,1), rgba(255,255,255,0)),
+	               url('../media/images/empty.png');
+	background-image: -ms-linear-gradient(top, rgba(255,255,255,1), rgba(255,255,255,0)),
+	               url('../media/images/empty.png');
+	background-image: -o-linear-gradient(top, rgba(255,255,255,1), rgba(255,255,255,0)),
+	               url('../media/images/empty.png');
+	background-image: linear-gradient(top, rgba(255,255,255,1), rgba(255,255,255,0)),
+	               url('../media/images/empty.png');
+	
+}
+.header.main.later {
+	background-image: -webkit-gradient(linear, left top, left bottom, from(rgb(221,221,187)), to(rgb(153,153,119))),
+		url('../media/images/empty.png');
+	background-image: -moz-linear-gradient(bottom, rgb(153,153,119),rgb(221,221,187)),url('../media/images/empty.png'));
+	background-image: linear-gradient(to top, rgb(153,153,119), rgb(221,221,187)),
+		url('../media/images/empty.png');
+	background-image: -ms-linear-gradient(bottom,rgb(153,153,119), rgb(221,221,187)),
+		url('../media/images/empty.png');
+	background-image: -o-linear-gradient(top, rgba(153,153,119,1), rgba(221,221,187,1)),
+		url('../media/images/empty.png');	
+}
+.logo {
+	float:left;
+	height:80px;
+	width:;
+}
+
+.logo .whiteshadow {
+	height:80px;	
+	
+}
+
+.avatarea{
+	
+	display:inline-block;
+	float:right;
+	min-width:190px;
+ 	border-style:none;
+	padding:0px 0px 0px 0px;
+	line-height: 18px;
+	
+	border-width:1px;
+	font-size:9pt;
+	vertical-align:middle;
+}
+
+a.avatarealink {  text-decoration:none;
+				padding-left: 15px;
+                font-weight:bold;
+                font-size:9pt; 
+                color:#660000; text-decoration:none;
+			 }
+a.avatarealink:hover { color:#0000FF; }
+span.avatareaheader { font-weight:bold;font-size:8pt; }
+
+.avatarea .logged_in_heading {
+	font-weight:bold;	
+}
+
+.avatarea .user_info {
+	float:left;	
+	font-weight:bold;
+	margin-top:-1px;
+	padding-right:8px;
+  
+}
+.avatarea .user_info .later{
+	text-shadow: 0 1px 0 rgba(255,255,255, .9);
+}
+
+.avatarea .avatar_container {
+	float:right;
+}
+
+.avatarea .avatar {
+	width:50px;
+	height:50px;
+}
+.avatarea .actions {
+	clear:both;
+	padding-top:2px;
+	
+}
+
+.avatarea .username {
+	
+}
+#seatname {
+	font-style:italic;
+}
+#logout_button {
+	float:left;
+}
+#profile_button {
+	float:right;
+}

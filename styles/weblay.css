@@ -1,0 +1,945 @@
+.ico_button, .sl_toggle_button {
+	padding:0px !important;
+	margin:0px !important;
+	
+	vertical-align:bottom !important;	
+}
+
+.ico_button .sl_ico_label {
+	padding-top:0px;
+	float:left;
+	padding-right:10px;
+	height:1.4em;
+	line-height:1.76em;
+	display:table-cell;
+	margin-top:0px;
+	vertical-align:middle !important;
+}
+
+.ico_button .weblay_ico {
+	float:left;
+}
+
+.weblay_ico {
+	background-image: url('../media/images/weblays_icons.png');
+	background-repeat: no-repeat;
+	width:32px !important;
+	height:32px !important;
+	border:0px;
+}
+.weblay_ico .none {
+	background-image: none;
+	display:none !importat;
+	width:0px !important;
+}
+.ico_button.sm {
+	vertical-align:text-bottom !important;
+	padding-right:5px;
+	width:; 
+	height:21px !important;
+}
+.ico_button.sm.noLabel {
+	width:25px !important;
+	position:relative;
+	top:0px;	
+	vertical-align:text-bottom !important;
+		
+}
+
+.sl_toggle_button {
+	vertical-align:text-bottom !important;
+	position:relative;
+	top:0px;
+	width: 25px !important; 
+	height:22px !important;
+	padding:0px !important	
+	line-height: 21px;
+	
+}
+.sl_toggle_button img {
+	
+	display: inline-block;
+	border-collapse:collapse !important;
+	border:none !important;
+	float:left;
+	display: inline-block;
+	width: 16px !important;
+	height:16px !important;
+	margin-left: 3.5px;
+	margin-top: 1px;
+}
+.sl_toggle_button [disabled].button img  {
+	display: hidden !important;
+}
+
+.ico_button.sm .label {
+	position:relative;	
+	left:0px;
+	line-height:21px;
+	margin-left:-5px;
+	padding-right:10px;	
+}
+
+.ico_button.sm img {
+	position:relative;
+	top:-7px;
+	left:-5px;
+	
+	
+}
+
+img.weblay_ico.none  {
+	background:none;
+	display:none;;
+	
+}
+
+.weblay_ico.pencil {
+	background-position: 0px 0px;
+}
+
+.weblay_ico.brush {
+	background-position: -32px 0px;
+}
+.weblay_ico.dib {
+	background-position: -64px 0px;
+}
+.weblay_ico.dib_pen {
+	background-position: -96px 0px;
+}
+.weblay_ico.brush_wide {
+	background-position: -128px 0px;
+}
+.weblay_ico.paint_bucket {
+	background-position: -160px 0px;
+}
+.weblay_ico.eye_open {
+	background-position: -192px 0px;
+}
+.weblay_ico.univ_no {
+	background-position: -224px 0px;
+}
+.weblay_ico.trash {
+	background-position: -256px 0px;
+}
+.weblay_ico.mag {
+	background-position: -288px 0px;
+}
+.weblay_ico.mag_minus {
+	background-position: -320px 0px;
+}
+.weblay_ico.mag_plus {
+	background-position: -352px 0px;
+}
+.weblay_ico.wand {
+	background-position: -384px 0px;
+}
+.weblay_ico.crosshair {
+	background-position: -416px 0px;
+}
+/* Row 1 */
+.weblay_ico.flag {
+	background-position: 0px -32px;
+}
+
+.weblay_ico.paperclip {
+	background-position: -32px -32px;
+}
+.weblay_ico.connections {
+	background-position: -64px -32px;
+}
+.weblay_ico.link {
+	background-position: -96px -32px;
+}
+.weblay_ico.tag {
+	background-position: -128px -32px;
+}
+.weblay_ico.lock {
+	background-position: -160px -32px;
+}
+.weblay_ico.lock_open {
+	background-position: -192px -32px;
+}
+.weblay_ico.pushpin {
+	background-position: -224px -32px;
+}
+.weblay_ico.pin {
+	background-position: -256px -32px;
+}
+.weblay_ico.badge {
+	background-position: -288px -32px;
+}
+.weblay_ico.key {
+	background-position: -320px -32px;
+}
+.weblay_ico.fire {
+	background-position: -352px -32px;
+}
+.weblay_ico.target {
+	background-position: -384px -32px;
+}
+.weblay_ico.bolt {
+	background-position: -416px -32px;
+}
+.weblay_ico.clock {
+	background-position: -448px -32px;
+}
+.weblay_ico.clock_tics {
+	background-position: -480px -32px;
+}
+.weblay_ico.hour_glass {
+	background-position: -512px -32px;
+}
+
+/* row 2 */
+.weblay_ico.phone {
+	background-position: 0px -64px;
+}
+.weblay_ico.cell {
+	background-position: -32px -64px;
+}
+.weblay_ico.envelope {
+	background-position: -64px -64px;
+}
+.weblay_ico.envelope_open {
+	background-position: -96px -64px;
+}
+.weblay_ico.envelope_stuffed {
+	background-position: -128px -64px;
+}
+.weblay_ico.box_inout {
+	background-position: -160px -64px;
+}
+.weblay_ico.box_out{
+	background-position: -192px -64px;
+}
+.weblay_ico.box_in{
+	background-position: -224px -64px;
+}
+.weblay_ico.video {
+	background-position: -256px -64px;
+}
+.weblay_ico.tape {
+	background-position: -288px -64px;
+}
+.weblay_ico.comment_filled {
+	background-position: -320px -64px;
+}
+.weblay_ico.comment_round {
+	background-position: -352px -64px;
+}
+.weblay_ico.comment_sq {
+	background-position: -384px -64px;
+}
+.weblay_ico.conversation {
+	background-position: -416px -64px;
+}
+.weblay_ico.rss_rev {
+	background-position: -448px -64px;
+}
+.weblay_ico.rss {
+	background-position: -480px -64px;
+}
+.weblay_ico.antenna {
+	background-position: -512px -64px;
+}
+
+/* row 3 */
+.weblay_ico.contacts {
+	background-position: 0px -96px;
+}
+.weblay_ico.contactbook {
+	background-position: -32px -96px;
+}
+.weblay_ico.person {
+	background-position: -64px -96px;
+}
+.weblay_ico.person_tie {
+	background-position: -96px -96px;
+}
+.weblay_ico.person_minus_simple {
+	background-position: -128px -96px;
+}
+.weblay_ico.person_plus {
+	background-position: -160px -96px;
+}
+.weblay_ico.person_minus {
+	background-position: -192px -96px;
+}
+.weblay_ico.person_x {
+	background-position: -224px -96px;
+}
+.weblay_ico.contact {
+	background-position: -256px -96px;
+}
+.weblay_ico.people {
+	background-position: -288px -96px;
+}
+.weblay_ico.buildings {
+	background-position: -320px -96px;
+}
+.weblay_ico.calendar_day {
+	background-position: -352px -96px;
+}
+.weblay_ico.calendar_month {
+	background-position: -384px -96px;
+}
+
+/* row 4 */
+.weblay_ico.page {
+	background-position: 0px -128px;
+}
+.weblay_ico.page_content {
+	background-position: -32px -128px;
+}
+.weblay_ico.pages {
+	background-position: -64px -128px;
+}
+.weblay_ico.folder {
+	background-position: -96px -128px;
+}
+.weblay_ico.folder_open {
+	background-position: -128px -128px;
+}
+.weblay_ico.folder_locked {
+	background-position: -160px -128px;
+}
+.weblay_ico.folder_plus {
+	background-position: -192px -128px;
+}
+.weblay_ico.folder_minus {
+	background-position: -224px -128px;
+}
+.weblay_ico.page_plus {
+	background-position: -256px -128px;
+}
+.weblay_ico.page_edit {
+	background-position: -288px -128px;
+}
+.weblay_ico.page_get {
+	background-position: -320px -128px;
+}
+
+/* row 5 */
+.weblay_ico.home {
+	background-position: 0px -160px;
+}
+.weblay_ico.home_rev {
+	background-position: -32px -160px;
+}
+.weblay_ico.signposts {
+	background-position: -64px -160px;
+}
+.weblay_ico.world {
+	background-position: -96px -160px;
+}
+.weblay_ico.map {
+	background-position: -128px -160px;
+}
+.weblay_ico.marker {
+	background-position: -160px -160px;
+}
+.weblay_ico.sign {
+	background-position: -192px -160px;
+}
+.weblay_ico.preserver {
+	background-position: -224px -160px;
+}
+.weblay_ico.code {
+	background-position: -256px -160px;
+}
+.weblay_ico.objects {
+	background-position: -288px -160px;
+}
+.weblay_ico.object {
+	background-position: -320px -160px;
+}
+.weblay_ico.network {
+	background-position: -352px -160px;
+}
+.weblay_ico.stack {
+	background-position: -384px -160px;
+}
+
+/* row 6 */
+.weblay_ico.cart_solid {
+	background-position: 0px -192px;
+}
+.weblay_ico.cart {
+	background-position: -32px -192px;
+}
+.weblay_ico.purse {
+	background-position: -64px -192px;
+}
+.weblay_ico.basket {
+	background-position: -96px -192px;
+}
+.weblay_ico.truck {
+	background-position: -128px -192px;
+}
+.weblay_ico.clipboard {
+	background-position: -160px -192px;
+}
+.weblay_ico.gift {
+	background-position: -192px -192px;
+}
+.weblay_ico.credit {
+	background-position: -224px -192px;
+}
+.weblay_ico.cash {
+	background-position: -256px -192px;
+}
+.weblay_ico.change {
+	background-position: -288px -192px;
+}
+.weblay_ico.calculator {
+	background-position: -320px -192px;
+}
+.weblay_ico.bank {
+	background-position: -352px -192px;
+}
+
+/* row 7 */
+.weblay_ico.speedometer {
+	background-position: 0px -224px;
+}
+.weblay_ico.gear {
+	background-position: -32px -224px;
+}
+.weblay_ico.gears {
+	background-position: -64px -224px;
+}
+.weblay_ico.tools {
+	background-position: -96px -224px;
+}
+.weblay_ico.screwdriver {
+	background-position: -128px -224px;
+}
+.weblay_ico.wrench {
+	background-position: -160px -224px;
+}
+.weblay_ico.toolbox {
+	background-position: -192px -224px;
+}
+.weblay_ico.wall_switch {
+	background-position: -224px -224px;
+}
+.weblay_ico.sliders {
+	background-position: -256px -224px;
+}
+
+/* row 8 */
+.weblay_ico.notebook {
+	background-position: 0px -256px;
+}
+.weblay_ico.bookmarked {
+	background-position: -32px -256px;
+}
+.weblay_ico.spiral_notes {
+	background-position: -64px -256px;
+}
+.weblay_ico.notebook_2{
+	background-position: -96px -256px;
+}
+.weblay_ico.camera {
+	background-position: -128px -256px;
+}
+.weblay_ico.video_camera {
+	background-position: -160px -256px;
+}
+.weblay_ico.graph_bar {
+	background-position: -192px -256px;
+}
+.weblay_ico.graph_line {
+	background-position: -224px -256px;
+}
+.weblay_ico.graph {
+	background-position: -256px -256px;
+}
+.weblay_ico.graphs {
+	background-position: -288px -256px;
+}
+.weblay_ico.presentation_screen {
+	background-position: -320px -256px;
+}
+.weblay_ico.film {
+	background-position: -352px -256px;
+}
+.weblay_ico.package_minus {
+	background-position: -384px -256px;
+}
+.weblay_ico.package_get {
+	background-position: -416px -256px;
+}
+.weblay_ico.package_put{
+	background-position: -448px -256px;
+}
+.weblay_ico.music_notes {
+	background-position: -480px -256px;
+}
+.weblay_ico.book_open {
+	background-position: -512px -256px;
+}
+
+/* row 9 */
+.weblay_ico.database {
+	background-position: 0px -288px;
+}
+.weblay_ico.monitor {
+	background-position: -32px -288px;
+}
+.weblay_ico.iphone {
+	background-position: -64px -288px;
+}
+.weblay_ico.ipad {
+	background-position: -96px -288px;
+}
+.weblay_ico.ipod {
+	background-position: -128px -288px;
+}
+.weblay_ico.battery_empty {
+	background-position: -160px -288px;
+}
+.weblay_ico.battery_half {
+	background-position: -192px -288px;
+}
+.weblay_ico.battery_full {
+	background-position: -224px -288px;
+}
+.weblay_ico.battery_charging {
+	background-position: -256px -288px;
+}
+
+/* row 10 */
+.weblay_ico.chart_pie {
+	background-position: 0px -320px;
+}
+.weblay_ico.chart_bar {
+	background-position: -32px -320px;
+}
+.weblay_ico.application {
+	background-position: -64px -320px;
+}
+.weblay_ico.app_graph {
+	background-position: -96px -320px;
+}
+.weblay_ico.app_commandline {
+	background-position: -128px -320px;
+}
+.weblay_ico.app_report {
+	background-position: -160px -320px;
+}
+.weblay_ico.app_layout {
+	background-position: -192px -320px;
+}
+.weblay_ico.shell {
+	background-position: -224px -320px;
+}
+
+/* row 11 */
+.weblay_ico.heart {
+	background-position: 0px -352px;
+}
+.weblay_ico.heart_solid {
+	background-position: -32px -352px;
+}
+.weblay_ico.like {
+	background-position: -64px -352px;
+}
+.weblay_ico.dislike {
+	background-position: -96px -352px;
+}
+.weblay_ico.award {
+	background-position: -128px -352px;
+}
+.weblay_ico.warning_ico {
+	background-position: -160px -352px;
+}
+.weblay_ico.check{
+	background-position: -192px -352px;
+}
+.weblay_ico.checkbox_checked {
+	background-position: -224px -352px;
+}
+.weblay_ico.checkbox_disabled {
+	background-position: -256px -352px;
+}
+.weblay_ico.check_styled {
+	background-position: -288px -352px;
+}
+.weblay_ico.checkbox_round {
+	background-position: -320px -352px;
+}
+.weblay_ico.checkbox_round_disabled {
+	background-position: -352px -352px;
+}
+.weblay_ico.checkbox_round_rev {
+	background-position: -384px -352px;
+}
+.weblay_ico.star {
+	background-position: -416px -352px;
+}
+.weblay_ico.star_bold {
+	background-position: -448px -352px;
+}
+
+
+/* row 12 */
+.weblay_ico.beaker {
+	background-position: 0px -384px;
+}
+.weblay_ico.bomb{
+	background-position: -32px -384px;
+}
+.weblay_ico.stamp {
+	background-position: -64px -384px;
+}
+.weblay_ico.mug {
+	background-position: -96px -384px;
+}
+.weblay_ico.lightbulb {
+	background-position: -128px -384px;
+}
+.weblay_ico.suitcase {
+	background-position: -160px -384px;
+}
+.weblay_ico.funnel {
+	background-position: -192px -384px;
+}
+.weblay_ico.ticket {
+	background-position: -224px -384px;
+}
+.weblay_ico.bug {
+	background-position: -256px -384px;
+}
+
+/* row 13 */
+.weblay_ico.text {
+	background-position: 0px -416px;
+}
+.weblay_ico.underline_ico {
+	background-position: -32px -416px;
+}
+.weblay_ico.italic_ico {
+	background-position: -64px -416px;
+}
+.weblay_ico.bold_ico {
+	background-position: -96px -416px;
+}
+.weblay_ico.strikethrough_ico {
+	background-position: -128px -416px;
+}
+.weblay_ico.justify_ico {
+	background-position: -160px -416px;
+}
+.weblay_ico.left_ico {
+	background-position: -192px -416px;
+}
+.weblay_ico.center_ico {
+	background-position: -224px -416px;
+}
+.weblay_ico.right_ico {
+	background-position: -256px -416px;
+}
+.weblay_ico.ul_list_ico {
+	background-position: -288px -416px;
+}
+.weblay_ico.ol_list_ico {
+	background-position: -320px -416px;
+}
+.weblay_ico.outdent_ico {
+	background-position: -352px -416px;
+}
+.weblay_ico.indent_ico {
+	background-position: -384px -416px;
+}
+
+/* row 14 */
+.weblay_ico.page_plus {
+	background-position: 0px -448px;
+}
+.weblay_ico.save_ico {
+	background-position: -32px -448px;
+}
+.weblay_ico.cut_ico {
+	background-position: -64px -448px;
+}
+.weblay_ico.paste_ico {
+	background-position: -96px -448px;
+}
+.weblay_ico.copy_ico {
+	background-position: -128px -448px;
+}
+.weblay_ico.undo_ico {
+	background-position: -160px -448px;
+}
+.weblay_ico.redo_ico {
+	background-position: -192px -448px;
+}
+.weblay_ico.search_ico {
+	background-position: -224px -448px;
+}
+.weblay_ico.print_ico {
+	background-position: -256px -448px;
+}
+.weblay_ico.anchor {
+	background-position: -288px -448px;
+}
+.weblay_ico.erase_ico {
+	background-position: -320px -448px;
+}
+.weblay_ico.markup {
+	background-position: -352px -448px;
+}
+.weblay_ico.quote_ico {
+	background-position: -384px -448px;
+}
+.weblay_ico.invisibles_ico {
+	background-position: -416px -448px;
+}
+.weblay_ico.stroke_color_ico {
+	background-position: -448px -448px;
+}
+.weblay_ico.text_color_ico {
+	background-position: -480px -448px;
+}
+.weblay_ico.hr_ico {
+	background-position: -512px -448px;
+}
+
+/* row 15 */
+.weblay_ico.arrow_right_sq_rev {
+	background-position: 0px -480px;
+}
+.weblay_ico.arrow_right_round_rev {
+	background-position: -32px -480px;
+}
+.weblay_ico.arrow_right_round {
+	background-position: -64px -480px;
+}
+.weblay_ico.arrow_right {
+	background-position: -96px -480px;
+}
+.weblay_ico.arrow_right_dashed  {
+	background-position: -128px -480px;
+}
+.weblay_ico.play_round_rev {
+	background-position: -160px -480px;
+}
+.weblay_ico.gt_arrow {
+	background-position: -192px -480px;
+}
+.weblay_ico.arrow_right_round_sm {
+	background-position: -224px -480px;
+}
+.weblay_ico.play_arrow_sm {
+	background-position: -256px -480px;
+}
+.weblay_ico.right_arrow_fat_sm {
+	background-position: -288px -480px;
+}
+.weblay_ico.right_arrow_dashed_bold {
+	background-position: -320px -480px;
+}
+.weblay_ico.gt_arrow_sm {
+	background-position: -352px -480px;
+}
+.weblay_ico.down_arrow_sm {
+	background-position: -384px -480px;
+}
+.weblay_ico.down_arrow_rev_sm {
+	background-position: -416px -480px;
+}
+.weblay_ico.arrow_down_right {
+	background-position: -448px -480px;
+}
+
+/* row 16 */
+.weblay_ico.sound_mute {
+	background-position: 0px -512px;
+}
+.weblay_ico.sound_min {
+	background-position: -32px -512px;
+}
+.weblay_ico.sound_max {
+	background-position: -64px -512px;
+}
+.weblay_ico.last_track{
+	background-position: -96px -512px;
+}
+.weblay_ico.rewind {
+	background-position: -128px -512px;
+}
+.weblay_ico.pause {
+	background-position: -160px -512px;
+}
+.weblay_ico.play {
+	background-position: -192px -512px;
+}
+.weblay_ico.fastfwd {
+	background-position: -224px -512px;
+}
+.weblay_ico.next_track {
+	background-position: -256px -512px;
+}
+.weblay_ico.last_track_rev {
+	background-position: -288px -512px;
+}
+.weblay_ico.rewind_rev {
+	background-position: -320px -512px;
+}
+.weblay_ico.pause_rev {
+	background-position: -352px -512px;
+}
+.weblay_ico.fastfwd_rev {
+	background-position: -384px -512px;
+}
+.weblay_ico.next_track_rev {
+	background-position: -416px -512px;
+}
+.weblay_ico.headphones{
+	background-position: -448px -512px;
+}
+.weblay_ico.mic {
+	background-position: -480px -512px;
+}
+
+/* row 17 */
+.weblay_ico.refresh_double {
+	background-position: 0px -544px;
+}
+.weblay_ico.refresh_single {
+	background-position: -32px -544px;
+}
+.weblay_ico.refresh_single_sm {
+	background-position: -64px -544px;
+}
+.weblay_ico.refresh_double_sm {
+	background-position: -96px -544px;
+}
+.weblay_ico.refresh_double_med {
+	background-position: -128px -544px;
+}
+.weblay_ico.question_ico {
+	background-position: -160px -544px;
+}
+.weblay_ico.exclamation_ico {
+	background-position: -192px -544px;
+}
+.weblay_ico.info_ico {
+	background-position: -224px -544px;
+}
+.weblay_ico.question_ico_rev {
+	background-position: -256px -544px;
+}
+.weblay_ico.exclamation_ico_rev {
+	background-position: -288px -544px;
+}
+.weblay_ico.info_ico_rev {
+	background-position: -320px -544px;
+}
+
+
+/* row 18 */
+.weblay_ico.x_round {
+	background-position: 0px -576px;
+}
+.weblay_ico.minus_round {
+	background-position: -32px -576px;
+}
+.weblay_ico.plus_round {
+	background-position: -64px -576px;
+}
+.weblay_ico.plus_round_rev {
+	background-position: -96px -576px;
+}
+.weblay_ico.minus_round_rev {
+	background-position: -128px -576px;
+}
+.weblay_ico.minus_sq_rev {
+	background-position: -160px -576px;
+}
+.weblay_ico.plus_sq_rev {
+	background-position: -192px -576px;
+}
+.weblay_ico.plus_sq_rev_sm {
+	background-position: -224px -576px;
+}
+.weblay_ico.minus_sq_rev_sm {
+	background-position: -256px -576px;
+}
+.weblay_ico.plus_bold {
+	background-position: -288px -576px;
+}
+.weblay_ico.minus_bold {
+	background-position: -320px -576px;
+}
+.weblay_ico.x_bold {
+	background-position: -352px -576px;
+}
+
+
+/* row 19 */
+.weblay_ico.power_ico {
+	background-position: 0px -608px;
+}
+.weblay_ico.sendto_ico {
+	background-position: -32px -608px;
+}
+.weblay_ico.border_adj_cursor {
+	background-position: -64px -608px;
+}
+.weblay_ico.move_cursor{
+	background-position: -96px -608px;
+}
+.weblay_ico.fullscreen_ico {
+	background-position: -128px -608px;
+}
+.weblay_ico.exit_fullscreen_ico {
+	background-position: -160px -608px;
+}
+.weblay_ico.resize_window_ico {
+	background-position: -192px -608px;
+}
+.weblay_ico.resize_horizontal {
+	background-position: -224px -608px;
+}
+.weblay_ico.sendto2_ico {
+	background-position: -256px -608px;
+}
+.weblay_ico.sendto_arrow {
+	background-position: -288px -608px;
+}
+.weblay_ico.send_recieve {
+	background-position: -320px -608px;
+}
+.weblay_ico.download_varrow {
+	background-position: -352px -608px;
+}
+.weblay_ico.download_tri_arrow {
+	background-position: -384px -608px;
+}
+.weblay_ico.ret_button_left{
+	background-position: -416px -608px;
+}
+.weblay_ico.ret_button_up{
+	background-position: -448px -608px;
+}
+.weblay_ico.ret_button_down {
+	background-position: -480px -608px;
+}
+
+
+/* row 20 */
+.weblay_ico.icon_view {
+	background-position: 0px -640px;
+}
+.weblay_ico.tile_view {
+	background-position: -32px -640px;
+}
+.weblay_ico.listing_view {
+	background-position: -64px -640px;
+}
+.weblay_ico.details_view {
+	background-position: -96px -640px;
+}

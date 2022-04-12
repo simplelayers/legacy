@@ -1,0 +1,21 @@
+#!/bin/env perl
+# a Perl program to run shp2img to render a specific mapfile and extent
+# Why can't we just do this within PHP using shell_exec() It's too slow/
+# See Cartograph ticket 552 for details.
+
+use CGI;
+use strict;
+
+my $cgi = new CGI;
+my $SHP2IMG = '/usr/bin/shp2img';
+my $MAPFILES = '/maps/mapfiles';
+
+my $mapfile = $cgi->param('mapfile'); $mapfile =~ s/[^\w\.\-]//g;
+my $extent  = $cgi->param('extent'); $extent =~ s/[^\d\.\-\s]//g;
+my $width   = int( $cgi->param('width') );
+my $height  = int( $cgi->param('height') );
+
+# compose the command and do it!
+my $command = "$SHP2IMG -m $MAPFILES/$mapfile.map -s $width $height -e $extent";
+#print "Content-type: text/plain\r\n\r\n$command"; exit;
+print "Content-type: image/png\r\n\r\n"; print `$command`;

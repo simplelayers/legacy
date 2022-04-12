@@ -1,0 +1,129 @@
+.login_panel  {
+	display:inline-block;
+	background: #f1f1f1;
+	border:2px solid #b6b7ba;
+	border-radius:15px;
+	margin:auto;
+	padding:10px;
+	
+	font-size:12pt;
+	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+	width:5in;
+	
+}
+.login_panel input{
+	
+	border:2px solid #b6b7ba;
+	padding:4px;
+	padding-left:5px;
+	padding-right:5px;
+	font-weight:700;
+	background:#fff;
+	width:100%;
+}
+
+.login_panel fieldset {
+	display: table;
+	width: 3.5in;
+	border:0px;
+	background:transparent;
+	margin: 0 auto 20px auto;
+	
+	
+}
+
+.login_panel .field_info {
+	display:table-row;
+	height:2em;
+	vertical-align:top;
+	
+}	
+	
+.login_panel .field_label {
+	
+	display:table-cell;
+	vertical-align:baseline;
+	
+	font-weight:700;
+	padding-right:10px;
+}
+
+.login_panel .field_item {
+	
+	display:table-cell;
+	vertical-align:baseline;
+	white-space:nowrap;
+	width:100%;
+	
+	
+}	
+
+
+.login_panel .forgotpw_lnk
+{
+	
+	margin-left:20px;
+	font-size:10pt;	
+}
+
+.login_panel .buttons {
+	height:36px;
+	
+}
+
+.login_panel .title{
+	margin-left:1em;
+}
+
+.login_panel .notice{
+	background:#faf7b0;
+	border-radius:15px;
+	border:2px solid #eae569;
+	margin:16px;
+	padding:4px;
+	padding-bottom:20px;
+	text-align:left;
+}
+
+.login_panel .notice.error {
+	background:#f55;
+	border:2px solid #f00;
+	color:#fff;
+}
+.login_panel .notice.error hr {
+	border:0;
+	height:2px;
+	background:#f00;
+	width:100%;
+	margin:1px auto;
+}
+
+.login_panel .notice .header{
+	text-align:center;
+	font-size:14pt;
+	margin:0px;
+	padding-top:10px;
+	padding-bottom:10px;
+	width:100%;
+}
+.login_panel .notice .message{
+	border:0;
+	border-radius:0;
+	height:2px;
+	margin:1px auto;
+	padding:10px;
+}
+
+.login_panel .notice hr{
+	border:0;
+	height:2px;
+	background:#eae569;
+	width:100%;
+	margin:1px auto;
+}
+
+
+
+
+#contentWrapper{width:100%;text-align:center;}
+.textblock{text-align:right;}

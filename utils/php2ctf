@@ -1,0 +1,12 @@
+#!/usr/bin/env perl
+# This script converts a PHP structure of colorschemes into CTF. This is effectively the inverse of ctf2php
+
+# Usage: cat colorschemes.php | php2ctf > scheme.ctf
+
+while (<>) {
+   my($type,$number,$name,$colors) = (m/^\s*@\$COLORSCHEMES\[COLORSCHEMETYPE_(\w+)\]\[(\d+)\]\['(\w+)'\]\s*=\s*array\((.+?)\)/);
+   next unless ($type && $number && $name);
+   $type = lc($type);
+   $colors =~ s/'//g;
+   print "${name}_${number}_${type}:$colors \n";
+}

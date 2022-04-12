@@ -1,0 +1,49 @@
+#!/bin/sh
+# A utility to create a new SimpleLayers world
+# It reads a bunch of resources from /maps/worlds/_default_
+
+WORLDDIR="/maps/worlds"				# where are worlds' custom files located?
+SKEL="$WORLDDIR/_default_"			# which world contains the default starting info?
+VHOSTSCONF="/etc/apache/vhost.conf"		# the Apache config file for the vhosts/worlds
+VHOSTSTEMPLATE="/etc/apache/vhost.template"	# the template for adding a new Apache vhost entry
+SSLDIR="/etc/apache/ssl"			# where are SSL certificates stored?
+
+# sanity-check the command-line args
+WORLDNAME=$1
+IPADDRESS=$2
+TARGET_DIR="$WORLDDIR/$WORLDNAME"
+if [ "$WORLDNAME" = "" -o "$IPADDRESS" = "" ]; then echo "Creates a new SimpleLayers world."; echo "   Usage: $0 <worldname> <ipaddress>"; exit; fi
+if [ "`echo $WORLDNAME | sed -e 's@[^a-z]@@g'`" != "$WORLDNAME" ]; then echo "Invalid world-name given. World-names are all letters."; exit; fi
+if [ "`echo $IPADDRESS | sed -e 's@[^0-9\.]@@g'`" != "$IPADDRESS" ]; then echo "Invalid IP address given."; exit; fi
+if [ -e "$TARGET_DIR" ]; then echo "That world already exists."; exit; fi
+echo "Creating new world $WORLDNAME in $TARGET_DIR"
+
+# create the database, and change ownership of all items therein
+password=`dd if=/dev/random of=/tmp/$$.tmp bs=1k count=1 2>/dev/null && md5sum /tmp/$$.tmp | cut -f 1 -d ' ' && rm -f /tmp/$$.tmp`
+echo "Creating DB account $WORLDNAME with password $password ..."
+psql -U pgsql -c "CREATE USER $WORLDNAME PASSWORD '$password'" postgres
+if [ $? -ne 0 ]; then echo "Cannot create DB account. Does this world already exist?"; exit; fi
+echo "Creating DB database..."
+psql -U pgsql -c "CREATE DATABASE $WORLDNAME WITH OWNER $WORLDNAME" postgres
+if [ $? -ne 0 ]; then echo "Cannot create DB database. Does this world already exist?"; exit; fi
+psql -U pgsql -c "REASSIGN OWNED BY root TO $WORLDNAME" $WORLDNAME
+
+# create their worlds/ subdirectory: logo, website, etc.
+echo "Creating world directory (website, logo, etc)..."
+cp -rpvP "$SKEL" "$TARGET_DIR"
+chown -R www:www "$TARGET_DIR"
+
+# create the vhosts config
+echo "Creating Apache vhosts config and SSL certificate..."
+echo "" >> "$VHOSTSCONF"
+echo "" >> "$VHOSTSCONF"
+echo "" >> "$VHOSTSCONF"
+cat "$VHOSTSTEMPLATE" | sed -e "s@WORLDNAME@$WORLDNAME@" | sed -e "s@IPADDRESS@$IPADDRESS@" >> "$VHOSTSCONF"
+openssl req -x509 -newkey rsa:4096 -nodes -batch -days 3650 -keyout "$SSLDIR/$WORLDNAME" -out "$SSLDIR/$WORLDNAME"
+apachectl configtest
+if [ $? -ne 0 ]; then echo "Hrm, something in the Apache config barfed. Fix it and then try 'apachectl restart'"; exit; fi
+
+# done!
+echo "Looks like everything went well. Restarting the webserver now. Have a nice day!"
+apachectl restart
+

@@ -1,0 +1,9 @@
+#contentWrapper, body div.toolbar, body table.topbox{
+	display:none;
+}
+#invoice{
+	width:100%;
+}
+#invoice table{
+	width:98%;
+}

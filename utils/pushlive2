@@ -1,0 +1,38 @@
+#!/bin/sh
+# A script to "push live" the latest Subversion revision.
+# That is: create a tag of the latest revision, and replace the current live version with the latest
+
+ROOTDIR="/maps"
+LATEST="svn://cartograph.com/cartograph2/"
+TAGS="svn://cartograph.com/tags/"
+
+
+# make sure that we're able to write to the checkout directory; otherwise this'll fail like crazy!
+olddir="`basename $LATEST`"
+bakdir="$olddir-old"
+if [ ! -d "$ROOTDIR/$olddir" -o ! -w "$ROOTDIR/$olddir" ]; then
+   echo "Directory $ROOTDIR/$olddir is not writable."
+   echo "Maybe it doesn't exist, or maybe you're not root?"
+   exit 1
+fi
+
+# delete the old checkout
+echo "Backup:      $ROOTDIR/$olddir    ->    $ROOTDIR/$bakdir"
+cd "$ROOTDIR"
+rm -rf "$bakdir" ; mv -f "$olddir" "$bakdir"
+echo "Checkout:     $LATEST     ->     $ROOTDIR/$olddir"
+svn co -q "$LATEST"
+
+# delete some stuff that doesn't need to be in the live code: coder documentation,
+# source code, etc.
+echo "Cleaning out unnecessary material from live (source code, API doc, etc)"
+rm -rf "$olddir/docs/coder" "$olddir/docs/examples" "$olddir/docs/jpgraph"
+rm -rf "$olddir/docs/client"
+rm -rf "$olddir/source/"
+
+# create a tag for this release
+tag=`date +'%Y%m%d'`
+tag="$TAGS/release-$tag"
+echo "Creating tag: $tag"
+svn copy -q -m "Pushlive on `date +'%F'`" "$LATEST" "$tag"
+

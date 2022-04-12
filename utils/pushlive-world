@@ -1,0 +1,37 @@
+#!/bin/sh
+# A pushlive script to push-to-live all of a World's custom configuration (templates and dispatchers)
+# Usage: pushlive <worldname>
+
+WORLDROOT="/maps/worlds"
+
+# basic sanity check on the world's name
+WORLD=$1
+if [ "$WORLD" = "" ]; then echo "Usage: pushlive <worldname>"; echo "Copies a World's dev templates and dispatchers over to live."; exit; fi
+if [ "`echo $WORLD | sed -e 's@[^a-z]@@g'`" != "$WORLD" ]; then echo "Invalid world-name given. World-names are all letters."; exit; fi
+
+# generate the list of directories, make sure they exist
+TEMPLATE_DEV="$WORLDROOT/$WORLD/templates-dev"
+TEMPLATE_OLD="$WORLDROOT/$WORLD/templates-old"
+TEMPLATE_LIVE="$WORLDROOT/$WORLD/templates"
+DISPATCHER_DEV="$WORLDROOT/$WORLD/dispatchers-dev"
+DISPATCHER_OLD="$WORLDROOT/$WORLD/dispatchers-old"
+DISPATCHER_LIVE="$WORLDROOT/$WORLD/dispatchers"
+if [ ! -d "$TEMPLATE_OLD" ];     then echo "Template-Old directory doesn't exist: $TEMPLATE_DEV"; exit; fi
+if [ ! -d "$TEMPLATE_DEV" ];     then echo "Template-Dev directory doesn't exist: $TEMPLATE_DEV"; exit; fi
+if [ ! -d "$TEMPLATE_LIVE" ];    then echo "Template-Live directory doesn't exist: $TEMPLATE_LIVE"; exit; fi
+if [ ! -d "$DISPATCHER_OLD" ];   then echo "Dispatcher-Old directory doesn't exist: $DISPATCHER_OLD"; exit; fi
+if [ ! -d "$DISPATCHER_DEV" ];   then echo "Dispatcher-Dev directory doesn't exist: $DISPATCHER_DEV"; exit; fi
+if [ ! -d "$DISPATCHER_LIVE" ];  then echo "Dispatcher-Live directory doesn't exist: $DISPATCHER_LIVE"; exit; fi
+
+# delete the -old copy and backup the live to -old
+echo "Backing up:      $TEMPLATE_LIVE  ->  $TEMPLATE_OLD"
+rm -rf "$TEMPLATE_OLD"    ; cp -r  "$TEMPLATE_LIVE"    "$TEMPLATE_OLD"
+echo "Backing up:      $DISPATCHER_LIVE  ->  $DISPATCHER_OLD"
+rm -rf "$DISPATCHER_OLD"  ; cp -r  "$DISPATCHER_LIVE"  "$DISPATCHER_OLD"
+
+# clean out the ~ files from dev, and copy it over to live
+echo "Pushing live:   $TEMPLATE_DEV  ->  $TEMPLATE_LIVE"
+rm -f "$TEMPLATE_DEV"/*~    ; rm -rf "$TEMPLATE_LIVE"    ; cp -r  "$TEMPLATE_DEV"   "$TEMPLATE_LIVE"
+echo "Pushing live:   $DISPATCHER_DEV  ->  $DISPATCHER_LIVE"
+rm -f "$DISPATCHER_DEV"/*~  ; rm -rf "$DISPATCHER_LIVE"  ; cp -r  "$DISPATCHER_DEV" "$DISPATCHER_LIVE"
+

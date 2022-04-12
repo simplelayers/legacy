@@ -1,0 +1,201 @@
+/* HORIZONTAL FREESTYLE MENU LAYOUT */
+
+
+.toolbar {
+	width:100%;
+	background-color:#222403;
+	height:20px;
+	font-size:9pt;
+	font-weight:bold;
+}
+
+/* All <ul> tags in the menu including the first level */
+.menulist, .menulist  ul {
+ line-height:10pt !important;
+ margin: 0;
+ padding: 0;
+ list-style: none;
+ color:#FFFFFF;
+}
+
+/* Submenus (<ul> tags) are hidden and absolutely positioned downwards from their parent */
+.menulist ul {
+ display: none;
+ position: absolute;
+ top: 1.0em; margin-top: 7px; /* I'm using ems and px to allow people to zoom their font */
+ left: -1px;
+ width: 175px;
+}
+
+/* Second and third etc. level submenus - position across from parent instead */
+.menulist ul ul {
+ top: -1px; margin-top: 0;
+ left: 148px;
+}
+
+/*
+ All menu items (<li> tags). 'float: left' lines them up horizontally, and they are
+ positioned relatively to correctly offset submenus. Also, they have overlapping borders.
+*/
+.menulist li {
+ float: left;
+ display: block;
+ position: relative;
+ /*background-color: #98B4CF;*/
+ color:#FFFFFF;
+ /* border: 1px solid #000000; */
+}
+
+/* Items in submenus - override float/border/margin from above, restoring default vertical style */
+.menulist ul li {
+background-color: #222403;
+ float: none;
+ margin: 0;
+ margin-bottom: -1px;
+}
+.menulist ul>li:last-child {
+ margin-bottom: 1px; /* Mozilla fix */
+}
+
+/* Links inside the menu */
+.menulist a {
+ display: block;
+ padding: 3px 15px;
+ color: #FFFFFF;
+ font-size: 8pt;
+ text-decoration: none;
+ cursor:pointer;
+}
+.menulist li ul li a{
+	padding: 3px;
+}
+
+/* Lit  items: 'hover' is mouseover, 'highlighted' are parent items to visible menus */
+.menulist a:hover, .menulist a.highlighted:hover, .menulist a:focus {
+ color: #FFFFFF;
+ background-color: #444712;
+}
+.menulist a.highlighted {
+ color: #FFFFFF;
+ background-color: #444712;
+}
+
+
+/* Only style submenu indicators within submenus. */
+.menulist a .subind {
+ display: none;
+}
+.menulist ul a .subind {
+ display: block;
+ float: right;
+}
+
+
+/* 'Escaped Comment' hack for horizontal menubar width in IE5/Mac */
+.menulist a {
+ float: left;
+}
+.menulist ul a {
+ float: none;
+}
+/* \*/
+.menulist a {
+ float: none;
+}
+/* */
+
+
+/*
+ HACKS: IE/Win:
+ A small height on <li> and <a> tags and floating prevents gaps in menu.
+ * html affects <=IE6 and *:first-child+html affects IE7.
+ You may want to move these to browser-specific style sheets.
+*/
+*:first-child+html .menulist ul li {
+ float: left;
+ width: 100%;
+}
+
+* html .menulist ul li {
+ float: left;
+ height: 1%;
+}
+* html .menulist ul a {
+ height: 1%;
+}
+/* End Hacks */
+
+.barwrapper{
+	float:right;
+}
+.topbar{
+	background:#C2CCC3;
+	margin-top:20px;
+	border:#C2CCC3;
+	border-style:groove;
+	border-right:none;
+}
+.topbar table{
+	background:url('media/images/social/barnoise.png');
+	height:40px;
+	border-spacing:0;
+	padding:0;
+	margin:0;
+}
+.topbar table td{
+	vertical-align:middle;
+	padding:0;
+	margin:0;
+	height:40px;
+}
+.topbar table td a{
+	display:block;
+	vertical-align:middle;
+	padding:0;
+	margin:0;
+	height:40px;
+	width:80px;
+	text-align:center;
+	/*margin-right:20px;*/
+}
+.topbar table td a.first{
+	/*margin-left:20px;*/
+}
+.topbar .divide{
+	float:right;
+}
+
+.displayNotify, .displayMessages, .displayHelp{
+	width:319px;
+	position:absolute;
+	background:#ddd;
+	border:2px groove #aaa;
+	font-size:8pt;
+	
+}
+.displayNotifyButtons{
+	text-align:center;
+}
+.displayNotifyButtons a{
+	display:block;
+	width:100%;
+}
+.displayMessagesButtons a{
+	display:block;
+	float:left;
+	width:50%;
+}
+.singleNotify{
+	border-bottom:2px groove #aaa;
+	padding:2px;
+}
+
+.singleNotify img.icon{
+	height:40px;
+	max-width:60px;
+	float:left;
+	margin-right:2px;
+}
+.singleNotify a{
+	display:block;
+}
