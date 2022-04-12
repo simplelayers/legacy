@@ -1,0 +1,444 @@
+### This is a set of symbols for points, lines, and polygons
+SYMBOLSET
+#
+# POINT MARKERS
+#
+SYMBOL
+NAME 'point_default'
+TYPE ELLIPSE
+POINTS
+1 1
+END
+FILLED FALSE
+END
+
+SYMBOL
+NAME 'point_default_filled'
+TYPE ELLIPSE
+POINTS
+1 1
+END
+FILLED TRUE
+END
+
+SYMBOL
+NAME 'point_tent'
+TYPE VECTOR
+POINTS
+0 1
+.5 0
+1 1
+.75 1
+.5 .5
+.25 1
+0 1
+END
+FILLED FALSE
+END
+
+SYMBOL
+NAME 'point_tent_filled'
+TYPE VECTOR
+POINTS
+0 1
+.5 0
+1 1
+.75 1
+.5 .5
+.25 1
+0 1
+END
+FILLED TRUE
+
+END
+
+SYMBOL
+NAME 'point_triangle'
+TYPE vector
+FILLED false
+POINTS
+0 1
+.5 0
+1 1
+0 1
+END
+END
+SYMBOL
+NAME 'point_triangle_filled'
+TYPE vector
+FILLED true
+POINTS
+0 1
+.5 0
+1 1
+0 1
+END
+END
+
+SYMBOL
+NAME 'point_square'
+TYPE vector
+FILLED false
+POINTS
+0 1
+0 0
+1 0
+1 1
+0 1
+END
+END
+SYMBOL
+NAME 'point_square_filled'
+TYPE vector
+FILLED true
+POINTS
+0 1
+0 0
+1 0
+1 1
+0 1
+END
+END
+
+SYMBOL
+NAME 'point_diamond'
+TYPE vector
+FILLED false
+POINTS
+0 0.5
+0.5 0
+1 0.5
+0.5 1
+0 0.5
+END
+END
+SYMBOL
+NAME 'point_diamond_filled'
+TYPE vector
+FILLED true
+POINTS
+0 0.5
+0.5 0
+1 0.5
+0.5 1
+0 0.5
+END
+END
+
+SYMBOL
+NAME 'point_house'
+TYPE vector
+FILLED false
+POINTS
+0 1
+0 0.5
+0.5 0
+1 0.5
+1 1
+0 1
+END
+END
+SYMBOL
+NAME 'point_house_filled'
+TYPE vector
+FILLED true
+POINTS
+0 1
+0 0.5
+0.5 0
+1 0.5
+1 1
+0 1
+END
+END
+
+
+
+#
+# LINE TYPES
+#
+
+SYMBOL
+NAME 'line_default'
+TYPE ELLIPSE
+ANTIALIAS true
+POINTS
+1 1
+END
+END
+
+
+SYMBOL
+NAME 'line_dashes_long'
+TYPE ellipse
+POINTS
+1 1
+END
+END
+
+SYMBOL
+NAME 'line_dashes_medium'
+TYPE ellipse
+POINTS
+1 1
+END
+END
+
+SYMBOL
+NAME 'line_dashes_short'
+TYPE ellipse
+POINTS
+1 1
+END
+END
+
+SYMBOL
+NAME 'line_dotted'
+TYPE ellipse
+POINTS
+1 1
+END
+FILLED true
+END
+
+SYMBOL
+NAME 'line_dotted_spaced'
+TYPE ellipse
+POINTS
+1 1
+END
+FILLED true
+END
+
+SYMBOL
+NAME 'line_dot_and_dash'
+TYPE ellipse
+FILLED true
+POINTS
+1 1
+END
+
+END
+
+
+#
+# POLYGON FILLS
+#
+
+SYMBOL
+NAME 'polygon_default'
+TYPE ellipse
+FILLED true
+POINTS
+0 0
+END
+END
+
+SYMBOL
+NAME 'polygon_hatch_horizontal'
+TYPE vector
+POINTS
+0 1.5
+1.5 1.5
+END
+END
+
+SYMBOL
+NAME 'polygon_hatch_vertical'
+TYPE vector
+POINTS
+1.5 0
+1.5 1.5
+END
+END
+
+SYMBOL
+NAME 'polygon_hatch_right'
+TYPE HATCH
+END
+
+SYMBOL
+NAME 'polygon_hatch_left'
+TYPE HATCH
+END
+
+SYMBOL
+NAME 'polygon_grid'
+TYPE vector
+POINTS
+0 0
+0 2
+2 2
+END
+END
+
+SYMBOL
+NAME 'polygon_grid_angled'
+TYPE vector
+POINTS
+0 0
+4 4
+-99 -99
+0 4
+4 0
+END
+END
+
+SYMBOL
+NAME 'polygon_grid_inverted'
+TYPE vector
+POINTS
+0 0.5
+0.5 0
+1 0.5
+0.5 1
+0 0.5
+END
+FILLED true
+END
+
+
+
+
+SYMBOL
+NAME 'point_star'
+TYPE vector
+POINTS
+0 0.375
+0.35 0.375
+0.5 0
+0.65 0.375
+1 0.375
+0.75 0.625
+0.875 1
+0.5 0.75
+0.125 1
+0.25 0.625
+0 0.375
+END
+FILLED FALSE
+END
+
+
+
+SYMBOL
+NAME 'point_star_filled'
+TYPE VECTOR
+POINTS
+0 0.375
+0.35 0.375
+0.5 0
+0.65 0.375
+1 0.375
+0.75 0.625
+0.875 1
+0.5 0.75
+0.125 1
+0.25 0.625
+0 0.375
+END
+FILLED TRUE
+END
+
+SYMBOL
+	NAME 'rectangle_filled'
+	TYPE VECTOR
+	POINTS 
+		0 0
+		1 0
+		1 0.5
+		0 0.5
+		0 0
+	END #POINTS
+	ANCHORPOINT 0 0
+	FILLED TRUE	
+END
+
+SYMBOL
+	NAME 'rectangle_hollow'
+	TYPE VECTOR
+	POINTS 
+		0 0
+		1 0
+		1 0.5
+		0 0.5
+		0 0
+	END #POINTS
+	ANCHORPOINT 0 0
+	FILLED FALSE
+END
+
+
+SYMBOL
+  NAME 'rectangle-train'
+  TYPE VECTOR
+  POINTS
+    0 0
+    0 0.6
+    1 0.6
+    1 0
+    0 0
+  END
+  FILLED TRUE
+END
+
+SYMBOL
+    NAME "arrow_right"
+    TYPE vector
+    FILLED true
+    ANTIALIAS true
+    POINTS
+      0 0
+      2 0.75
+      2 1.25
+      0 2
+      0 0
+    END # POINTS
+    ANCHORPOINT 1 0.5
+END # SYMBOL
+
+SYMBOL
+    NAME "arrow_left"
+    TYPE vector
+    FILLED true
+    ANTIALIAS true
+    POINTS
+      2 0
+      0 0.75
+      0 1.25
+      2 2
+      2 0      
+    END # POINTS
+    ANCHORPOINT 0 0.5
+END # SYMBOL
+
+SYMBOL
+  NAME "vertline"
+  TYPE vector
+  FILLED true
+  POINTS
+    0 0
+    1 0
+    1 10 
+    0 10
+    0 0        
+  END # POINTS
+  ANCHORPOINT 0.5 0.5
+END # SYMBOL
+
+SYMBOL
+  NAME "vertline_bold"
+  TYPE vector
+  FILLED true
+  POINTS
+    0 0
+    10 0
+    10 10 
+    0 10
+    0 0    
+    
+  END # POINTS
+  ANCHORPOINT 0.5 0.5
+END # SYMBOL
+
+END
