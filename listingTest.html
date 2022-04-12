@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
+<script
+	src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="media/js/listings/listings.js"></script>
+
+</head>
+<body>
+	<div id='templates' style="display:none" >
+		<ul>
+			<li id='layerItem' class='layer_listing'>
+				<img class='layer_listing type_icon' src=''></img>
+				<span class='layer_listing item_label'>&nbsp;</span>
+				<br >
+				<img class='layer_listing user_ico' ></img>
+				<span class="layer_listing owner_name">&nbsp;</span>
+			</li>
+			<li id='playerItem' class='player_listing'>
+				<img class='player_listing type_icon' ></img>
+				<span class='player_listing item_label'></span>
+				<br >
+				<img class='player_listing user_ico' src=''></img>
+				<span class="player_listing owner_name"></span>
+				<span>Layer: <span class='player_listing plid'></span></span></li>
+		</ul>
+	</div>
+
+	<div>
+		<ul id='test' style="float: left;">
+		</ul>
+		<ul id='test2' style="float: left">
+		</ul>
+	</div>
+
+	<script>
+		function getTemplate() {
+			return $('#layerItem').clone();
+		}
+		function getPTemplate() {
+			return $("#playerItem").clone();
+		}
+
+		function populateTemplate($template, data) {
+			$template.find('.layer_listing.item_label').text(data.name);
+			$template.find('.layer_listing.owner_name').text(data.owner);
+			
+			
+			return $template;
+		}
+		function populatePTemplate($template, data) {
+
+			$template.find('.player_listing.item_label').text(data.name);
+			$template.find('.player_listing.owner_name').text(data.owner);
+			$template.find('.player_listing.plid').text(''+data.player);
+			return $template;
+		}
+		$(document).ready(function() {
+			$listing = $('#test');
+			$plisting = $('#test2');
+
+			var item = {
+				name : 'Layer 1',
+				owner: 'public'
+			};
+			$listItem = $listing.layerListItem(item);
+			$listItem.populateItem = populateTemplate;
+			$listItem.getItemTemplate = getTemplate;
+			$listItem.addItemToListing();
+
+			item = {
+				name : 'Project Layer 1',
+				owner: 'flashuiguy',
+				layer: 123,
+				player: 4210
+			};
+			$listItem = $plisting.layerListItem(item);
+			$listItem.populateItem = populatePTemplate;
+			$listItem.getItemTemplate = getPTemplate;
+			$listItem.addItemToListing();
+		});
+	</script>
+</body>
+</html>

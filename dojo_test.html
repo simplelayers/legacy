@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Demo: Layout with Dijit</title>
+		<link rel="stylesheet" href="../../../resources/style/demo.css" media="screen">
+		<link rel="stylesheet" href="temp.css" media="screen">
+		<link rel="stylesheet" href="lib/js/dojo.1.9.1/dijit/themes/tundra/tundra.css" media="screen">
+		<!-- load dojo and provide config via data attribute -->
+		<script src="lib/js/dojo.1.9.1/dojo/dojo.js"
+				data-dojo-config="async: true">
+		</script>
+		<script>
+			require(["dojo/_base/fx", "dojo/_base/lang", "dojo/dom-style", "dojo/parser", "dojo/ready", 
+		 		"dijit/registry", "dijit/layout/ContentPane","dijit/layout/TabContainer","dijit/layout/BorderContainer"], 
+		 function(baseFx, lang, domStyle, parser, ready, registry, ContentPane,TabContainer,BorderContainer){
+
+		 	/* Some shared functions */
+		 		
+		 	ready(function(){
+		 		parser.parse().then(function(objects){
+		 			baseFx.fadeOut({  //Get rid of the loader once parsing is done
+		 				node: "preloader",
+		 				onEnd: function() {
+		 					domStyle.set("preloader","display","none");
+		 					domStyle.set("appLayout","visibility","visible");
+		 					
+		 				}
+		 			}).play();
+		 		});
+		 	});
+		 });
+			
+		</script>
+	</head>
+	<body class="tundra">
+	<div id="preloader">Loading Application...</div>
+		<div id="appLayout" style="visibility:hidden" class="demoLayout" data-dojo-type="dijit.layout.BorderContainer" data-dojo-props="design: 'headline'">
+			<div id='centerPanel' class="centerPanel" data-dojo-type="dijit.layout.TabContainer" data-dojo-props="region: 'center', tabPosition: 'top'">
+				<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props="title: 'Group 1'">
+					<h4>Group 1 Content</h4>
+					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+				</div>
+				<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props="title: 'Group Two'">
+					<h4>Group 2 Content</h4>
+				</div>
+				<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props="title: 'Long Tab Label for this One'">
+					<h4>Group 3 Content</h4>
+				</div>
+			</div>
+			<div class="edgePanel" data-dojo-type="dijit.layout.ContentPane" data-dojo-props="region: 'top'">Header content (top)</div>
+			<div id="leftCol" class="edgePanel" data-dojo-type="dijit.layout.ContentPane" data-dojo-props="region: 'left', splitter: true">Sidebar content (left)</div>
+		</div>
+	</body>
+</html>

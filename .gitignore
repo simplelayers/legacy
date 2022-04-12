@@ -1,0 +1,7 @@
+#Ignored Files
+.settings
+.project
+.buildpath
+.metadata
+.settings
+version.txt

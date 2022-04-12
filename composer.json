@@ -1,0 +1,11 @@
+{
+  "name" : "simplelayers/server",
+  "repositories" : [ {
+    "type" : "composer",
+    "url" : "https://packagist.org/"
+  } ],
+  "require": {
+    "mongodb/mongodb": "^1.0.0",
+    "smarty/smarty": "^3.1"
+  }
+}
