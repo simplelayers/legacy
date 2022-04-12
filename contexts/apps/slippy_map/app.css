@@ -1,0 +1,24 @@
+@CHARSET "ISO-8859-1";
+
+body {
+	position:absolute;
+	top:0px;
+	bottom:0px;
+	left:0px;
+	right:0px;
+	psding:0px;
+	margin:0px;
+	
+	
+}
+
+
+.app_content,ol-viewport {
+	width: 100%;
+	height:100%;	
+}
+
+.map {
+	width: 100%;
+	height: 100%;
+}

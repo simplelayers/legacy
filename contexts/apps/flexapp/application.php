@@ -1,0 +1,148 @@
+<?php
+use utils\ParamUtil;
+
+if (! defined('APPDIR'))
+    throw new Exception('This page may not be called directly.');
+
+$args = WAPI::GetParams();
+
+$app = 'flex_app';
+
+$session = SimpleSession::Get();
+$userInfo = $session->GetUserInfo();
+
+// ar_dump($userInfo['id']);
+
+// header("Content-Type: text/html");
+/*
+ * $requireToken = false; $requireAuthentication = false; $requireProject = (isset($_REQUEST['project']) &&( isset($_SESSION) || isset($_REQUEST['embedded'])) );
+ */
+// $preViewerDispatcher = true;
+// function _dispatch_start($request,$world,$user,$template,$project,$embedded,$permission) {
+/*
+ * $projectRequired = (isset (ParamUtil::Get($args,'project',false) ) && ($session->sessionState == SimpleSession::STATE_SESS_OK ) || ParamUtil::Get($args,'embedded',false));
+ * if ($projectRequired) {
+ * $wapi = System::GetWapi();
+ * $project = ParamUtil::Get($args,'project');
+ * $wapi->RequireProject();
+ * $project = $world->getProjectById ( $_REQUEST ['project'] );
+ * if (! $project) {
+ * print javascriptalert ( 'The requested Map could not be found.', 'html' );
+ * }
+ * }
+ */
+
+$swfId = "SimpleLayers";
+
+$project = ParamUtil::GetOne(WAPI::GetParams(), 'map', 'project');
+
+$project = System::Get()->getProjectById($project);
+
+System::Get()->logProjectUsage((isset($_REQUEST['embedded']) ? "embeded" : $userInfo), $project, $_SERVER['REMOTE_ADDR']);
+
+if (isset($project)) {
+    // $template->assign ( 'project', $project->id );
+    $_SESSION[$project->id . "lastNav"] = 0;
+}
+$title = explode(".", RequestUtil::Get('application'));
+$title = $title[0] . " -- Powered by Simple Layers";
+// $template->assign ( 'title', $title );
+$params = "";
+
+$request = $args;
+unset($request['app']);
+ParamUtil::Prune($request, 'app', 'map', 'do');
+
+foreach ($request as $key => $val) {
+    $params .= "&" . $key . "=" . $val;
+}
+
+$width = isset($request['width']) ? $request['width'] : '100%';
+$height = isset($request['height']) ? $request['height'] : '100%';
+
+$url = ("do=get&format=swf&asset=SimpleLayers.swf" . $params);
+
+// $template = new SLSmarty(APPDIR.'/templates/')
+// $template->assign ( 'swf', "?$url" );
+$name = isset($project) ? ": " . $project->name : "";
+
+/*
+ * $template->assign ( 'title', "Map" . $name );
+ * $template->assign ( 'bgcolor', '#cccccc' );
+ * $template->assign ( 'version_major', '9' );
+ * $template->assign ( 'version_minor', '0' );
+ * $template->assign ( 'version_revision', '28' );
+ * $template->assign ( 'application', 'SimpleLayers.swf' );
+ * $template->assign ( 'width', '100%' );
+ * $template->assign ( 'height', '100%' );
+ *
+ * $template->display ( "flexapp.tpl" );
+ */
+$baseurl = BASEURL;
+
+$report = new Report(System::Get(), REPORT_ACTIVITY_OPEN, REPORT_ENVIRONMENT_VIEWER, REPORT_TARGET_MAP, $project->id, $project->name, $userInfo);
+$report->commit();
+require_once (dirname(__FILE__) . "/../../../includes/main.inc.php");
+// define ( 'APPDIR', BASEURL . "contexts/apps/$app/" );
+$pageArgs['_swf'] = $swf;
+
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title><?php echo $title;?></title>
+<style type="<?php echo $baseurl;?>styles/style.css"></style>
+<style type="<?php echo $baseurl;?>styles/buttons.css"></style>
+<style type="<?php echo $baseurl;?>styles/weblay.css"></style>
+<style type="<?php echo $baseurl;?>styles/login.css"></style>
+
+
+<!-- Enable Browser History by replacing useBrowserHistory tokens with two hyphens -->
+<!-- BEGIN Browser History required section -->
+<link rel="stylesheet" type="text/css"
+	href="<?php echo $baseurl;?>lib/js/history/history.css"
+/>
+<script type="text/javascript"
+	src="<?php echo $baseurl;?>lib/js/history/history.js"
+></script>
+<!-- END Browser History required section -->
+
+<script type="text/javascript"
+	src="<?php echo $baseurl;?>lib/js/swfobject.js"
+></script>
+<script type="text/javascript">
+function EmbedSwf() {
+	
+
+	
+}
+		</script>
+<style>
+html,body {
+	height: 100%;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	text-align: center;
+	background-color: #ffffff;
+}
+
+object:focus {
+	outline: none;
+	margin: 0;
+	margin-bottom: 5;
+	width: 100%;
+	height: 100%;
+}
+</style>
+</head>
+<body>
+	<script>
+	   if(Document === undefined) Document = {};
+	   Document.prototype.pageArgs=$pageArgs;
+	</script>
+</body>
+</html>

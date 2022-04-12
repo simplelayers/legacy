@@ -1,0 +1,56 @@
+@CHARSET "ISO-8859-1";
+body {
+	overflow:hidden;
+	position:fixed;
+}
+.sl_basic {
+	background:#ccc;
+	position: fixed;	
+	left:0px;
+	right:0px;
+	top:0px;
+	bottom:0px;
+	height:100%;
+	
+}
+
+.sl_basic .app_content {
+	background:#0f0;
+	position: fixed;	
+	left:0px;
+	right:0px;
+	top:0px;
+	bottom:0px;
+	height:100%;
+	overflow:hidden;
+}
+
+.sl_basic .map_flat {
+	position: fixed;	
+	left:0px;
+	right:0px;
+	top:0px;
+	bottom:0px;
+	height:100%;
+	overflow:hidden;
+}
+
+.sl_basic .map_flat #message {
+	position: fixed;
+	top:0px;
+	left:0px;
+	right:0px;
+	z:100;
+	
+}
+.sl_basic .map_flat img {
+	position: fixed;
+	top:18px;
+	left:0px;
+	right:0px;
+	bottom:0px;
+	z:2;
+	
+}
+
+

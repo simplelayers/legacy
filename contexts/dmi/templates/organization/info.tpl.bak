@@ -1,0 +1,46 @@
+<!--{$subnav}-->
+<div>
+<form action="./?do=organization.editinfo" method="post">
+	<div style="float:right;width:50%;">
+		<p><b>Description:</b><br/><span id="desc"><!--{$org->description|nl2br}--></span></p>
+		<!--{if $org->owner->id == $user->id}--><button id="edit">Edit</button><!--{/if}-->
+	</div>
+	<div style="float:left;width:50%;">
+		<input type="hidden" name="id" value="<!--{$org->id}-->" />
+		<p><b>Name:</b><br/><span id="name"><!--{$org->name}--></span></a></p>
+		<p><b>Short Name (Permalink):</b><br/><!--{$org->short}--></p>
+	</div>
+	<!--{if $org->owner->id == $user->id}-->
+	<div style="display:none;float:left;width:50%;" id="extra">
+		<table>
+		<tr><td>Billing Name:</td><td><input type="text" name="billing_name" value="<!--{$org->billing_name}-->"/></td></tr>
+		<tr><td>Street1:</td><td><input type="text" name="street1" value="<!--{$org->street1}-->"/></td></tr>
+		<tr><td>Street2:</td><td><input type="text" name="street2" value="<!--{$org->street2}-->"/></td></tr>
+		<tr><td>City:</td><td><input type="text" name="city" value="<!--{$org->city}-->"/></td></tr>
+		<tr><td>State:</td><td><input type="text" name="state" value="<!--{$org->state}-->"/></td></tr>
+		<tr><td>Zip:</td><td><input type="text" name="zip" value="<!--{$org->zip}-->"/></td></tr>
+		<tr><td>Phone:</td><td><input type="text" name="phone" value="<!--{$org->phone}-->"/></td></tr>
+		</table>
+	</div>
+	<!--{/if}-->
+</form>
+
+<script>
+	$(function() {
+		$('#edit').click(toggleEdit);
+	});
+	var edit = false;
+	function toggleEdit(){
+		if(edit){
+			return true;
+		}else{
+			$('#name').html('<input style="width:90%;" type="text" name="name" value="'+$('#name').text()+'" />');
+			$('#desc').html('<textarea style="width:90%;height:90px;" name="desc">'+$('#desc').text()+'</textarea>');
+			$('#extra').css('display', 'block');
+			$('#edit').text('Save');
+			edit = true;
+			return false;
+		}
+	}
+</script>
+<div style="clear:both;"></div>
