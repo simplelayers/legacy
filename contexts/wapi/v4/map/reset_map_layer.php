@@ -37,15 +37,16 @@ function _exec()
     if($inheritHover === true) {
         $projectLayer->tooltip = null;
     }
-    
+
     if($labelStyle === true) {
-        $projectLayer->labelitem = $layer->labelitem;
-        $projectLayer->label_style = $layer->label_style;
+        $projectLayer->labelitem = null;//$layer->labelitem;
+
+        $projectLayer->label_style = null;//$layer->label_style;
     }
     if($classes === true) {
-        $projectLayer->CopyColorScheme();
+        $projectLayer->colorscheme->clearScheme();
     }
-    
+ 
     if(!is_null($subs)) {
         switch($subs) {
             case 'update':
@@ -61,5 +62,6 @@ function _exec()
     }   
     $project->UpdateProjLayerZs();
     $format = ParamUtil::Get($params,'format','json');
-    WAPI::SendSimpleResponse(array('action'=>'wapi/map/reset_map_layer/','mapLayer'=>$projectLayer->id,'layerId'=>$layer->id),$format,'ok');
+
+     WAPI::SendSimpleResponse(array('action'=>'wapi/map/reset_map_layer/','mapLayer'=>$projectLayer->id,'layerId'=>$layer->id),$format,'ok');
 }

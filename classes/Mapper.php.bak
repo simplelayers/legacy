@@ -1,0 +1,1401 @@
+<?php
+
+use symbols\Symbol;
+use symbols\Polygon;
+use symbols\Lines;
+use symbols\Point;
+use model\mapping\Labels;
+use model\mapping\PixoSpatial;
+use model\logging\Log;
+use model\mapping\Renderer;
+use utils\ParamUtil;
+use utils\ClassCtr;
+use utils\ColorUtil;
+use model\mapping\ALayer;
+use utils\SymbolSizes;
+
+/**
+ * See the Mapper class documentation.
+ */
+
+/**
+ * A class for generating map images and fetching other info about the map-generation context.
+ * Its main function is to take a list of layers and render a map image. Secondary functions include
+ * being the repository for the list of fonts, list of symbols, and other map-related stuff.
+ *
+ * A Mapper object can be obtained by the World's getMapper() method. Typically, you will then
+ * set its attributes (height, width)s add some layers, then call its render() function to
+ * draw the image. The imagethumbnail dispatcher is a great example of real-life usage. @see _dispatch_imagethumbnail()
+ *
+ * @see _dispatch_imagethumbnail() Public attributes:
+ * 		- width -- Integer, the width of the image to generate.
+ * 		- height -- Integer, the height of the image to generate.
+ * 		- screenshot -- Boolean, indicating whether the image should be treated as a screenshot instead of a map layer. This sets the background color, output format, etc.
+ * 		- geotiff -- Boolean, indicating whether the image should be treated as a screenshot and then downloaded as a GeoTIFF. If this is set, it will override the behavior of the 'screenshot' flag.
+ * 		- extent -- A 4-tuple, representing the desired spatial extent to zoom in on. Note that not all layers will be visible or will look good at all spatial extents.
+ * 		- projection -- A PROJ4 string or EPSG:xxxx string, indicating the projection to be used when rendering the map.
+ * 		- filter_gids -- Filter the output, drawing only features which match gid = value.
+ * 		- filter_color -- Filter the output (see above), and color the matching features this color instead of the usual.
+ * 	   
+ * 		Other assignables to the Mapper instance:
+ * 		- $m->screenshot = true; Configure the image generation for screenshots.
+ * 		- $m->geotiff = true; Configure the image generation for Georeferenced TIFF output.
+ * 		- $m->thumbnail = true; Configure the image generation for lower-quality JPEG thumbnail output.
+ * 		- $m->lowquality = true; Configure the image generation for good quality but the older/faster renderer with poor line quality.
+ * 	   
+ * 	   
+ * 		For more info on filtering, see the documentation in renderlayer.php Note that filtering only works on vector
+ * 		and ODBC layers, and should only be used when a single layer is being rendered.
+ * 	   
+ * 	   
+ * 	   
+ */
+class Mapper {
+
+    /**
+     *
+     * @ignore
+     *
+     */
+    private $world;
+
+    /**
+     *
+     * @ignore
+     *
+     */
+    public $width;
+
+    /**
+     *
+     * @ignore
+     *
+     */
+    public $height;
+
+    /**
+     *
+     * @ignore
+     *
+     */
+    public $filter_field;
+
+    /**
+     *
+     * @ignore
+     *
+     */
+    public $filter_value;
+
+    /**
+     *
+     * @ignore
+     *
+     */
+    public $extent;
+
+    /**
+     * @ ignore
+     */
+    public $isDynamic;
+
+    /**
+     * @ ignore
+     */
+    public $quantize;
+
+    /**
+     * @ ignore
+     */
+    public $interlace;
+
+    /**
+     * @ ignore
+     */
+    public $bgcolor;
+
+    /**
+     * @ ignore;
+     */
+    public $projection;
+    public $legendMode = false;
+
+    /**
+     *
+     * @ignore
+     *
+     */
+    public $map;
+    private $tempdir;
+    public $mapfile;
+    public $debugMapFile = false;
+    private $mapFileName;
+
+    function __construct(&$world, $isDynamic = false) {
+        $ini = System::GetIni();
+
+        $this->world = $world;
+        $this->width = 144;
+        $this->height = 144;
+        $this->extent = array(
+            0,
+            0,
+            0,
+            0
+        );
+        $this->mapfile = '';
+        $this->layers = array();
+        $this->screenshot = false;
+        $this->geotiff = false;
+        $this->thumbnail = false;
+        $this->lowquality = false;
+        $this->projection = null;
+        $this->map = null;
+        $this->filter_gids = null;
+        $this->filter_color = null;
+        $this->isDynamic = $isDynamic;
+        $this->quantize = false;
+        $this->interlace = false;
+        $this->fontsdir = $ini->maps_fontsdir;
+        $this->symbolFile = WEBROOT . $ini->maps_symbolfile;
+        $this->tempdir = $ini->tempdir;
+        $this->tempurl = $ini->tempurl;
+        $this->mapfileDir = $ini->mapfiledir;
+        #var_dump($this->tempurl);
+        #var_dump($this->mapfileDir);
+    }
+
+    function SetRenderer(Renderer $renderer) {
+        $this->layers = $renderer;
+    }
+
+    // ///
+    // /// core methods for accepting layers and generating an image
+    // ///
+
+    /**
+     * What mapfile will the Mapper use as it is presently configured?
+     *
+     * @return array A two-item array: The mapfile which will represent this request, and whether the (existing mapfile if it exists) is stale and needs regeneration.
+     */
+    function _this_mapfile() {
+
+        // determine the mapfile to be generated
+        $firstlayer = $this->layers[0]['layer'];
+        $firstclass = get_class($firstlayer);
+        $ini = System::GetIni();
+        switch ($firstclass) {
+            case 'ProjectLayer':
+                $mapfile = sprintf("%s%s-%s-%s-%d.map", $this->mapfileDir, 'mapfile', $ini->name, 'projectlayer', $firstlayer->id);
+                $mtime = $firstlayer->project->last_modified_unix;
+                break;
+            case 'Layer':
+                $mapfile = sprintf("%s%s-%s-%s-%d.map", $this->mapfileDir, 'mapfile', $ini->name, 'layer', $firstlayer->id);
+                $mtime = $firstlayer->last_modified_unix;
+                break;
+            default:
+                $mapfile = sprintf("%s%s.map", $this->tempir, md5(microtime() . mt_rand()));
+                $mtime = 0;
+                break;
+        }
+        #ob_end_clean();
+        // look for excuses to force the generation
+        $stale = false;
+        if (!$stale and ! is_file($mapfile))
+            $stale = true; // mapfile doesn't exist
+        if (!$stale and ! filesize($mapfile))
+            $stale = true; // mapfile is blank? not good
+        if (!$stale and count($this->layers) > 1)
+            $stale = true; // more than 1 layer, so not storable
+        if (!$stale and filemtime($mapfile) <= $mtime)
+            $stale = true; // the Project or Layer has been modified
+            
+// done
+        return array(
+            $mapfile,
+            $stale
+        );
+    }
+
+    function _setRGBFromColorString($color, &$r, &$g, &$b) {
+        if (substr($color, 0, 1) == '#')
+            $color = substr($color, 1);
+        if ($color == "trans") {
+            $r = $g = $b = - 1;
+            return;
+        }
+
+        // convert the #rrggbb colors into R,G,B
+        $r = hexdec(substr($color, - 6, 2));
+        $g = hexdec(substr($color, - 4, 2));
+        $b = hexdec(substr($color, - 2, 2));
+
+        if ($r == 255 && $g == 255 && $b == 255) {
+            $r = $g = $b = 254;
+        }
+    }
+
+    // ///
+    // /// core methods for accepting layers and generating an image
+    // ///
+
+    /**
+     * Draw the map image, and return the URL of the generated image.
+     * Typically, this will be the last method called, after extents are set and layers are added.
+     *
+     * @return string The URL of the generates map image.
+     */
+    function _generate_mapfile($forceGeneration = true, $classIndex = null, $dataWKT = null) {
+        $ini = System::GetIni();
+        // what mapfile are we using, and should we override $force ?
+        list ($mapfile, $force) = $this->_this_mapfile();
+
+        if ($forceGeneration) {
+
+            $force = true;
+        }
+
+        $this->mapfile = $mapfile;
+
+        // if it's not forced, just return a handle to the existing mapfile
+        // if (!$force && !$this->isDynamic)
+        // return ms_newMapObj ( $mapfile );
+        // this defines the size of point symbols for each size class
+        // it's an array of arrays, each value itself being a 2-item array for the outline and fill
+        // the width of polygon outlines foreach size class
+        // initialize the map: projection, etc.
+        if (!$this->map)
+            $this->init();
+
+        // add the layers
+        $tmpFiles = array();
+
+        $numLayers = is_array($this->layers) ? count($this->layers) : $this->layers->Count();
+
+        for ($i = 0; $i < $numLayers; $i ++) {
+
+            // fetch the entry and make some easy-access scalars
+            $entry = $this->layers[$i];
+
+            $layer = $entry['layer'];
+            $opacity = (int) (abs($entry['opacity']) * 100);
+
+            $glopacity = isset($entry['glopacity']) ? (int) ($entry['glopacity'] * 100) : 0;
+            $glowColor = isset($entry['glowColor']) ? $entry['glowColor'] : 'trans';
+            $mainColor = $layer->filter_color;
+            $outlineOnly = substr($entry['opacity'], 0, 1) == "-";
+            $filterColor = $layer->filter_color;
+            if ($outlineOnly)
+                $entry['opacity'] = substr($entry['opacity'], 1);
+
+            $labels = $entry['labels'];
+
+            $labelsHelper = Labels::GetLabelsFromALayer($layer);
+
+            $labelField = $entry['labelField'];
+
+            // Create $l, which points to the Layer object. If this layer entry is a Layer, this is the same thing.
+            // But if it's a ProjectLayer, we need the Layer object hidden inside.
+
+            list ($player, $l) = ALayer::GetLayers($layer);
+
+            $layertype = 0 + $l->type;
+
+            // the layer header, very minimal
+            $maplayer = ms_newLayerObj($this->map);
+            $maplayer->set('name', $l->name);
+            $maplayer->set('status', MS_DEFAULT);
+            // $maplayer->set('opacity', $opacity);
+            // $maplayer->setProjection ( 'init=epsg:4326' );
+            $maplayer->setProjection("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs");
+
+            if ($l->minscale && !$entry['ignoreScale']) {
+                $scale = (double) $l->minscale * 10;
+                $maplayer->set('maxscaledenom', $scale);
+            }
+
+            // the TYPE, CONNECTIONTYPE, and DATA tags
+            if ($layertype == LayerTypes::WMS) {
+
+                $maplayer->set('type', MS_LAYER_RASTER);
+                //$url = $this->_renderWebRemoteWMS ( $i );
+                //break;
+                $urlParts = $this->_generateRemoteWMSURL($i, true);
+
+                $url = $urlParts->url;
+
+                $urlParams = $urlParts->params;
+
+                $extString = "EXTENT " . implode(' ', $this->extent);
+                $ext = $this->extent;
+                // $maplayer->extent->setExtent($ext[0],$ext[1],$ext[2],$ext[3]);
+                // $maplayer->set ( 'data', $url );
+                $maplayer->setMetaData('wms_srs', 'EPSG:4326');
+                $maplayer->setMetaData('wms_format', $urlParams['FORMAT']);
+                $maplayer->setMetaData('wms_server_version', ParamUtil::Get($urlParams, 'VERSION', '1.1.1'));
+                $maplayer->setMetaData('wms_name', str_replace(',', ' ', $urlParams['LAYERS']));
+
+                $maplayer->setConnectiontype(MS_WMS);
+
+                $maplayer->set('connection', $urlParts->base);
+
+                // $maplayer->setProjection($this->map->getProjection());
+                // $maplayer->setUnits(MS_DD);
+                /*
+                 * // clean up the WMS URL, because they usually leave a lot of params in, e.g. size, version, format, ...
+                 * preg_match ( '/&?LAYERS=([^&]+)/i', $l->url, $wmslayername );
+                 * @$wmslayername = $wmslayername [1];
+                 * preg_match ( '/&?FORMAT=([^&]+)/i', $l->url, $imageformat );
+                 * @$imageformat = $imageformat [1];
+                 *
+                 * if (! $imageformat)
+                 * $imageformat = 'image/png';
+                 *
+                 * $url = $l->url;
+                 * $url = preg_replace ( '/&?VERSION=[^&]+/i', '', $url );
+                 * $url = preg_replace ( '/&?SRS=[^&]+/i', '', $url );
+                 * $url = preg_replace ( '/&?SERVICE=[^&]+/i', '', $url );
+                 * $url = preg_replace ( '/&?REQUEST=[^&]+/i', '', $url );
+                 * $url = preg_replace ( '/&?FORMAT=[^&]+/i', '', $url );
+                 * $url = preg_replace ( '/&?LAYERS=[^&]+/i', '', $url );
+                 * $url = preg_replace ( '/&?BBOX=[^&]+/i', '', $url );
+                 * $url = preg_replace ( '/&?WIDTH=[^&]+/i', '', $url );
+                 * $url = preg_replace ( '/&?HEIGHT=[^&]+/i', '', $url );
+                 * $url .= '&TRANSPARENT=TRUE&';
+                 * $url = str_replace ( '?&', '?', $url );
+                 * // now add the WMS layer to the mapfile
+                 * $maplayer->set ( 'type', MS_LAYER_RASTER );
+                 * $maplayer->setConnectiontype( MS_WMS );
+                 * $maplayer->set ( 'connection', $url );
+                 * $maplayer->setMetaData ( 'wms_srs', 'EPSG:4326' );
+                 * $maplayer->setMetaData ( 'wms_format', $imageformat );
+                 * $maplayer->setMetaData ( 'wms_server_version', '1.1.1' );
+                 * $maplayer->setMetaData ( 'wms_name', $wmslayername );
+                 */
+            } elseif ($layertype == LayerTypes::VECTOR or $layertype == LayerTypes::RELATIONAL) {
+                // vector layers require the PostGIS connection string, and also all the coloscheme entries!
+                $maplayer->set('type', GeomTypes::ToMSType($l->geomtype));
+                $maplayer->setConnectionType(MS_POSTGIS);
+                $maplayer->set('connection', "host={$ini->pg_host} port=5432 user={$ini->pg_admin_user} dbname={$ini->pg_sl_db} password=" . $ini->pg_admin_password);
+                $gids = preg_replace('/[^\,\d]/', '', $layer->filter_gids);
+                $notFilter = (substr($gids, 0, 1) == "-") ? 'not ' : '';
+                $filtering = !is_null($layer->filter_gids);
+
+                $gidQuery = $l->url;
+
+                if (!is_null($dataWKT)) {
+                    $maplayer->set('data', "the_geom from (select 1 as gid, ST_GeometryFromText('$dataWKT') as the_geom) as q1 USING UNIQUE gid USING SRID=4326");
+                } else {
+                    $maplayer->set('data', "the_geom from \"{$l->url}\" using unique gid using srid=4326");
+                    if ($filtering) {
+                        if (ms_GetVersionInt() == 70200) {
+                            $maplayer->setProcessing('NATIVE_FILTER=' . "gid in ($gids)");
+                        } else {
+                            $maplayer->setFilter("gid in ($gids)");
+                        }
+                    }
+                }
+
+                /*
+                  if ($filtering) {
+                  // $gids = preg_replace('/[^\,\d]/','',$this->filter_gids);
+                  $gids = $layer->filter_gids;
+                  $notfilter = (substr($gids, 0, 1) == "-") ? ' not ' : ' ';
+                  $maplayer->setFilter(sprintf($layer->filter_field . $notfilter . 'in (%s)', $gids));
+                  }
+                 */
+
+                // the columns; we'll need this for criteria; we also use it to unset labels if it refers to a nonexistent field
+                $attributetypes = $l->getAttributes();
+                if (!@$attributetypes[$labelField])
+                    $labels = false;
+
+                // add the colorscheme entries
+                $geomtype = $l->geomtype;
+                $geomtypestring = GeomTypes::GetGeomType($l->geomtype); // $eGeomTypes[$l->geom_type];
+
+                $colorscheme = is_null($player) ? $layer->colorscheme->getAllEntries() : $player->colorscheme->getAllEntries();
+
+                $entries = array_slice($colorscheme, 0, $ini->max_colorclasses); // just in case they somehow exceeded it
+                $lastClass = null;
+                // if (! $filtering) {
+                $criteriaGroup = array();
+                $classCtr = 0;
+                foreach ($entries as $entry) {
+                    $classCtr++;
+                    $class = null;
+                    $hadClass = false;
+                    $firstInGroup = true;
+                    $criteria = $entry->criteria1 . $entry->criteria2 . $entry->criteria3;
+
+                    if (in_array($criteria, array(null, ""))) {
+                        $criteria = "default";
+                    }
+                    if (isset($criteriaGroup[$criteria])) {
+                        $hadClass = true;
+                        if (isset($criteriaGroup[$criteria])) {
+                            $class = $criteriaGroup[$criteria];
+                        }
+                        if ($lastClass == $class)
+                            $firstInGroup = false;
+                    }
+                    if ($criteria == 'default') {
+                        $criteria = "";
+                    }
+                    if (is_null($class)) {
+                        $class = ms_newClassObj($maplayer);
+                    }
+
+                    $lastClass = $class;
+                    $label = new labelObj();
+                    $name = $entry->description;
+                    if (in_array($name, array(
+                                null,
+                                ""
+                            ))) {
+                        $name = 'class_' . ClassCtr::GetNext();
+                        if ($criteria == "")
+                            $name = ($classCtr > 1) ? 'All other features' : 'All Features';
+                    }
+
+
+                    if ($hadClass) {
+                        //$class->set('name', $name);
+                    } else {
+                        $class->set('name', $name);
+                    }
+
+
+
+                    // $symbols = explode('+',$entry->symbol);
+                    // $symbol ="{$geomtypestring}_{$symbols[0]}";
+                    $symbolName = $entry->symbol;
+                    $symbolStrokeName = (isset($entry->symbol_stroke)) ? $entry->symbol_stroke : null;
+
+                    $symbol = (stripos($symbolName, 'complex') === false) ? "{$geomtypestring}_{$symbolName}" : $symbolName;
+
+                    // if($geomtypestring=='line') $symbol = $symbolName = 'complex_rail';
+                    $stroke_color = $entry->stroke_color;
+
+                    // fetch the colors. If this is a filter operation, replace the fill color
+                    $fill_color = $entry->fill_color;
+
+                    if ($filtering) {
+                        if ($layer->filter_color != 'trans') {
+                            if ($layer->filter_color)
+                                $stroke_color = $outlineOnly ? $layer->filter_color : $entry->stroke_color;
+                            if ($layer->filter_color)
+                                $fill_color = $outlineOnly ? $entry->fill_color : $layer->filter_color;
+                        }
+                        if ($geomtype == GeomTypes::LINE)
+                            $stroke_color = $outlineOnly ? $layer->filter_color : $fill_color;
+                        if (!$firstInGroup) {
+                            $stroke_color = "trans";
+                        }
+                    }
+
+                    // convert the #rrggbb colors into R,G,B
+
+                    $fr = $fg = $fb = $sr = $sg = $sb = 0;
+
+
+                    ColorUtil::Web2RGB($fill_color, $fr, $fg, $fb);
+                    //$this->_setRGBFromColorString($fill_color, $fr, $fg, $fb);
+
+                    ColorUtil::Web2RGB($stroke_color, $sr, $sg, $sb);
+                    //$this->_setRGBFromColorString($stroke_color, $sr, $sg, $sb);
+
+                    $db = System::GetDB(System::DB_ACCOUNT_SU);
+                    /* @var $entry ColorSchemeEntry  */
+                    /*
+                     * $gidQuery = $entry->toGIDQuery();
+                     * if(stripos('?',$gidQuery)) {
+                     *
+                     * $gids = $db->GetOne($gidQuery,$entry->criteria3);
+                     * } else {
+                     * $gids = $db->GetOne($gidQuery);
+                     * }
+                     */
+                    // the criteria
+                    // if (! $filtering) {
+
+                    if ($entry->criteria1 and $entry->criteria2) {
+
+                        //$criteria = $entry->criteria1 . $entry->criteria2 . $entry->criteria3;
+                        $criteriaGroup[$criteria] = $class;
+                        if ($entry->criteria2 == 'contains') {
+                            $maplayer->set('classitem', $entry->criteria1);
+                            $class->setExpression('/' . $entry->criteria3 . '/i');
+                        } elseif (@$attributetypes[$entry->criteria1] == DataTypes::TEXT) {
+                            $class->setExpression("(\"[{$entry->criteria1}]\" {$entry->criteria2} \"{$entry->criteria3}\")");
+                        } elseif (@$attributetypes[$entry->criteria1] == DataTypes::BOOLEAN) {
+                            if ($entry->criteria3 == "t") {
+                                $class->setExpression("(\"[{$entry->criteria1}]\" {$entry->criteria2} \"true\")");
+                            } else {
+                                $class->setExpression("(\"[{$entry->criteria1}]\" {$entry->criteria2} \"false\")");
+                            }
+                        } else {
+                            $class->setExpression("([{$entry->criteria1}] {$entry->criteria2} {$entry->criteria3})");
+                        }
+                    } else {
+                        $class->setExpression("");
+                    }
+                    // }
+
+                    /*
+                     * if($gids !='') {
+                     * $class->setExpression( "gid IN '$gids' ");
+                     * }
+                     */
+
+                    // the cosmetic definitions
+                    $label_position = MS_AUTO;
+                    $label_angle = 0;
+                    $minfeaturesize = 10;
+
+                    switch (0 + $geomtype) {
+                        case GeomTypes::POINT:
+
+                            $size = $entry->symbol_size;
+
+                            // list ($size1, $size2) = SymbolSize::GetSymbolSizes($entry->symbol, $size);
+
+                            if ($filtering) {
+                                \model\mapping\mapfile\Point::SetFilteredSymbol($this->map, $class, $symbol, $entry, $glowColor, $filterColor, $opacity, $glopacity, $outlineOnly);
+                            } else {
+                                \model\mapping\mapfile\Point::SetSymbol($this->map, $class, $symbol, $entry, $stroke_color, $fill_color, $opacity);
+                            }
+
+                            \model\mapping\mapfile\Point::SetLabel($label);
+                            $label->set('anglemode', MS_TRUE);
+
+                            break;
+                        case GeomTypes::POLYGON:
+
+                            $symbolObj = new symbolObj($this->map, $symbol);
+                            $entrySize = $entry->symbol_size;
+                            $size = $entrySize;
+                            $size = SymbolSize::GetOutlineThickness($entrySize);
+                            // $size = ($filtering) ? min($entry->symbol_size+2,SymbolSize::XLARGE) : $entry->symbol_size;
+                            // $sr=$sg=$sb=0;
+                            $label_position = MS_AUTO;
+                            $minfeaturezize = MS_AUTO;
+                            $origFr = $fr;
+                            $origFg = $fg;
+                            $ofigFb = $fb;
+
+                            $isComplex = stripos($symbol, 'complex_') === 0;
+                            $isOutline = stripos($symbol, 'polygon_outline_') === 0;
+                            if (!$isOutline)
+                                $isOutline = stripos($symbol, 'outline_') === 0;
+                            $isStandard = !($isComplex || $isOutline);
+
+                            if ($filtering) {
+
+
+                                if ($outlineOnly) {
+
+                                    ColorUtil::Web2RGB($filterColor, $fr, $fg, $fb);
+                                }
+
+
+                                if (!$isOutline) {
+                                    $outerHilight = ms_newStyleObj($class);
+                                    // if($filtering) {$sr=$sg=$sb=0;}
+                                    $outerHilight->outlinecolor->setRGB($fr, $fg, $fb);
+                                    $outerHilight->set('width', 3);
+                                    $size = ($isStandard) ? $size - 1 : $size;
+
+                                    $outerHilight->updateFromString("geomtransform (buffer([shape],$entrySize))");
+                                    $outerHilight->opacity = $glopacity;
+
+                                    $innerHilight = ms_newStyleObj($class);
+                                    $innerHilight->outlinecolor->setRGB($fr, $fg, $fb);
+                                    $innerHilight->set('width', 2);
+                                    $innerHilight->updateFromString("geomtransform (buffer([shape], -$entrySize))");
+                                    ColorUtil::Web2RGB($filterColor, $fr, $fg, $fb);
+                                    $innerHilight->opacity = $glopacity;
+                                }
+
+                                if (!$outlineOnly) {
+                                    if (!$hadClass) {
+                                        // $style3->color->setRGB($fr, $fg, $fb);
+                                        $style3->opacity = $opacity;
+                                    }
+                                }
+
+                                $style3 = ms_newStyleObj($class);
+                                $style3->updateFromString("geomtransform (buffer([shape], -$size+1))");
+                                ColorUtil::Web2RGB($filterColor, $fr, $fg, $fb);
+                                if ($outlineOnly)
+                                    ColorUtil::Web2RGB('trans', $fr, $fg, $fb);
+                                $style3->color->setRGB($fr, $fg, $fb);
+                                $style3->opacity = $opacity;
+                                $style3->updateFromString("geomtransform (buffer([shape], -$size))");
+                            }
+
+
+                            if ($isComplex) {
+                                $symbolName = $entry->symbol;
+
+
+                                // $style = ms_newStyleObj($class);
+                                // $style->color->setRGB($fr, $fg, $fb);
+                                /* ( if ($filtering) {
+                                  ColorUtil::Web2RGB($filterColor, $sr, $sg, $sb);
+                                  ColorUtil::Web2RGB($glowColor, $fr, $fg, $fb);
+                                  if($outlineOnly) ColorUtil::Web2RGB('trans',$fr,$fg,$fb);
+                                  $xpacity = $glopacity;
+                                  } else { */
+                                ColorUtil::Web2RGB($stroke_color, $sr, $sg, $sb);
+                                ColorUtil::Web2RGB($fill_color, $fr, $fg, $fb);
+                                $xpacity = $opacity;
+                                //}
+
+                                $xpacity = ($filtering) ? $glopacity : $opacity;
+
+                                $newStyle = Polygon::SetComplexSymbol($symbol, $size, $class, array(
+                                            $sr,
+                                            $sg,
+                                            $sb
+                                                ), array(
+                                            $fr,
+                                            $fg,
+                                            $fb
+                                                ), $outlineOnly, $this->map, $xpacity);
+
+                                break;
+                            } elseif ($isOutline) {
+
+                                // $symbol = substr($symbol, strlen('polygon_outline_'));
+                                // $symbol = 'line_' . $symbol;
+
+                                $style = ms_newStyleObj($class);
+                                if ($outlineOnly)
+                                    ColorUtil::Web2RGB($glowColor, $fr, $fg, $fb);
+                                if (!$filtering)
+                                    $style->color->setRGB($fr, $fg, $fb);
+
+                                // $style->set ( 'symbolname', $symbol );
+                                $style = ms_newStyleObj($class);
+                                if ($outlineOnly)
+                                    ColorUtil::Web2RGB($glowColor, $sr, $sg, $sb);
+                                $style->outlinecolor->setRGB($sr, $sg, $sb);
+
+                                $symbolObj->set('name', $symbol);
+
+                                Polygon::SetPattern($symbolObj, $style, $entrySize);
+                                $style->set('width', $size);
+                                $style->set('size', $size);
+                                $bufferSize = -(round($size / 2.0));
+
+                                //$style->updateFromString("geomtransform (buffer([shape], $bufferSize))");
+                                break;
+                            } else {
+
+                                $symbolObj->set('name', $symbol);
+
+
+                                ColorUtil::Web2RGB($stroke_color, $sr, $sg, $sb);
+                                ColorUtil::Web2RGB($fill_color, $fr, $fg, $fb);
+                                $stroke = ms_newStyleObj($class);
+                                $stroke->set('width', $size);
+                                $stroke->outlinecolor->setRGB($sr, $sg, $sb);
+                                $stroke->set('size', $size);
+                                ColorUtil::Web2RGB('trans', $fr, $fg, $fb);
+                                $stroke->color->setRGB($fr, $fg, $fb);
+                                //$stroke->updateFromString("geomtransform (buffer([shape], -2))");
+                                $stroke->opacity = $opacity;
+                                if (!$filtering) {
+
+                                    ColorUtil::Web2RGB($stroke_color, $sr, $sg, $sb);
+                                    ColorUtil::Web2RGB($fill_color, $fr, $fg, $fb);
+
+                                    $fill = ms_newStyleObj($class);
+                                    $fill->set('size', $size);
+
+                                    if ($fill_color == 'trans') {
+                                        //$fill->updateFromString('color 255 255 255 0');
+                                        if ($this->legendMode)
+                                            $fr = $fg = $fb = 255;
+                                    } else {
+                                        $fill->color->setRGB($fr, $fg, $fb);
+                                    }
+                                    if ($symbol != 'polygon_default') {
+                                        $fill->set('symbolname', $symbol);
+                                    }
+                                    if (!Polygon::SetPattern($symbolObj, $fill, $entrySize)) {
+                                        $fill->set('width', $entrySize);
+                                    }
+
+                                    // $fill->updateFromString("geomtransform (buffer([shape], -2))");
+                                }
+
+                                break;
+                            }
+
+
+                            /*
+                             * if (! $filtering) {
+                             * $style2 = ms_newStyleObj($class);
+                             * // if($filtering) {$sr=$sg=$sb=0;}
+                             * if($outlineOnly) ColorUtil::Web2RGB($glowColor, $sr, $sg, $sb);
+                             * $style2->outlinecolor->setRGB($sr, $sg, $sb);
+                             * $style2->set('width', $outline_thickness[$size]);
+                             * /*
+                             * /*
+                             * if (! is_null($entry->label_style)) {
+                             * // $labelStyle = new Labels($entry->label_style);
+                             * }
+                             */
+
+                            // die();
+                            // }
+
+                            break;
+                        case GeomTypes::LINE:
+                            $symbolObj = new symbolObj($this->map, $symbol);
+                            $isComplex = stripos($symbol, 'complex_') === 0;
+                            $size = $entry->symbol_size;
+                            $size = SymbolSize::GetOutlineThickness($size);
+                            // $size = ($filtering) ? SymbolSize::XXLARGE : $entry->symbol_size;
+                            // $label_position = MS_FOLLOW;
+                            // $label_angle = MS_FOLLOW;
+                            /* if ($filtering && ! $hadClass) {
+                              $style3 = ms_newStyleObj($class);
+                              ColorUtil::Web2RGB($filterColor, $fr, $fg, $fb);
+                              $style3->color->setRGB($fr, $fg, $fb);
+
+                              // $style3->updateFromString("geomtransform (buffer([shape], 2))");
+                              $style3->offsetx = - $size;
+                              $style3->offsety = - $size;
+                              $style3->set('width', $size);
+                              $style3->opacity = $glopacity;
+
+                              ColorUtil::Web2RGB($filterColor, $sr, $sg, $sb);
+                              ColorUtil::Web2RGB($filterColor, $fr, $fg, $fb);
+
+                              $style4 = ms_newStyleObj($class);
+                              ColorUtil::Web2RGB($filterColor, $fr, $fg, $fb);
+                              $style4->color->setRGB($fr, $fg, $fb);
+                              $style4->set('opacity', $glopacity);
+                              // $style4->updateFromString("geomtransform (buffer([shape], 2))");
+                              $style4->offsetx = $size;
+                              $style4->offsety = $size;
+                              $style4->set('width', $size);
+                              $style4->opacity=$glopacity;
+                              //$opacity = $glopacity;
+
+                              //ColorUtil::Web2RGB($glowColor, $sr, $sg, $sb);
+
+                              }
+                             */
+                            if (!$filtering) {
+                                ColorUtil::Web2RGB($stroke_color, $sr, $sg, $sb);
+                                ColorUtil::Web2RGB($fill_color, $fr, $fg, $fb);
+                            } else {
+                                ColorUtil::Web2RGB($filterColor, $sr, $sg, $sb);
+                                ColorUtil::Web2RGB($glowColor, $fr, $fg, $fb);
+                            }
+
+                            $label->set('anglemode', MS_TRUE);
+                            if ($isComplex) {
+                                $size = Lines::SetComplexSymbol($symbolName, $size, $class, array(
+                                            $sr,
+                                            $sg,
+                                            $sb
+                                                ), $opacity, array(
+                                            $fr,
+                                            $fg,
+                                            $fb
+                                ));
+                                if ($filtering) {
+
+                                    $offsetSize = $size; // / -($size > SymbolSize::MEDIUM ) ? $size/4 : 0;
+                                    //$style3->offsetx = - $offsetSize;
+                                    $style3->offsety = - $offsetSize;
+                                    //$style4->offsetx = $offsetSize;
+                                    $style4->offsety = $offsetSize;
+                                }
+                            } else {
+                                $style = ms_newStyleObj($class);
+                                $style->color->setRGB($sr, $sg, $sb);
+
+                                // $style->set ( 'symbolname', $symbol );
+                                Lines::SetPattern($symbolObj, $style, $size);
+
+                                $style->set('width', $size);
+                                $style->set('size', $size);
+                                $style->opacity = $opacity;
+                            }
+
+                            /*
+                             * if(count($symbols)>1) {
+                             * for($sym=1;$sym<count($symbols);$sym++) {
+                             * $style = ms_newStyleObj($class);
+                             * $style->set('symbolname',$symbols[$sym]);
+                             * $style->set('size',$outline_thickness[$entry->symbol_size]-2);
+                             * }
+                             * }
+                             */
+
+                            break;
+                            ;
+                    }
+
+                    // labels
+                    // $labels = false;
+                    if ($labels) {
+
+                        if (!$hadClass) {
+                            $class->addLabel($label);
+                            $maplayer->set('labelitem', $labelField);
+                            $labelStyleInfo = (!is_null($entry->label_style)) ? $entry->label_style : $layer->label_style;
+                            $labelStyler = new Labels($labelStyleInfo, $label_position);
+                            $labelStyler->UpdateLabel($label);
+                            // $label->color->setRGB(0, 0, 0);
+                            // $label->outlinecolor->setRGB(200, 200, 200);
+                            // $label->set('position', $label_position);
+                            if ($geomtype != GeomTypes::POINT)
+                                $label->set('angle', $label_angle);
+                            // $label->set('minfeaturesize',0);
+                            // $label->set('force',MS_TRUE);
+                            // $label->set('size', 7);
+                            // $label->set('type', MS_TRUETYPE);
+                            // $label->set('font', 'Vera');
+                            // $label->set('mindistance', 1);
+                            // $label->set('buffer', 1);
+                            // $label->set('partials', MS_TRUE);
+                            // $label->set('minfeaturesize', $minfeaturesize);
+                        }
+                    }
+                } // end entries loop
+            } elseif ($layertype == LayerTypes::RASTER) {
+                // raster layers are actually pretty simple
+                $maplayer->set('type', MS_LAYER_RASTER);
+                $maplayer->set('data', $l->url);
+            } else { // layertype not any of the above?
+                error_log('Invalid layer type in Mapper');
+            }
+        }
+        // save the mapfile to disk, and return this already configured object
+        $this->map->save($mapfile);
+        $this->mapFileName = $mapfile;
+        if ($this->debugMapFile === true) {
+            readfile($mapfile);
+        }
+        return $this->map;
+    }
+
+    function renderStream($force = true, $fileName = null, $flush = true) {
+
+        //$this->	=true;
+        // a single WMS layer can be handled by a simpler call
+        $this->debugMapFile=true;//false;
+        $map = $this->_generate_mapfile($force);
+        
+        //$img = ob_get_clean();
+        if ($this->debugMapFile) {
+            header('Content-type:text/plain');
+            if (file_exists($this->mapFileName)) {
+                readfile($this->mapFileName);
+            }
+            die();
+        }
+        
+
+        // ob_start();
+        $ext = $this->extent;
+        $imgObj = null;
+        try {
+            
+            if (($ext[0] != $ext[2]) && ($ext[1] != $ext[3])) {            
+                $map->setExtent($ext[0], $ext[1], $ext[2], $ext[3]);
+            }
+            $imgObj = $map->draw();
+            
+        } catch (Exception $e) {
+            var_dump($e->getMessage());
+            WAPI::SetWapiHeaders(WAPI::FORMAT_PNG);
+            throw new Exception('Empty Image');
+        }
+        
+        // header('Content-type: image/png');
+        if ($imgObj) {
+            if ($fileName) {
+                if (file_exists($fileName)) {
+                    unlink($fileName);
+                }
+                $imgObj->saveImage($fileName);
+            } else {
+                WAPI::SetWapiHeaders(WAPI::FORMAT_PNG);
+                $imgObj->saveImage();
+            }
+        }
+        return;
+        if ($flush) {
+            ob_end_flush();
+        } else {
+            ob_end_clean();
+        }
+
+
+        // return $this->_renderSingleLayerviaCGI ();
+        // }
+        // fine, we need to call shell_exec() ourselves
+        // $command = sprintf ( "shp2img -s %d %d -m %s -e %f %f %f %f", $this->width, $this->height, $this->mapfile, $this->extent [0], $this->extent [1], $this->extent [2], $this->extent [3] );
+        // return shell_exec ( $command );
+    }
+
+    function legendImage() {
+        $ini = System::GetIni();
+        // constants for the image: positions and offsets and the like
+        $x_layername = 12; // the X (horizontal) position of the layer names, in pixels
+        $x_classname = 55; // the X (horizontal) position of the class names, in pixels
+        $x_classicon = 25; // the X (horizontal) position of the class icons, in pixels
+        $fontsize_layername = 10;
+        $fontfile_layername = $ini->fontdir . '/Vera.ttf'; // the font for the layer names
+        $fontsize_classname = 8;
+        $fontfile_classname = $ini->fontdir . '/VeraIt.ttf'; // the font for the class names
+        $icon_width = 50;
+        $icon_height = 18; // the width and height of the icon images
+        $y = - 10; // the Y offset, where we start counting as we lay out each item
+        $y_offset_layer = 60; // how far to move down to place a new layer header?
+        $y_offset_class = 21; // how far to move down to place a new class header?
+        // $data is an array of arrays, each one being a msLayerObj and an array of msClassObj objects
+        // This way we can count up the number of layers and classes (to determine the image size) and not have to fetch the objects from the map again
+        $height = 10; // an initial offfset for fudging the height
+        $map = $this->_generate_mapfile();
+        $data = array();
+        $width = $this->width;
+        foreach ($map->getlayersdrawingorder() as $i) {
+            $layer = $map->getLayer($i);
+            $classes = array();
+            for ($i = 0; $i < $layer->numclasses; $i ++)
+                array_push($classes, $layer->getClass($i));
+            $thisdata = array(
+                'layer' => $layer,
+                'classes' => $classes
+            );
+            array_push($data, $thisdata);
+            $height += $y_offset_layer;
+            $height += sizeof($classes) * $y_offset_class;
+        }
+        $height -= 8 * sizeof($data); // take back some height, from space that will be freed up in the layer-header spacing
+        if ($height < $this->height)
+            $height = $this->height;
+
+        // figure up the colors
+        // create the new image, and initialize the colors
+        $image = imagecreatetruecolor($width, $height);
+
+        $text_color = imagecolorallocate($image, hexdec(substr($this->fgcolor, - 6, 2)), hexdec(substr($this->fgcolor, - 4, 2)), hexdec(substr($this->fgcolor, - 2, 2)));
+        $bg_color = imagecolorallocate($image, hexdec(substr($this->bgcolor, - 6, 2)), hexdec(substr($this->bgcolor, - 4, 2)), hexdec(substr($this->bgcolor, - 2, 2)));
+        imagefill($image, 0, 0, $bg_color);
+
+        // go through each layer and each class, and lay down the labels
+        foreach ($data as $layerinfo) {
+            $y += $y_offset_layer;
+            imagettftext($image, $fontsize_layername, 0, $x_layername, $y, $text_color, $fontfile_layername, $layerinfo['layer']->name);
+            $y -= 8; // for the first class in the layer, bring it a bit higher/closer to the title we just drew
+            foreach ($layerinfo['classes'] as $class) {
+                $y += $y_offset_class;
+                imagettftext($image, $fontsize_classname, 0, $x_classname, $y + 5, $text_color, $fontfile_classname, $class->name);
+                $icon = sprintf("%s/%s.png", $ini->tempdir, md5(microtime() . mt_rand()));
+                $class->createLegendIcon($icon_width, $icon_height)->saveImage($icon);
+                $icon = imagecreatefrompng($icon);
+                imagecopy($image, $icon, $x_classicon, $y - 10, 0, 0, $icon_width, $icon_height);
+            }
+        }
+
+        // and save it
+        $filename = md5(microtime() . mt_rand());
+        $filename = "{$ini->tempdir}/legend-{$filename}.png";
+        imagepng($image, $filename);
+
+        return $filename;
+    }
+
+    /**
+     * Generates a WMS URL to use for rendering a map.
+     *
+     * @param
+     * 			  layerOffset int the offset in $this->layers to get the url for
+     */
+    function _generateRemoteWMSURL($layerOffset = 0, $asObj = false) {
+
+        $ini = System::GetIni();
+        $sl_wms = $ini->sl_wms_basepath;
+
+        $layer = $this->layers[$layerOffset]['layer'];
+        $layer = is_a($layer, 'Layer') ? $layer : $layer->layer;
+
+        // custom data url
+        $url = is_null($layer->custom_data) ? null : $layer->custom_data['get_map'];
+
+        // if no custom data url, use old field
+        if (!$url) {
+            $url = $layer->url;
+        }
+        $urlParts = explode('/', $url);
+        $baseParts = explode('/', BASEURL);
+        if ($urlParts[2] === '50.117.112.42') {
+            $urlParts[0] = $baseParts[0];
+            $urlParts[2] = $baseParts[2];
+        }
+        $url = implode('/', $urlParts);
+        $isSLWMS = false; // stripos($sl_wms,$url) == 0;
+
+        if (stripos($url, "?") === false) {
+            $url .= '?';
+        }
+
+        list ($base, $query) = explode('?', $url);
+        $base .= "?";
+
+        $params = array();
+        parse_str($query, $params);
+
+        if (isset($params['MAP']) || isset($params['map'])) {
+            $base .= "&map=" . $params['map'];
+            unset($params['map']);
+        }
+
+        $keys = array_keys($params);
+        $newParams = array();
+        foreach ($keys as $key) {
+            $newParams[strtoupper($key)] = $params[$key];
+        }
+
+        $params = $newParams;
+        unset($newParams);
+
+        array_change_key_case($params, CASE_UPPER);
+
+        $version = isset($params['VERSION']) ? $params['VERSION'] : '1.3.0';
+
+        // get version
+
+        $version = explode(".", $version);
+        $majorVersion = (int) $version[0];
+        $minorVersion = (int) $version[1];
+        // get bbox
+        $bbox = "{$this->extent[0]},{$this->extent[1]},{$this->extent[2]},{$this->extent[3]}";
+        if (($majorVersion >= 1) && ($minorVersion >= 3)) {
+            $bbox = "{$this->extent[1]},{$this->extent[0]},{$this->extent[3]},{$this->extent[2]}";
+        }
+        $params['BBOX'] = $bbox;
+
+        if (isset($params['CRS'])) {
+            $params['CRS'] = 'EPSG;4326';
+        } elseif (isset($params['SRS'])) {
+            $params['SRS'] = 'EPSG:4326';
+        } else {
+            if (($majorVersion >= 1) && ($minorVersion >= 3)) {
+                $params['CRS'] = "EPSG:4326";
+            } else {
+                $params["SRS"] = "EPSG:4326";
+            }
+        }
+
+        if (!isset($params['STYLES'])) {
+            $params['STYLES'] = '';
+        }
+        // now replace those same params with known values
+        if (strpos($url, "STYLES") === false) {
+            $url .= "&STYLES=";
+        }
+
+        $params['FORMAT'] = 'image/png';
+
+        $params['TRANSPARENT'] = 'true';
+        $params['SERVICE'] = 'WMS';
+        $params['WIDTH'] = $this->width;
+        $params['HEIGHT'] = $this->height;
+        $url = strpos($base, '?') ? $base . '&' . http_build_query($params) : $base . '?' . http_build_query($params);
+
+        // die(print_r($url,true));
+        // die();
+        if ($asObj) {
+            $obj = new stdClass();
+            $obj->base = $base;
+            $obj->params = $params;
+            $obj->url = $url;
+            return $obj;
+        }
+
+        // all set!
+        return $url;
+    }
+
+    function _renderWebRemoteWMS($layerOffset = null) {
+        $ini = System::GetIni();
+        $filename = md5(mt_rand() . microtime()) . '.png';
+        // $tempfile = $world->config['tempdir'] . '/' . $filename;
+
+        $tempurl = $ini->tempurl . '/' . $filename;
+
+        $fileData = $this->_renderStreamRemoteWMS($layerOffset);
+
+        if (is_null($fileData))
+            throw new Exception("Empty Image");
+        echo $fileData;
+        //$url = $this->_generateRemoteWMSURL($layerOffset);
+        //file_put_contents($tempurl, $fileData);
+        //return $tempurl;
+    }
+
+    function _renderStreamRemoteWMS($layerOffset = null) {
+        $url = urldecode($this->_generateRemoteWMSURL($layerOffset));
+
+        ob_start();
+        $contents = file_get_contents($url);
+        ob_end_clean();
+
+
+        return $contents;
+    }
+
+    /**
+     * For the most common case, there being only 1 layer, we call shp2img CGI program because
+     * shell_exec() runs at 1/6 speed versus normal shell.
+     * Why? Nobody knows and PHP doesn't care.
+     *
+     * @return string A binary data string, the image data.
+     */
+    function _renderSingleLayerviaCGI() {
+        $url = sprintf("https://www.cartograph.com/cgi-bin/shp2img?mapfile=%s&width=%d&height=%d&extent=%f+%f+%f+%f&odbcini=%s", basename($this->mapfile, '.map'), $this->width, $this->height, $this->extent[0], $this->extent[1], $this->extent[2], $this->extent[3], @$this->odbcini);
+        return file_get_contents($url);
+    }
+
+    // ///
+    // /// methods for adding layers to the Mapper for rendering
+    // ///
+
+    /**
+     * Add a layer to the map for rendering.
+     *
+     * @param Layer $layer
+     * 			  A Layer or ProjectLayer object.
+     */
+    function addLayer(&$layer, $opacity = 1.0, $labels = false, $labelField = null, $baseLayer = null, $ignoreScale = false) {
+        if (is_null($labelField))
+            $labelField = (isset($layer->labelitem)) ? $layer->labelitem : null;
+        array_push($this->layers, array(
+            'layer' => $layer,
+            'opacity' => $opacity,
+            'labels' => $labels,
+            'labelField' => $labelField,
+            'baseLayer' => $baseLayer,
+            'ignoreScale' => $ignoreScale
+        ));
+    }
+
+    /**
+     * This method removes all Layers from the Mapper, so you can start fresh.
+     */
+    function clearLayers() {
+        $this->layers = array();
+    }
+
+    // ///
+    // /// methods pertaining to the global list of symbols, fonts, etc.
+    // ///
+
+    /**
+     * Return an array of symbols appropriate for the given geometry type.
+     *
+     * @param string $geomtypestring
+     * 			  The string geometry type; use $layer->geomtypestring
+     * @return array An associative array, mapping the symbol's internal name => the symbol's human-friendly name.
+     */
+    function listSymbols($geomtypestring) {
+        $symbols = array();
+        switch ($geomtypestring) {
+            case 'point':
+                return Point::GetEnum();
+            case 'polygon':
+                return Polygon::GetEnum();
+            case 'line':
+                return Lines::GetEnum();
+        }
+        return null;
+        foreach (file($this->symbolFile) as $line) {
+
+            @preg_match('/^\s*name\s+\"([^_]+)_(\w+)\"/i', $line, $parts);
+            if (!isset($parts[1]))
+                continue;
+            if ($parts[1] != $geomtypestring)
+                continue;
+            if (substr($parts[2], - 7) == '_filled')
+                continue;
+
+            $label = $parts[2];
+            if ($label == 'default')
+                $label = $geomtypestring == 'point' ? 'circle' : 'solid';
+            $symbols[$parts[2]] = $label;
+        }
+        return $symbols;
+    }
+
+    /**
+     * Initialize the Mapper's map object: projection, image formats, et cetera.
+     *
+     * @param boolean $adjustunits
+     * 			  Should the units and extents be changed to fit the given projection?
+     * @param boolean $forRendering
+     * 			  if false, the map obj will be setup with size and extent params. Otherwise it will set up image and legend formats etc.
+     */
+    function init($adjustunits = false, $mapObj = null) {
+        $ini = System::GetIni();
+
+        if ($mapObj == null) {
+            // load up a blank mapfile, set all the usual stuffi
+            $this->map = ms_newMapObj(NULL);
+
+            // the projection should be set first so that when size and extent are set they are being set for the appropriate projection.
+            $this->map->set('units', MS_DD); // units should be set with projection
+            if ($this->projection != $this->world->projections->defaultSRID) {
+                $this->map->setProjection($this->world->projections->getProj4BySRID($this->projection), $adjustunits);
+            }
+            $hasExtent = false;
+            if (!($this->extent[0] == $this->extent[2]) && ($this->extent[1] == $this->extent[3])) {
+                $hasExtent = true;
+                $this->map->extent->setextent($this->extent[0], $this->extent[1], $this->extent[2], $this->extent[3]);
+            }
+            if (isset($this->width) && isset($this->height) && $hasExtent) {
+                $this->map->setSize($this->width, $this->height);
+            }
+        } else {
+            $this->isDynamic = true;
+            $this->map = $mapObj;
+            $this->width = $mapObj->width;
+            $this->height = $mapObj->height;
+            $this->extent = array();
+            $this->extent[0] = $mapObj->extent->minx;
+            $this->extent[1] = $mapObj->extent->miny;
+            $this->extent[2] = $mapObj->extent->maxx;
+            $this->extent[3] = $mapObj->extent->maxy;
+        }
+        $this->map->set('name', 'renderer');
+        $this->map->set('status', MS_ON);
+
+        // error_log(var_export($this->world->config,true));
+        $this->map->setSymbolSet($this->symbolFile);
+        $this->map->setFontSet($this->fontsdir . '/fonts.inc');
+        $this->map->web->set('imagepath', $ini->tempurl . '/'); // tempdir );
+        $this->map->web->set('imageurl', $ini->tempurl . '/');
+        $this->map->outputformat->setOption('INTERLACE', 'OFF');
+        // Set up the image format and background color, depending on the context: screenshot, map layer, downloadable.
+        // There's a known bug in mapscript that selectOutputFormat() doesn't work, and that the AGG driver doesn't work
+        // properly, failing over to old GD. So, we do two tricks:
+        // a) We lie about what "gif" means (since we can't change from it!) as far as driver and format and all.
+        // b) In the _render() method, we use shp2img instead of $this->map->draw() because shp2img actually works.
+        if ($this->geotiff) {
+            $this->map->imagecolor->setRGB(204, 204, 204);
+            $this->map->outputformat->set('name', 'png');
+            $this->map->outputformat->set('mimetype', 'image/tiff');
+            $this->map->outputformat->set('driver', 'GDAL/GTiff');
+            $this->map->outputformat->set('extension', 'tiff');
+            $this->map->outputformat->set('imagemode', MS_IMAGEMODE_RGB);
+            $this->map->outputformat->set('transparent', MS_OFF);
+            // $this->map->outputformat->setOption ( 'COMPRESS', 'DEFLATE' );
+        } elseif ($this->screenshot) {
+            $this->map->imagecolor->setRGB(204, 204, 204);
+            $this->map->outputformat->set('name', 'gif');
+            $this->map->outputformat->set('mimetype', 'image/jpeg');
+            if (@$this->lowquality) {
+                $this->map->outputformat->set('driver', 'GD/JPEG');
+            } else {
+                $this->map->outputformat->set('driver', 'AGG/PNG');
+            }
+            $this->map->outputformat->set('extension', 'png');
+            $this->map->outputformat->set('imagemode', MS_IMAGEMODE_RGB);
+            $this->map->outputformat->set('transparent', MS_OFF);
+            $this->map->outputformat->setOption('quality', '100');
+            $this->map->outputformat->setOption('INTERLACE', MS_OFF);
+        } elseif ($this->thumbnail) {
+            $this->map->imagecolor->setRGB(255, 255, 255);
+
+            $this->map->outputformat->set('name', 'gif');
+            $this->map->outputformat->set('mimetype', 'image/jpeg');
+            $this->map->outputformat->set('driver', 'AGG/JPEG');
+            $this->map->outputformat->set('extension', 'jpg');
+            $this->map->outputformat->set('imagemode', MS_IMAGEMODE_RGB);
+            $this->map->outputformat->set('transparent', MS_ON);
+            $this->map->outputformat->setOption('quality', '100');
+            $this->map->outputformat->setOption('INTERLACE', MS_OFF);
+        } else {
+
+            $this->map->imagecolor->setRGB(255, 255, 254);
+            $this->map->outputformat->set('name', 'PNG24');
+            // if (@$this->lowquality) {
+            // $this->map->outputformat->set ( 'mimetype', 'image/png' );
+            // $this->map->outputformat->set ( 'driver', 'GD/PNG' );
+            // $this->map->outputformat->set ( 'imagemode', MS_IMAGEMODE_RGB );
+            // $this->map->outputformat->set ( 'transparent', MS_ON );
+            // } else {
+            $this->map->outputformat->set('mimetype', 'image/png; mode=24bit');
+            $this->map->outputformat->set('driver', 'AGG/PNG');
+            $this->map->outputformat->set('imagemode', MS_IMAGEMODE_RGBA);
+            $this->map->outputformat->set('transparent', MS_ON);
+            // }#
+
+            if (!$this->interlace)
+                $this->map->outputformat->setOption('INTERLACE', 'OFF');
+            if ($this->quantize) {
+                $this->map->outputformat->setOption('QUANTIZE_FORCE', 'ON');
+                $this->map->outputformat->setOption('QUANTIZE_COLORS', 256);
+                $this->map->outputformat->setOption('QUANTIZE_NEW', 'ON');
+                $this->map->outputformat->setOption('QUANTIZE_DITHER', 'OFF');
+            }
+        }
+
+        // configure the legend
+        $this->map->legend->set('width', $this->width);
+        $this->map->legend->set('height', $this->height);
+        $this->map->legend->set('status', MS_ON);
+        $this->map->legend->imagecolor->setRGB(204, 204, 204);
+        $this->map->legend->label->color->setRGB(0, 0, 0);
+        $this->map->legend->label->set('size', 9);
+        if (defined('IS_DEV_SANDBOX')) {
+            $this->map->legend->label->set('type', MS_TRUETYPE);
+        }
+        $this->map->legend->label->set('font', 'Vera');
+        $this->map->legend->label->set('position', MS_UR);
+        $this->map->legend->set('keysizex', 18);
+        $this->map->legend->set('keysizey', 12);
+        $this->map->legend->set('keyspacingx', 15);
+        $this->map->legend->set('keyspacingy', 14);
+        return $this->map;
+    }
+
+    function SetPixospatialMapObj(PixoSpatial $pixo, $proj4 = null) {
+        if (is_null($proj4))
+            $proj4 = System::Get()->projections->defaultProj4;
+        list ($minLon, $minLat, $maxLon, $maxLat) = explode(',', $pixo->GetBBox());
+
+        $reporting = error_reporting();
+        //ob_start();
+        if (is_null($this->map))
+            $this->map = ms_newMapObj(null);
+        $this->map->setProjection($proj4, MS_TRUE);
+        error_reporting(0);
+        try {
+            $this->map->setExtent((double) $minLon, (double) $minLat, (double) $maxLon, (double) $maxLat);
+            $this->map->setSize((int) $pixo->GetWidth(), (int) $pixo->GetHeight());
+        } catch (Exception $e) {
+            Log::Debug($e->getMessage());
+        }
+        //ob_end_clean();
+        error_reporting($reporting);
+    }
+
+    static function Get($isDynamic = false) {
+
+        return new Mapper(System::Get());
+    }
+
+}
+
+?>

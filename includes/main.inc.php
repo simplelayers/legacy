@@ -39,7 +39,7 @@ function simple_autoload($class) {
         
         $incPath = implode ( PATH_SEPARATOR, $includePath );
       
-        set_include_path ( $incPath );
+        set_include_path( $incPath );
     }
     $includePath = explode ( ':', get_include_path () );
 
@@ -66,17 +66,13 @@ function simple_autoload($class) {
 }
 
 // Require
-
 // Require core resources used for getting starteds 
 require_once (WEBROOT . 'classes/System.php');
 require_once (WEBROOT . 'classes/SimpleSession.php');
 require_once (dirname ( __FILE__ ) . '/ConfigEnvironment.php');
 require_once (dirname ( __FILE__ ) . '/functions.inc.php');
 
-
 System::SetupSystem();
-
-
 
 if(!function_exists('ms_newStyleObj')) include('mapserver_stubs.php');
 

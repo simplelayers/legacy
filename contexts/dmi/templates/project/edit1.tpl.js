@@ -393,7 +393,8 @@ class Controller {
         }
         item += '<button type="button" class="btn btn-sm btn-primary ' + btnClass + ' ' + infoClass + '"  title="' + desc + '"><span class="fas fa-' + infoIcon + '"></span></button>';
         item += '<span>';
-        item += name;
+        item += `<button type="button" class="btn btn-sm btn-primary info-button info"
+ title="${data.id}:${data.plid} ${name}"><span class="fas fa-info"></span></button>${name}`;
         item += '</span>';
         item += '</li>';
         var element = $(item);

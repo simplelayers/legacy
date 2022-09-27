@@ -24,9 +24,9 @@ tr.row2 { background-color:#FFFFFF; }
    <span class="title">Feature Name: <!--{$label}--></span>
    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
    <!--{if $editing}-->
-   <a class="noprint href=".?do=viewerquerygid&project=<!--{$smarty.request.project}-->&layer=<!--{$smarty.request.layer}-->&gid=<!--{$gid}-->&format=html">view</a>
+   <a class="noprint" href=".?do=viewerquerygid&project=<!--{$smarty.request.project}-->&layer=<!--{$smarty.request.layer}-->&gid=<!--{$gid}-->&format=html">view</a>
    <!--{elseif $editable}-->
-   <a class="noprint href=".?do=viewerquerygid&project=<!--{$smarty.request.project}-->&layer=<!--{$smarty.request.layer}-->&gid=<!--{$gid}-->&format=html&edit">edit</a>
+   <a class="noprint" href=".?do=viewerquerygid&project=<!--{$smarty.request.project}-->&layer=<!--{$smarty.request.layer}-->&gid=<!--{$gid}-->&format=html&edit">edit</a>
    <!--{/if}-->
    <!--{if ! $editing and ! $downloading }-->
    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

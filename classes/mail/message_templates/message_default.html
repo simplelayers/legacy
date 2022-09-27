@@ -1,0 +1,54 @@
+<html>
+<head>
+<style>
+table {
+	margin-top:15px;
+	margin-bottom:15px;
+	font-size:14pt;
+}
+th {
+	vertical-align:baseline;
+	text-align:left;
+	font-weight: bold;
+	font-size:14pt;
+	padding-right:10px;
+	line-height:24pt;
+	white-space: nowrap;
+	
+}
+td {
+	vertical-align:baseline;
+	align:left;
+	width:100%;
+}
+p {
+	line-height:18pt;
+	font-size:14pt;
+}
+
+.message_row {
+	padding-top:1em;
+}
+</style>
+</head>
+<body>
+<table>
+<tr><td colspan='2'><img src='<!--{sl_logo_url}-->' /> </tr>
+<!--{if !is_null($parameters)}-->
+<!--{foreach from=$parameters key=paramName item=param}-->
+<tr ><th><!--{$paramName}--></th><td><!--{$param}--></td></tr>
+
+<!--{/foreach}-->
+<!--{/if}-->
+<!--{if isset($message) }-->
+<tr class='message_row'><td colspan='2'>
+<p><b>A SimpleLayers member has written to say: </b></p>
+<!--{foreach from=$message item=line}-->
+<p><!--{$line}--></p>
+<!--{/foreach}-->
+</td></tr>
+<!--{/if}-->
+</table>
+ 
+</body>
+</html>

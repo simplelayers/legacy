@@ -1,5 +1,5 @@
 @CHARSET "ISO-8859-1";
-.map_layers..parentless button.back_button {
+.map_layers.parentless button.back_button {
 	display:none;	
 }
 .row_stepper .dijitInputContainer  {
