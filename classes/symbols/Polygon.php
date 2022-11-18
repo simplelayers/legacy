@@ -134,8 +134,7 @@ class Polygon extends Symbol {
         if ((self::$enum !== NULL) and ! $replace)
             return self::$enum;
         self::$enum = new \Enum(array());
-        self::$enum->AddItem('polygon_default', 'default');
-        self::$enum->AddItem('polygon_solid', 'solid');
+        self::$enum->AddItem('polygon solid', 'default');
         self::$enum->AddItem('hatch horizontal', 'hatch_horizontal');
         self::$enum->AddItem('hatch vertical', 'hatch_vertical');
         self::$enum->AddItem('hatch right', 'hatch_right');
