@@ -42,7 +42,7 @@ class MongoCRUD {
 		$mongo = \System::GetMongo();
 		$id = new \MongoDB\BSON\ObjectId();
 		$slid = "$id";
-		$document = array('_id'=>$id,'id'=>$slid,'created'=>\mktime(),'updated'=>mktime());
+		$document = array('_id'=>$id,'id'=>$slid,'created'=>\time(),'updated'=>time());
 		
 		if($mergeData) {
 			$document = array_merge($document,$data);

@@ -642,6 +642,7 @@ class World
         $ini = System::GetIni();
         if (is_null($username))
             $username = $ini->visitor_account;
+        $username = strtolower($username);
         $id = $this->db->GetOne('SELECT id FROM people WHERE username=?', array(
             $username
         ));

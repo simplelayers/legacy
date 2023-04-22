@@ -26,8 +26,8 @@ class Creds {
 	
 	public static function GetFromRequest() {
 		$user = isset($_REQUEST['username']) ? $_REQUEST['username'] : null;
-		
-		$pw = isset($_REQUEST['password']) ? $_REQUEST['password'] : null;
+		if($user) $user = strtolower($user);
+                $pw = isset($_REQUEST['password']) ? $_REQUEST['password'] : null;
 		$creds = new self($user,$pw);
 		return $creds;
 	}

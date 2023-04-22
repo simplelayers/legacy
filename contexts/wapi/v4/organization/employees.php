@@ -88,7 +88,8 @@ function _exec() {
 			
 			$seatAssignment = $seatAssignments->AssignSeat($params);
 			$orgShort = $org->short;
-			$username = array_shift(explode('@',$username));
+                        $nameParts = explode('@',$username);
+			$username = array_shift($nameParts);
 			$username.='@'.$orgShort;
 			
 			$newPerson = array('person'=>array('id'=>$person->id, 'username'=>$username,'realname'=>$realname,'email'=>$email),'seatAssignment'=>$seatAssignment,'status'=>'added');
@@ -143,7 +144,8 @@ function _exec() {
 				if($person->id != $owner->id) {
     				if(isset($employee['username'])) {
         				$orgShort = $org->short;
-        				$username = array_shift(explode('@',$employee['username']));
+                                        $nameParts = explode('@',$employee['username']);
+        				$username = array_shift($nameParts);
         				$username.='@'.$orgShort;
         				$employee['username'] = $username;
     				}

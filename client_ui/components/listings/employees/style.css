@@ -1,107 +1,127 @@
 @CHARSET "ISO-8859-1";
-
+tr, td, label {
+    font-size: 0.8rem;
+}
+.mail {
+    background-position-x: calc(-3 * 32px);
+    background-position-y: calc(-3 * 21.5px);
+}
 
 .new_employee .instructions {
-	max-width:400px;
-	font-style:italic;
-	
+    max-width:400px;
+    font-style:italic;
+
 }
 .employees {
-	overflow-x:auto;
-	min-height:0px !important;
+    overflow-x:auto;
+    min-height:0px !important;
 }
 .employees .scrollable_listing {
-	overflow-x:auto;
-	
+    overflow-x:auto;
+
 }
 .employees .display {
-	padding: 0px 10px 5px 10px;
-	
+    padding: 0px 10px 5px 10px;
+
 }
 .employees .row {
-	margin-left: .5em !important;
-	margin-right: .5em !important;
+    margin-left: .5em !important;
+    margin-right: .5em !important;
+    display: grid;
+    grid-template-columns: 100fr;
+    grid-template-columns: auto auto auto auto auto auto auto;
+
 }
 .organization_employees table td {
-	vertical-align:top;
+    vertical-align:top;
 }
 
 .organization  td{
-	line-height: 24pt;
+    line-height: 24pt;
 }
 .new_employee input {
-	width:100%;
+    width:100%;
 }
 .new_employee table {
-	width:100%;
+    width:100%;
 }
 .new_employee tr {
-	vertical-align:middle;
+    vertical-align:middle;
 }
 
 
 .new_employee td {
-	padding-right:10px;
-	vertical-align:baseline;
-	
+    padding-right:10px;
+    vertical-align:baseline;
+
+}
+.employees td {
+    display:grid;
+    grid-gap: 0.25rem;
 }
 .employees table, .employees table .row1, .employees table .row2 {
-	width:100%;
-	min-width:700px !important;	
+    width:100%;
+    min-width:700px !important;	
 }
 
 .employees table .row div {
-	display:inline-block;]
-	text-align: left;
-	
+    display:inline-block;]
+    text-align: left;
+
 }
 
 .employees table .col1 {
-	min-width:36px !important;
-	width:36px;
+    min-width:36px !important;
+    width:36px;
 }
 .employees table .col2, .employees table .col4 {
-	width:8em;
-	text-align:right;
+    width:8em;
+    text-align:right;
 }
 
 .employees table .col6 {
-	width:100%;
+    width:100%;
 }
 
 .deleted label {
-	text-decoration: line-through;
+    text-decoration: line-through;
 }
 .deleted input {
-	border:none;
-	background:none;
-	text-decoration: line-through;
+    border:none;
+    background:none;
+    text-decoration: line-through;
 }
 .deleted select {
-	border:none;
-	background:none;
-	text-decoration: line-through;
+    border:none;
+    background:none;
+    text-decoration: line-through;
 }
-
+label {
+    white-space:nowrap;
+}
+.seat-row {
+    display: grid !important;
+    grid-template-columns: auto auto auto 1fr !important;
+}
 .changed input, .changed label, .changed select {
-	font-style:italic !important;	
+    font-style:italic !important;	
 }
 tr.changed {
-	background:rgba(128,128,255,.5) !important;
+    background:rgba(128,128,255,.5) !important;
 }
 tr.changed:nth-child(even) {
-	background:rgba(128,128,150,.5) !important;
+    background:rgba(128,128,150,.5) !important;
 }
 
 .organization_employees .properties_heading {
-	font-weight: bold;
-	line-height: 22pt;
+    font-weight: bold;
+    line-height: 22pt;
 }
 
 .at_orgname td {
-	font-style: italic;
-	line-height: 12px;
-	
-	padding-bottom: 7px;
+    font-style: italic;
+    line-height: 12px;
+
+    padding-bottom: 7px;
 }
 
