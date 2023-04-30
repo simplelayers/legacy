@@ -42,7 +42,7 @@
     }
     .no-info,
     .info {
-        border-radius: 12px;
+        border-radius: 1rem !important;
     }
     .no-info {
         opacity: .5;
@@ -338,7 +338,7 @@
                         <small class="instruction form-text text-muted">Update map with current set of sub layers for this collection.  Adds missing sublayers to beginning of sub layer list, removes sub layers no longer in original collection.</small>
                     </div>
                     <div class="item stateful req-coll" >
-                        <input class="opt sublayers-update_reorder_rad" name="sublayer_opts" type="radio">Update and Rorder Sub-layer set and order
+                        <input class="opt sublayers-update_reorder_rad" name="sublayer_opts" type="radio">Update and Reorder Sub-layer set and order
                         <small class="instruction form-text text-muted">Update map with current set of sub layers for this collection and update the order to reflect the original layer colleciton. Adds missing sublayers and removes sub layers no longer in collection.</small>
                     </div>
                     <div class="item stateful req-coll" >

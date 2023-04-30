@@ -1,187 +1,223 @@
 [
-{"groupTitle" : "Maps",
-	"requirements" : {		
-	},
-	"links" : [ {
-		"title" : "List",
-		"ref" : "?do=project.list",
-		"perm":":MapsGeneral:View"
-	}, {
-		"title" : "New",
-		"ref" : "?do=project.create1",
-		"perm":":MapsGeneral:Create"
-	}]	
-},{
-	"groupTitle" : "Edit",
-	"requirements" : {	
-	    "pageArg":"isMapEditor",
-	    "pageArgValue":"true",
-	    "perm":":MapsGeneral:Edit"
-	},
-	"links" : [ {
-		"title" : "General",
-		"ref" : "?",
-		"fields":[
-		    {"name":"do",
-		     "value":"project.edit1",
-		     "type":"static"},
-		    {"name":"id",
-		     "value":"mapId",
-		     "type":"pageArg"}
-		]
-	}, {
-		"title" : "Embed",
-		"ref" : "?",
-		"fields":[
-		    {"name":"do",
-		     "value":"project.iframe1",
-		     "type":"static"},
-		    {"name":"id",
-		     "value":"mapId",
-		     "type":"pageArg"}
-		],
-		"pageArg":"isMapEmbeddable",
-		"pageArgValue":"true",
-		"perm":":MapsEmbedding:Create"
-	}, {
-		"title" : "Embed",
-		"ref" : null,
-		"tooltip":"Embed: You must have edit privilege and the map must have limited public access or view access to be embedded.",
-		"fields":[
-		    {"name":"do",
-		     "value":"project.iframe1",
-		     "type":"static"},
-		    {"name":"id",
-		     "value":"mapId",
-		     "type":"pageArg"}
-		],
-		"pageArg":"isMapEmbeddable",
-		"pageArgValue":"false",
-		"perm":":MapsEmbedding:Create"
-	}]		
-}, {
-	"groupTitle" : "Info",
-	"requirements" : {	
-	    "pageArg":"isMapEditor",
-	    "pageArgValue":"false",
-	    "perm":":MapsGeneral:View"
-	},
-	"links" : [ {
-		"title" : "General",
-		"ref" : "?",
-		"fields":[
-		    {"name":"do",
-		     "value":"project.info",
-		     "type":"static"},
-		    {"name":"id",
-		     "value":"mapId",
-		     "type":"pageArg"}
-		]
-	}, {
-		"title" : "Embed",
-		"ref" : "?",
-		"fields":[
-		    {"name":"do",
-		     "value":"project.iframe1",
-		     "type":"static"},
-		    {"name":"id",
-		     "value":"mapId",
-		     "type":"pageArg"}
-		],			
-		"pageArg":"isMapEmbeddable",
-		"pageArgValue":"true",
-		"perm":":MapsEmbedding:Create"
-	}, {
-		"title" : "Embed",
-		"ref" : null,
-		"tooltip":"Embed: You must have edit privilege and the map must have limited public access or view access to be embedded.",
-		"fields":[
-		    {"name":"do",
-		     "value":"project.iframe1",
-		     "type":"static"},
-		    {"name":"id",
-		     "value":"mapId",
-		     "type":"pageArg"}
-		],
-		"pageArg":"isMapEmbeddable",
-		"pageArgValue":"false",
-		"perm":":MapsEmbedding:Create"
-	}]		
-}, {
-	"groupTitle" : "Manage",
-	"requirements" : {
-		"pageArg":"isMapOwner",
-		"pageArgValue":"true",
-		"perm":":MapsGeneral:Edit"		
-	},
-	"links" : [ {
-		"title" : "Sharing",
-		"ref" : "?",
-		"fields":[
-		    {"name":"do",
-		     "value":"project.permissions",
-		     "type":"static"},
-		    {"name":"id",
-		     "value":"mapId",
-		     "type":"pageArg"}
-		],
-		"perm":":MapsSharing:"
-		
-	}, {
-		"title" : "Delete",
-		"ref" : "?",
-		"fields":[
-		    {"name":"do",
-		     "value":"project.delete",
-		     "type":"static"},
-		    {"name":"id",
-		     "value":"mapId",
-		     "type":"pageArg"}
-		],
-		"confirm":"Are you sure you want to delete this map?\nThere is no way to un-delete or recover a map once it has been deleted.\n\nClick OK to delete this map.\nClick Cancel to NOT delete this map.",
-		"perm":":MapsGeneral:Delete"
-	}, {
-		"title" : "Copy",
-		"ref" : "?",
-		"fields":[
-		    {"name":"do",
-		     "value":"project.copy1",
-		     "type":"static"},
-		    {"name":"id",
-		     "value":"mapId",
-		     "type":"pageArg"}
-		],
-		"perm":":MapsGeneral:Copy"	
-	}, {
-		"title" : "Track",
-		"ref" : "?",
-		"fields":[
-		    {"name":"do",
-		    "value":"project.log",
-		    "type":"static"},
-		    {"name":"id",
-		     "value":"mapId",
-		     "type":"pageArg"}
-		],	
-		"perm":":MapsUsage:"
-	} ]
-}, {
-	"groupTitle" : "View",
-	"requirements" : {
-		"pageArg":"mapId",
-		"perm":":MapsGeneral:View"
-	},
-	"links" : [ {
-		"title" : "Map",
-		"ref" : "javascript:openViewer([mapId])",
-		"perm":":MapsGeneral:View"			
-	}, {
-		"title" : "WMS",
-		"ref" : "?do=project.ogc&id=[mapId]",
-		"perm":":MapsGeneral:View"
-	} ]
-} 
+    {
+        "groupTitle": "Maps",
+        "requirements": {		
+        },
+        "links": [{
+                "title": "List",
+                "ref": "?do=project.list",
+                "perm": ":MapsGeneral:View"
+            }, {
+                "title": "New",
+                "ref": "?do=project.create1",
+                "perm": ":MapsGeneral:Create"
+            }]	
+    }, {
+        "groupTitle": "Edit",
+        "requirements": {	
+            "pageArg": "isMapEditor",
+            "pageArgValue": "true",
+            "perm": ":MapsGeneral:Edit"
+        },
+        "links": [{
+                "title": "General",
+                "ref": "?",
+                "fields": [
+                    {
+                        "name": "do",
+                        "value": "project.edit1",
+                        "type": "static"
+                    },
+                    {
+                        "name": "id",
+                        "value": "mapId",
+                        "type": "pageArg"
+                    }
+                ]
+            }, {
+                "title": "Embed",
+                "ref": "?",
+                "fields": [
+                    {
+                        "name": "do",
+                        "value": "project.iframe1",
+                        "type": "static"
+                    },
+                    {
+                        "name": "id",
+                        "value": "mapId",
+                        "type": "pageArg"
+                    }
+                ],
+                "pageArg": "isMapEmbeddable",
+                "pageArgValue": "true",
+                "perm": ":MapsEmbedding:Create"
+            }, {
+                "title": "Embed",
+                "ref": null,
+                "tooltip": "Embed: You must have edit privilege and the map must have limited public access or view access to be embedded.",
+                "fields": [
+                    {
+                        "name": "do",
+                        "value": "project.iframe1",
+                        "type": "static"
+                    },
+                    {
+                        "name": "id",
+                        "value": "mapId",
+                        "type": "pageArg"
+                    }
+                ],
+                "pageArg": "isMapEmbeddable",
+                "pageArgValue": "false",
+                "perm": ":MapsEmbedding:Create"
+            }]		
+    }, {
+        "groupTitle": "Info",
+        "requirements": {	
+            "pageArg": "isMapEditor",
+            "pageArgValue": "false",
+            "perm": ":MapsGeneral:View"
+        },
+        "links": [{
+                "title": "General",
+                "ref": "?",
+                "fields": [
+                    {
+                        "name": "do",
+                        "value": "project.info",
+                        "type": "static"
+                    },
+                    {
+                        "name": "id",
+                        "value": "mapId",
+                        "type": "pageArg"
+                    }
+                ]
+            }, {
+                "title": "Embed",
+                "ref": "?",
+                "fields": [
+                    {
+                        "name": "do",
+                        "value": "project.iframe1",
+                        "type": "static"
+                    },
+                    {
+                        "name": "id",
+                        "value": "mapId",
+                        "type": "pageArg"
+                    }
+                ],			
+                "pageArg": "isMapEmbeddable",
+                "pageArgValue": "true",
+                "perm": ":MapsEmbedding:Create"
+            }, {
+                "title": "Embed",
+                "ref": null,
+                "tooltip": "Embed: You must have edit privilege and the map must have limited public access or view access to be embedded.",
+                "fields": [
+                    {
+                        "name": "do",
+                        "value": "project.iframe1",
+                        "type": "static"
+                    },
+                    {
+                        "name": "id",
+                        "value": "mapId",
+                        "type": "pageArg"
+                    }
+                ],
+                "pageArg": "isMapEmbeddable",
+                "pageArgValue": "false",
+                "perm": ":MapsEmbedding:Create"
+            }]		
+    }, {
+        "groupTitle": "Manage",
+        "requirements": {
+            "pageArg": "isMapOwner",
+            "pageArgValue": "true",
+            "perm": ":MapsGeneral:Edit"		
+        },
+        "links": [{
+                "title": "Sharing",
+                "ref": "?",
+                "fields": [
+                    {
+                        "name": "do",
+                        "value": "project.permissions",
+                        "type": "static"
+                    },
+                    {
+                        "name": "id",
+                        "value": "mapId",
+                        "type": "pageArg"
+                    }
+                ],
+                "perm": ":MapsSharing:"
+            }, {
+                "title": "Delete",
+                "ref": "?",
+                "fields": [
+                    {
+                        "name": "do",
+                        "value": "project.delete",
+                        "type": "static"
+                    },
+                    {
+                        "name": "id",
+                        "value": "mapId",
+                        "type": "pageArg"
+                    }
+                ],
+                "confirm": "Are you sure you want to delete this map?\nThere is no way to un-delete or recover a map once it has been deleted.\n\nClick OK to delete this map.\nClick Cancel to NOT delete this map.",
+                "perm": ":MapsGeneral:Delete"
+            }, {
+                "title": "Copy",
+                "ref": "?",
+                "fields": [
+                    {
+                        "name": "do",
+                        "value": "project.copy1",
+                        "type": "static"
+                    },
+                    {
+                        "name": "id",
+                        "value": "mapId",
+                        "type": "pageArg"
+                    }
+                ],
+                "perm": ":MapsGeneral:Copy"	
+            }, {
+                "title": "Track",
+                "ref": "?",
+                "fields": [
+                    {
+                        "name": "do",
+                        "value": "project.log",
+                        "type": "static"
+                    },
+                    {
+                        "name": "id",
+                        "value": "mapId",
+                        "type": "pageArg"
+                    }
+                ],	
+                "perm": ":MapsUsage:"
+            }]
+    }, {
+        "groupTitle": "View",
+        "requirements": {
+            "pageArg": "mapId",
+            "perm": ":MapsGeneral:View"
+        },
+        "links": [{
+                "title": "Map",
+                "ref": "javascript:openViewer([mapId])",
+                "perm": ":MapsGeneral:View"			
+            }]
+    } 
 ]
-	
-	
+
+
 	

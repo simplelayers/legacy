@@ -47,8 +47,8 @@ class Controller {
         const me = this;
         $('.tundra').toggleClass('hidden-overflow', true);
         $('.contentarea').toggleClass('no-nav-row', true);
-         $(".contentarea").toggleClass('flex-content', true);
-       
+        $(".contentarea").toggleClass('flex-content', true);
+
         this.includeBB.on('change', function () {
             me.UpdateBounds();
         });
@@ -393,8 +393,11 @@ class Controller {
         }
         item += '<button type="button" class="btn btn-sm btn-primary ' + btnClass + ' ' + infoClass + '"  title="' + desc + '"><span class="fas fa-' + infoIcon + '"></span></button>';
         item += '<span>';
-        item += `<button type="button" class="btn btn-sm btn-primary info-button info"
- title="${data.id}:${data.plid} ${name}"><span class="fas fa-info"></span></button>${name}`;
+        if (!!data.plid) {
+            item += `<button type="button" class="btn btn-sm btn-primary info-button info"
+ title="${data.id}:${data.plid} ${name}"><span class="fas fa-info"></span></button>`;
+        } 
+        item += `${name}`;
         item += '</span>';
         item += '</li>';
         var element = $(item);
@@ -496,16 +499,16 @@ class ResetLayerModal {
         this.params = $('.param', this.dialog);
         this.opts = $('.opt', this.dialog);
         this.okButton = $('.ok-button', this.dialog);
-        this.cancelButton = $('.cancel-button',this.dialog);
+        this.cancelButton = $('.cancel-button', this.dialog);
         this.footer = $('.modal-footer', this.dialog);
         const me = this;
-        this.closeButton = $('.close-button',this.dialog);
-        this.closeButton.on('click',function(){
-           me.Hide(); 
+        this.closeButton = $('.close-button', this.dialog);
+        this.closeButton.on('click', function () {
+            me.Hide();
         });
-       this.cancelButton.on('click',function(){
-           me.Hide();
-       })
+        this.cancelButton.on('click', function () {
+            me.Hide();
+        })
         this.okButton.on('click', function () {
             const params = {};
             params.properties = me.layerProps.prop('checked') === true ? 'true' : 'false';

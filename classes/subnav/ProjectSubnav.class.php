@@ -7,8 +7,9 @@ class ProjectSubnav extends Subnav {
 		if($project->getPermissionById($user->id) >= AccessLevels::READ){
 			$this->add("View", "Map", "javascript:openViewer(<!--{\$id}-->);");
 		}
+                
 		if($project->getPermissionById($user->id) >= AccessLevels::COPY){
-			$this->add("View", "WMS", "project.ogc&id=<!--{\$id}-->", true);
+			// $this->add("View", "WMS", "project.ogc&id=<!--{\$id}-->", true);
 		}
 		if($project->getPermissionById($user->id) >= AccessLevels::EDIT){
 			$this->add("Edit", "Details", "project.edit1&id=<!--{\$id}-->");

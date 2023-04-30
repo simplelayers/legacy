@@ -1,6 +1,7 @@
 <?php
 
 use model\MongoCRUD;
+use MongoDB\Client;
 
 class System {
 
@@ -57,7 +58,7 @@ class System {
                 $webURL .= $sandbox;
                 $webURL .= '/' . implode('/', $path);
                 if (substr($webURL, -1) === '/') {
-                    #$webURL = substr($webURL, 0, strlen($webURL) - 1);
+#$webURL = substr($webURL, 0, strlen($webURL) - 1);
                 }
                 $sysInfo ['REQUEST_URI'] = $webURL;
                 define('BASEURL', $webURL);
@@ -65,7 +66,7 @@ class System {
                 $webURL = $siteURL;
                 $sysInfo ['REQUEST_URI'] = $webURL;
                 if (substr($webURL, -1) === '/') {
-                    #$webURL = substr($webURL,0, strlen($webURL) - 1);
+#$webURL = substr($webURL,0, strlen($webURL) - 1);
                 }
 
                 define('BASEURL', $webURL);
@@ -73,7 +74,7 @@ class System {
         } else {
             $webURL = $siteURL;
             if (substr($webURL, -1) === '/') {
-                #$webURL = substr($webURL, 0, strlen($webURL - 1));
+#$webURL = substr($webURL, 0, strlen($webURL - 1));
             }
             $sysInfo ['REQUEST_URI'] = $webURL;
             define('BASEURL', $webURL);
@@ -83,8 +84,8 @@ class System {
         if (isset($_SERVER ['REDIRECT_SIMPLE_LAYERS']))
             $_SERVER ['SIMPLE_LAYERS'] = $_SERVER ['REDIRECT_SIMPLE_LAYERS'];
 
-        // f (!defined('SANDBOX_MODE')) define('SANDBOX_MODE',false);
-        // efine('BASEDIR', dirname(dirname(__FILE__)));// VIEWER_MODE ? dirname(dirname($_SERVER['SCRIPT_FILENAME'])) : dirname($_SERVER['SCRIPT_FILENAME']) );
+// f (!defined('SANDBOX_MODE')) define('SANDBOX_MODE',false);
+// efine('BASEDIR', dirname(dirname(__FILE__)));// VIEWER_MODE ? dirname(dirname($_SERVER['SCRIPT_FILENAME'])) : dirname($_SERVER['SCRIPT_FILENAME']) );
 
         if (!defined('VIEWER_MODE'))
             define('VIEWER_MODE', false);
@@ -183,6 +184,13 @@ class System {
         return $GLOBALS ['_SL_DB'];
     }
 
+    public static function CloseDB() {
+        $db = isset($GLOBALS ['_SL_DB']) ? $GLOBALS ['_SL_DB'] : null;
+        if (!is_null($db)) {
+            $db->Close();
+        }
+    }
+
     public static function GetCGDB($account) {
         $cgdb = isset($GLOBALS ['_CG_DB']) ? $GLOBALS ['_CG_DB'] : null;
         if (!is_null($cgdb))
@@ -212,15 +220,43 @@ class System {
 
     public static function GetMongo() {
 
+        /**
+         * @var MongoDB\Client $mongoDB 
+         */
         $mongoDB = isset($GLOBALS ['_SL_MONGO']) ? $GLOBALS ['_SL_MONGO'] : null;
-        if (!is_null($mongoDB))
-            return $mongoDB;
+        if (!is_null($mongoDB)) {
+            try {
+                $dbs = $mongoDB->listDatabases();
+                return $mongoDB;
+            } catch (Exception $e) {
+                unset($GLOBALS['_SL_MONGO']);
+                $mongoDB = null;
+            }
+        }
         $ini = self::GetIni();
 
-        $mongoDB = new \MongoDB\Client("mongodb://" . $ini->mongo_server);
+        $options = [
+            "maxIdleTimeMS" => 10000 // Set the idle timeout to 5 seconds
+        ];
+        $mongoDB = new \MongoDB\Client(
+                "mongodb://" . $ini->mongo_server,
+                $options
+        );
         $GLOBALS ['_SL_MONGO'] = $mongoDB;
 
         return $GLOBALS ['_SL_MONGO'];
+    }
+
+    public static function CloseMongo() {
+        $mongoDB = isset($GLOBALS ['_SL_MONGO']) ? $GLOBALS ['_SL_MONGO'] : null;
+        if (!$mongoDB)
+            return;
+        unset($GLOBALS['_SL_MONGO']);
+    }
+
+    public static function CloseDBs() {
+        self::CloseDB();
+        self::CloseMongo();
     }
 
     public static function GetMailConfig() {
@@ -266,7 +302,7 @@ class System {
         foreach ($ini->jpgraph_incs as $inc) {
             require_once ($inc);
         }
-        // constants pertaining to graph generation
+// constants pertaining to graph generation
         define('GRAPH_BGCOLOR', '#FFFFFF'); // the background color
         define('GRAPH_GRIDCOLOR', '#BBBBBB'); // the color for grid lines
         define('GRAPH_WIDTH', 700);
@@ -277,12 +313,12 @@ class System {
         define('MARKERSIZE_LARGE', 7);
         define('MARKERSIZE_HUGE', 9);
         define('GRAPH_LIMIT_ALL', 1000); // when we ask for "all data" how many do we really mean?
-        // a list of options for selecting how many records to show in the graph (or other report)
+// a list of options for selecting how many records to show in the graph (or other report)
         $GRAPH_LIMIT_OPTIONS = array(
             7 => 'Last 7 data points',
             GRAPH_LIMIT_ALL => 'All data'
         );
-        // what colors should plots be in a graph? The lines will cycle through these colors.
+// what colors should plots be in a graph? The lines will cycle through these colors.
         $GRAPHCOLORS = array(
             '#000000',
             '#009900',
@@ -353,11 +389,11 @@ class System {
                 }
             }
         }
-        #require_once ($ini->smarty_inc);
+#require_once ($ini->smarty_inc);
     }
 
     public static function RequireColorPicker() {
-        // and the color_picker() function, which is separated out solely for readability
+// and the color_picker() function, which is separated out solely for readability
         require_once SL_INCLUDE_PATH . 'colorpicker.php';
     }
 

@@ -93,6 +93,7 @@ function _dispatch_iframe1($template, $args,$org,$pageArgs) {
     
     $bgColor = (isset($entry->fill_color) ? $entry->fill_color : 'trans');
     //Color Picker
+    $template->assign('mapId',$project->id);
     $template->assign('colorpicker_background', color_picker('theform','backgroundColor','',$bgColor,true,'setTimeout("updateEmbedCode()", 100);') );
     // and draw it...
     

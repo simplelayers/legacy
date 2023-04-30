@@ -6,6 +6,10 @@ use utils\ParamUtil;
 use utils\AssetUtil;
 
 require_once ('includes/main.inc.php');
+function myShutdownFunction() {
+    System::CloseDBs();
+}
+register_shutdown_function('myShutdownFunction');
 //System::RequireZend();
 //\Zend_Loader::loadClass('Zend_Debug');
 //\Zend_Debug::dump('Starting','index',false);
@@ -125,8 +129,6 @@ if (is_a($context, 'auth\DMIContext')) {
 if (is_a($context, 'auth\MailActionContext')) {
     return $context->Exec($_REQUEST);
 }
-
-
 
 
 // if($do=='get')
