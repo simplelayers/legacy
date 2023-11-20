@@ -24,3 +24,5 @@ VeraMonospaceItalic		VeraMoIt.ttf
 VeraMonospace			VeraMono.ttf
 VeraSerif			VeraSe.ttf
 VeraSerifBold			VeraSeBd.ttf
+FontAwesomeRegular		fontawesome-free-6.4.0.web/webfonts/fa-regular-400.ttf
+FontAwesomeSolid		fontawesome-free-6.4.0.web/webfonts/fa-solid-900.ttf

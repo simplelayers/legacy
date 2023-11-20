@@ -43,32 +43,22 @@ function openViewer(projectid,event) {
    var location = (window.location.href.indexOf('~') == -1) ? 'no' : 'yes';
    var environment = window.location.href.match(/https:\/\/([^\.]+).simplelayers/)[1];
    var appURL = '';
+   var dmi_viewer = 'sl_viewer';
+   if(event.ctrlKey === true) {
+       dmi_viewer = 'viewer';
+   }
    switch(environment) {
        case 'dev':
-          appURL = 'https://apps-dev.simplelayers.com/viewer/'+projectid;
+          appURL = 'https://apps-dev.simplelayers.com/dmi/sl-viewer/'+projectid;
         break;
        case 'staging':
-           appURL = 'https://apps-staging.simplelayers.com/viewer/'+projectid;
+           appURL = 'https://apps-staging.simplelayers.com/dmi/sl-viewer/'+projectid;
            break;
        case 'secure':
-           appURL = 'https://apps.simplelayers.com/viewer/'+projectid;
+           appURL = 'https://apps.simplelayers.com/viewer/dmi/sl-viewer/'+projectid;
            break;
    }
-   if(location === 'yes') {
-  	 url = (event.ctrlKey === true) ? this.baseURL+"app/flexapp/application:CG3Viewer/project:" + projectid
-    		 :  appURL;
-   } else {
-       
-  	 url = (event.ctrlKey === true) ? this+"app/flexapp/application:CG3Viewer/project:" + projectid
-    		 : appURL;
-   }
-   if (window.screen) {
-       w = window.screen.availWidth * 90 / 100;
-       h = window.screen.availHeight * 100 / 100;
-   }
-   // easy
-   // window.open(url,'_blank','location='+location+',width='+w+',height='+h);
-   window.open(url,'_blank');
+   window.open(appURL,'_blank');
    if(!!event) {
   	 console.log(event);
    }

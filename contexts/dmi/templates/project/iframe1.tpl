@@ -14,7 +14,7 @@
 </style>
 <script>
     $(() => {
-        $('#selectorFrame')[0].src = "<!--{$appsPath}-->/app_selector/viewer/<!--{$mapId}-->";
+        $('#selectorFrame')[0].src = "<!--{$appsPath}-->/app_selector/sl-viewer/<!--{$mapId}-->";
         $('.contentarea').toggleClass('padless');
         $('.contentarea').toggleClass('flex-content');
     });

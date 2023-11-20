@@ -100,7 +100,9 @@ class OGRShpUtil
             $this->prjFile = null;
         
         $this->metadata = $this->getLayer($this->srcFile);
-        
+        if($this->prjFile && file_exists($this->prjFile)) {
+            $this->metadata['srs']= file_get_contents($this->prjFile);
+        }
         $this->convertFile($file);
         if($this->xmlFile) {
             $this->layer->importMetadata($this->xmlFile);
