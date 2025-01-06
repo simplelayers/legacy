@@ -63,7 +63,7 @@ define(["dojo/_base/declare",
             		
             		var val = this.data[+group_i];
             		var match = pages.MeetsRequirements(val.requirements);
-            		
+					
             		if(match === true) {
             			try {
             			group = new link_group(val);

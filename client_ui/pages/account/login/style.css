@@ -15,6 +15,9 @@
 	
 }
 
+#page_content {
+	display:none !important;
+}
 .pageLayout {
 	
 	height: 100%;

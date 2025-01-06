@@ -13,14 +13,13 @@ class SubnavFactory {
 	const SUBNAV_PROJECT = 'project';
 	const SUBNAV_ACCOUNT = 'account';
 	
-	public static $nav_options = array('',self::SUBNAV_ADMIN,self::SUBNAV_CONTACT,self::SUBNAV_GROUP,self::SUBNAV_LAYER,self::SUBNAV_ORG,self::SUBNAV_PROJECT,self::SUBNAV_ACCTOUNT);
+	public static $nav_options = array('',self::SUBNAV_ADMIN,self::SUBNAV_CONTACT,self::SUBNAV_GROUP,self::SUBNAV_LAYER,self::SUBNAV_ORG,self::SUBNAV_PROJECT,self::SUBNAV_ACCOUNT);
 	/**
 	 * 
 	 * @param unknown $type
 	 * @return Subnav
 	 */
 	public static function GetNav($type,$params=null) {
-		return null;
 		$subnav = null;
 		if(is_numeric($type)) $type = self::$nav_options[$type];
 		switch($type) {
@@ -34,6 +33,7 @@ class SubnavFactory {
 				$subnav = new GroupSubnav($params);
 				break;
 			case self::SUBNAV_LAYER:
+				
 				$subnav = new LayerSubnav($params);
 				break;
 			case self::SUBNAV_ORG:

@@ -51,7 +51,8 @@ use \model\mapping\HilightDriver;
  *     
  *     
  */
-class Mapper {
+class Mapper
+{
 
     /**
      *
@@ -112,6 +113,10 @@ class Mapper {
      */
     public $interlace;
 
+     /**
+     * @ ignore
+     */
+    public $fgcolor;
     /**
      * @ ignore
      */
@@ -128,12 +133,18 @@ class Mapper {
      * @ignore
      *
      */
+    /**
+     * @var \mapObj 
+     */
     public $map;
     private $tempdir;
     public $debugMapFile = false;
     private $mapFileName;
     private $jsPath = '';
     public $mode = 'latlon';
+    /**
+     * @var HilightDriver
+     */
     private $hilightDriver;
     private $hilightMode = null;
     public $globalBuffer = 0;
@@ -142,14 +153,26 @@ class Mapper {
     public $globalInputBBOX = null;
     public $globalInputType = 'feature';
     public $globalCriteria = null;
-
+    private $mapfile;
+    private $screenshot = false;
+    private $geotiff = false;
+    private $thumbnail = false;
+    private $lowquality = false;
+    private $filter_gids = null;
+    private $filter_color = null;
+    private $fontsdir;
+    private $symbolFile;
+    private $tempurl;
+    private $mapfileDir;
+    private $odbcini;
     /**
      *
      * @var array 
      */
     private $layers;
 
-    function __construct($world = null, $isDynamic = false) {
+    function __construct($world = null, $isDynamic = false)
+    {
         $world = System::Get();
         $ini = System::GetIni();
 
@@ -183,17 +206,20 @@ class Mapper {
         $this->mapfileDir = $ini->mapfiledir;
     }
 
-    function SetHilightMode(bool $onOff) {
+    function SetHilightMode(bool $onOff)
+    {
         $this->hilightMode = $onOff;
     }
 
-    function SetMode($mode = null) {
+    function SetMode($mode = null)
+    {
         if ($mode === null)
             $mode = self::$MODE_LATLON;
         $this->mode = $mode;
     }
 
-    function SetRenderer(Renderer $renderer) {
+    function SetRenderer(Renderer $renderer)
+    {
         $this->layers = $renderer;
     }
 
@@ -206,7 +232,8 @@ class Mapper {
      *
      * @return array A two-item array: The mapfile which will represent this request, and whether the (existing mapfile if it exists) is stale and needs regeneration.
      */
-    function _this_mapfile() {
+    function _this_mapfile()
+    {
 
         // determine the mapfile to be generated
         $firstlayer = $this->layers[0]['layer'];
@@ -229,9 +256,9 @@ class Mapper {
         // look for excuses to force the generation
 
         $stale = false;
-        if (!$stale and!is_file($mapfile))
+        if (!$stale and !is_file($mapfile))
             $stale = true; // mapfile doesn't exist
-        if (!$stale and!filesize($mapfile))
+        if (!$stale and !filesize($mapfile))
             $stale = true; // mapfile is blank? not good
         if (!$stale and sizeof($this->layers) > 1)
             $stale = true; // more than 1 layer, so not storable
@@ -243,18 +270,19 @@ class Mapper {
         );
     }
 
-    function _setRGBFromColorString($color, &$r, &$g, &$b) {
+    function _setRGBFromColorString($color, &$r, &$g, &$b)
+    {
         if (substr($color, 0, 1) == '#')
             $color = substr($color, 1);
         if ($color == "trans") {
-            $r = $g = $b = - 1;
+            $r = $g = $b = -1;
             return;
         }
 
         // convert the #rrggbb colors into R,G,B
-        $r = hexdec(substr($color, - 6, 2));
-        $g = hexdec(substr($color, - 4, 2));
-        $b = hexdec(substr($color, - 2, 2));
+        $r = hexdec(substr($color, -6, 2));
+        $g = hexdec(substr($color, -4, 2));
+        $b = hexdec(substr($color, -2, 2));
 
         if ($r == 255 && $g == 255 && $b == 255) {
             $r = $g = $b = 254;
@@ -269,16 +297,18 @@ class Mapper {
      * Draw the map image, and return the URL of the generated image.
      * Typically, this will be the last method called, after extents are set and layers are added.
      *
-     * @return string The URL of the generates map image.
+     * @return \mapObj The resulting map object.
      */
-    function _generate_mapfile($forceGeneration = true, $classIndex = null, $dataWKT = null) {
+    function _generate_mapfile($forceGeneration = true, $classIndex = null, $dataWKT = null)
+    {
         $ini = System::GetIni();
         // what mapfile are we using, and should we override $force ?
-        list ($mapfile, $force) = $this->_this_mapfile();
+        list($mapfile, $force) = $this->_this_mapfile();
         if ($forceGeneration) {
 
             $force = true;
         }
+
         // if it's not forced, just return a handle to the existing mapfile
         // if (!$force && !$this->isDynamic)
         // return new mapObj ( $mapfile );
@@ -286,12 +316,14 @@ class Mapper {
         // it's an array of arrays, each value itself being a 2-item array for the outline and fill
         // the width of polygon outlines foreach size class
         // initialize the map: projection, etc.
-        if (!$this->map)
-            $this->init();
-        $this->map->setConfigOption('MS_ERRORFILE', '/var/log/mapserv/errors.log');
-        $this->map->set('maxsize',4000);
-        $this->map->set('debug', 5);
+        if (!$this->map) {
+            $this->map = $this->init();
+        }
         
+        $this->map->setConfigOption('MS_ERRORFILE', '/var/log/mapserv/errors.log');
+        $this->map->set('maxsize', 4000);
+        $this->map->set('debug', 5);
+
         // add the layers
 
         $tmpFiles = array();
@@ -320,7 +352,7 @@ class Mapper {
             $lyrEntry = $this->layers[$i];
 
             $layer = $lyrEntry['layer'];
-            list ($player, $l) = ALayer::GetLayers($layer);
+            list($player, $l) = ALayer::GetLayers($layer);
             $geomType = intval($l->geomtype);
             $opacity = (int) (abs($lyrEntry['opacity']) * 100);
             $opacity255 = isset($lyrEntry['opacity']) ? (int) (abs($lyrEntry['opacity']) * 255) : 0;
@@ -386,7 +418,7 @@ class Mapper {
             $filterColor = $layer->filter_color;
 
             if ($outlineOnly)
-                $lyrEntry['opacity'] = substr($entry['opacity'], 1);
+                $lyrEntry['opacity'] = substr($lyrEntry['opacity'], 1);
 
             $labels = $lyrEntry['labels'];
 
@@ -415,11 +447,11 @@ class Mapper {
 
             if ($needHilightDriver) {
                 $this->hilightDriver = new HilightDriver(
-                        $layer->filter_gids,
-                        $layer->filter_color,
-                        floatval($lyrEntry['opacity']),
-                        floatval($lyrEntry['glopacity']),
-                        $hilighting
+                    $layer->filter_gids,
+                    $layer->filter_color,
+                    floatval($lyrEntry['opacity']),
+                    floatval($lyrEntry['glopacity']),
+                    $hilighting
                 );
             }
             $maplayer = new layerObj($this->map);
@@ -496,7 +528,7 @@ class Mapper {
             $type = '';
             if ($layertype == LayerTypes::WMS) {
                 $type = MS_LAYER_RASTER;
-            } elseif (($layertype == LayerTypes::VECTOR) or ( $layertype == LayerTypes::RELATIONAL)) {
+            } elseif (($layertype == LayerTypes::VECTOR) or ($layertype == LayerTypes::RELATIONAL)) {
                 // vector layers require the PostGIS connection string, and also all the coloscheme entries!
                 $type = GeomTypes::ToMSType($geomType, true);
             } elseif ($layertype == LayerTypes::RASTER) {
@@ -517,7 +549,7 @@ class Mapper {
             $proj4 = $this->GetProjection();
 
             if ($l->minscale && !$lyrEntry['ignoreScale']) {
-                $scale = (double) $l->minscale * 10;
+                $scale = (float) $l->minscale * 10;
                 #$maplayer->set('maxscaledenom', $scale);
             }
 
@@ -545,7 +577,7 @@ class Mapper {
                 $maplayer->setMetaData('wms_server_version', ParamUtil::Get($urlParams, 'VERSION', '1.1.1'));
                 $maplayer->setMetaData('wms_name', $urlParams['LAYERS']); // str_replace(',', ' ', $urlParams['LAYERS']));
                 //$maplayer->setMetaData('wms_essential', '1');
-                $maplayer->setConnectiontype(MS_WMS);
+                $maplayer->setConnectiontype(\MS_WMS);
 
                 $maplayer->set('connection', $url);
 
@@ -583,7 +615,7 @@ class Mapper {
                  * $maplayer->setMetaData ( 'wms_server_version', '1.1.1' );
                  * $maplayer->setMetaData ( 'wms_name', $wmslayername );
                  */
-            } elseif (($layertype == LayerTypes::VECTOR) or ( $layertype == LayerTypes::RELATIONAL)) {
+            } elseif (($layertype == LayerTypes::VECTOR) or ($layertype == LayerTypes::RELATIONAL)) {
                 // vector layers require the PostGIS connection string, and also all the coloscheme entries!
 
 
@@ -631,7 +663,7 @@ QUERY;
                     if (!is_null($this->globalBufferPt)) {
                         $wkt = "POINT(" . $this->globalBufferPt[0] . ' ' . $this->globalBufferPt[1] . ')';
                     } elseif (!is_null($this->globalBufferBbox)) {
-                        list ($minX, $minY, $maxX, $maxY) = $this->globalBufferBbox;
+                        list($minX, $minY, $maxX, $maxY) = $this->globalBufferBbox;
                         $wkt = "POLYGON(($minX $minY,$minX $maxY,$maxX $maxY,$maxX $minY,$minX $minY))";
                     }
 
@@ -643,7 +675,7 @@ QUERY;
                     }
                 } elseif (!is_null($this->globalInputBBOX)) {
                     $SRID = $this->mode === self::$MODE_WEB ? 3857 : 4326;
-                    list ($minX, $minY, $maxX, $maxY) = $this->globalInputBBOX;
+                    list($minX, $minY, $maxX, $maxY) = $this->globalInputBBOX;
                     $wkt = "POLYGON(($minX $minY,$minX $maxY,$maxX $maxY,$maxX $minY,$minX $minY))";
 
                     if ($wkt !== "") {
@@ -720,11 +752,10 @@ QUERY;
                         $entries[$key] = $entry;
                     }
                 }
-                if (!$buffering && ($this->globalInputType === 'point')) {
+                /*if (!$buffering && ($this->globalInputType === 'point')) {
                     if (!is_null($this->globalBufferPt)) {
-                        
                     }
-                }
+                }*/
 
                 $lastClass = null;
                 // if (! $filtering) {
@@ -768,7 +799,7 @@ QUERY;
                         $lastClass = $class;
                         $classCtr++;
                     }
-                    
+
                     $criteria = $entry->criteria1 . $entry->criteria2 . $entry->criteria3;
 
                     if ($criteria == 'default') {
@@ -811,7 +842,7 @@ QUERY;
                     if ($this->legendMode) {
                         $class->setExpression('');
                     } elseif ($entry->criteria1 and $entry->criteria2) {
-                        
+
                         // $criteria = $entry->criteria1 . $entry->criteria2 . $entry->criteria3;
                         $criteriaGroup[$criteria] = $class;
                         if ($entry->criteria2 == 'contains') {
@@ -1058,7 +1089,6 @@ UPDATE;
                         }
                     }
                     if (($geomType === GeomTypes::LINE)) {
-                        
                     }
                 } // end entries loop
                 if ($this->hilightDriver->hilighting === true) {
@@ -1086,7 +1116,8 @@ UPDATE;
         return $this->map;
     }
 
-    function renderStream($force = true, $fileName = null, $flush = true, $base64 = false) {
+    function renderStream($force = true, $fileName = null, $flush = true, $base64 = false)
+    {
 
         // $this->debugMapFile = true;
         // $this-> =true;
@@ -1195,7 +1226,8 @@ UPDATE;
         // return shell_exec ( $command );
     }
 
-    function legendImage() {
+    function legendImage()
+    {
         $ini = System::GetIni();
         // constants for the image: positions and offsets and the like
         $x_layername = 12; // the X (horizontal) position of the layer names, in pixels
@@ -1207,7 +1239,7 @@ UPDATE;
         $fontfile_classname = $ini->fontdir . '/VeraIt.ttf'; // the font for the class names
         $icon_width = 50;
         $icon_height = 18; // the width and height of the icon images
-        $y = - 10; // the Y offset, where we start counting as we lay out each item
+        $y = -10; // the Y offset, where we start counting as we lay out each item
         $y_offset_layer = 60; // how far to move down to place a new layer header?
         $y_offset_class = 21; // how far to move down to place a new class header?
         // $data is an array of arrays, each one being a msLayerObj and an array of msClassObj objects
@@ -1237,8 +1269,8 @@ UPDATE;
         // create the new image, and initialize the colors
         $image = imagecreatetruecolor($width, $height);
 
-        $text_color = imagecolorallocate($image, hexdec(substr($this->fgcolor, - 6, 2)), hexdec(substr($this->fgcolor, - 4, 2)), hexdec(substr($this->fgcolor, - 2, 2)));
-        $bg_color = imagecolorallocate($image, hexdec(substr($this->bgcolor, - 6, 2)), hexdec(substr($this->bgcolor, - 4, 2)), hexdec(substr($this->bgcolor, - 2, 2)));
+        $text_color = imagecolorallocate($image, hexdec(substr($this->fgcolor, -6, 2)), hexdec(substr($this->fgcolor, -4, 2)), hexdec(substr($this->fgcolor, -2, 2)));
+        $bg_color = imagecolorallocate($image, hexdec(substr($this->bgcolor, -6, 2)), hexdec(substr($this->bgcolor, -4, 2)), hexdec(substr($this->bgcolor, -2, 2)));
         imagefill($image, 0, 0, $bg_color);
 
         // go through each layer and each class, and lay down the labels
@@ -1270,7 +1302,8 @@ UPDATE;
      * @param
      *            layerOffset int the offset in $this->layers to get the url for
      */
-    function _generateRemoteWMSURL($layerOffset = 0, $asObj = false, $layer = null) {
+    function _generateRemoteWMSURL($layerOffset = 0, $asObj = false, $layer = null)
+    {
 
         $ini = System::GetIni();
         $sl_wms = BASEURL; //$ini->sl_wms_basepath;
@@ -1304,7 +1337,7 @@ UPDATE;
         if (stripos($url, "?") === false) {
             $url .= '?';
         }
-        list ($base, $query) = explode('?', $url);
+        list($base, $query) = explode('?', $url);
         $base .= "?";
 
         $params = array();
@@ -1391,7 +1424,8 @@ UPDATE;
         return $url;
     }
 
-    function _renderWebRemoteWMS($layerOffset = null) {
+    function _renderWebRemoteWMS($layerOffset = null)
+    {
         $ini = System::GetIni();
         $filename = md5(mt_rand() . microtime()) . '.png';
         // $tempfile = $world->config['tempdir'] . '/' . $filename;
@@ -1410,7 +1444,8 @@ UPDATE;
         // return $tempurl;
     }
 
-    function _renderStreamRemoteWMS($layerOffset = null) {
+    function _renderStreamRemoteWMS($layerOffset = null)
+    {
         $url = $this->_generateRemoteWMSURL($layerOffset);
         $url = urldecode($url);
         var_dump($url);
@@ -1429,7 +1464,8 @@ UPDATE;
      *
      * @return string A binary data string, the image data.
      */
-    function _renderSingleLayerviaCGI() {
+    function _renderSingleLayerviaCGI()
+    {
         $url = sprintf("https://www.cartograph.com/cgi-bin/shp2img?mapfile=%s&width=%d&height=%d&extent=%f+%f+%f+%f&odbcini=%s", basename($this->mapfile, '.map'), $this->width, $this->height, $this->extent[0], $this->extent[1], $this->extent[2], $this->extent[3], @$this->odbcini);
         return file_get_contents($url);
     }
@@ -1444,7 +1480,8 @@ UPDATE;
      * @param Layer $layer
      *            A Layer or ProjectLayer object.
      */
-    function addLayer(&$layer, $opacity = 1.0, $labels = false, $labelField = null, $baseLayer = null, $ignoreScale = false, $glopacity = null, $glowColor = null, $at = null) {
+    function addLayer(&$layer, $opacity = 1.0, $labels = false, $labelField = null, $baseLayer = null, $ignoreScale = false, $glopacity = null, $glowColor = null, $at = null)
+    {
         if (is_null($labelField)) {
             $labelField = (isset($layer->labelitem)) ? $layer->labelitem : null;
         }
@@ -1473,7 +1510,8 @@ UPDATE;
     /**
      * This method removes all Layers from the Mapper, so you can start fresh.
      */
-    function clearLayers() {
+    function clearLayers()
+    {
         $this->layers = array();
     }
 
@@ -1488,7 +1526,8 @@ UPDATE;
      *            The string geometry type; use $layer->geomtypestring
      * @return array An associative array, mapping the symbol's internal name => the symbol's human-friendly name.
      */
-    function listSymbols($geomtypestring) {
+    function listSymbols($geomtypestring)
+    {
         $symbols = array();
         switch ($geomtypestring) {
             case 'point':
@@ -1507,7 +1546,7 @@ UPDATE;
                 continue;
             if ($parts[1] != $geomtypestring)
                 continue;
-            if (substr($parts[2], - 7) == '_filled')
+            if (substr($parts[2], -7) == '_filled')
                 continue;
 
             $label = $parts[2];
@@ -1526,7 +1565,8 @@ UPDATE;
      * @param boolean $forRendering
      *            if false, the map obj will be setup with size and extent params. Otherwise it will set up image and legend formats etc.
      */
-    function init($adjustunits = false, $mapObj = null) {
+    function init($adjustunits = false, $mapObj = null)
+    {
         $ini = System::GetIni();
         $mapUnits = ($this->mode === self::$MODE_LATLON) ? MS_DD : MS_METERS;
 
@@ -1536,7 +1576,7 @@ UPDATE;
             $this->map->maxsize = 4000;
             // print(__CLASS__.':'. __FUNCTION__.":check 2<br>");
             if ($this->legendMode) {
-                $map->legend->color->setRGB(255, 255, 255);
+                $this->map->legend->color->setRGB(255, 255, 255);
             }
             $this->projection = $this->GetProjection();
             // the projection should be set first so that when size and extent are set they are being set for the appropriate projection.
@@ -1667,13 +1707,14 @@ UPDATE;
         return $this->map;
     }
 
-    function SetPixospatialMapObj(PixoSpatial $pixo, $proj4 = null) {
+    function SetPixospatialMapObj(PixoSpatial $pixo, $proj4 = null)
+    {
         if (is_null($proj4))
             $proj4 = $this->GetProjection();
 
         $extent = $this->GetProjectedExtents($pixo->GetBBox());
 
-        list ($minLon, $minLat, $maxLon, $maxLat) = explode(',', $extent);
+        list($minLon, $minLat, $maxLon, $maxLat) = explode(',', $extent);
 
         $reporting = error_reporting();
         // ob_start();
@@ -1683,7 +1724,7 @@ UPDATE;
         $this->map->setProjection($proj4, MS_TRUE);
         error_reporting(0);
         try {
-            $this->map->setExtent((double) $minLon, (double) $minLat, (double) $maxLon, (double) $maxLat);
+            $this->map->setExtent((float) $minLon, (float) $minLat, (float) $maxLon, (float) $maxLat);
             $this->map->setSize((int) $pixo->GetWidth(), (int) $pixo->GetHeight());
         } catch (Exception $e) {
             Log::Debug($e->getMessage());
@@ -1692,11 +1733,13 @@ UPDATE;
         error_reporting($reporting);
     }
 
-    static function Get($isDynamic = false) {
+    static function Get($isDynamic = false)
+    {
         return new Mapper();
     }
 
-    public function GetProjection($mode = null) {
+    public function GetProjection($mode = null)
+    {
         if (is_null($mode))
             $mode = $this->mode;
 
@@ -1710,7 +1753,8 @@ UPDATE;
         }
     }
 
-    public function GetProjectedExtents($bbox, $direct = true) {
+    public function GetProjectedExtents($bbox, $direct = true)
+    {
         if ($this->mode === self::$MODE_LATLON)
             return $bbox;
         if (!is_array($bbox)) {
@@ -1720,7 +1764,7 @@ UPDATE;
         if (count($bbox) != 4) {
             throw new \Exception('invalid extents');
         }
-        list ($minx, $miny, $maxx, $maxy) = $bbox;
+        list($minx, $miny, $maxx, $maxy) = $bbox;
         if ($direct) {
             $projFrom = new projectionObj($this->GetProjection(self::$MODE_LATLON));
             $projTo = new projectionObj($this->GetProjection(self::$MODE_WEB));
@@ -1746,7 +1790,8 @@ UPDATE;
         ));
     }
 
-    public function ShowMapFile() {
+    public function ShowMapFile()
+    {
         if ($this->mapFileName) {
             if (file_exists($this->mapFileName)) {
                 readfile($this->mapFileName);
@@ -1754,7 +1799,4 @@ UPDATE;
             }
         }
     }
-
 }
-
-?>

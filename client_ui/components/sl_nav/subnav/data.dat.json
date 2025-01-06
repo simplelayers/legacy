@@ -96,6 +96,23 @@
                 "perm": "Layers:Classifications:View",
                 "pageArg": "isVector",
                 "pageArgValue": "true"
+            }, {
+                "title":"Configure",
+                "ref":"?",
+                "fields": [
+                    {
+                        "name": "do",
+                        "value": "layer.edit_arcgis",
+                        "type": "static"
+                    },
+                    {
+                        "name": "layerId",
+                        "value": "layerId",
+                        "type": "pageArg"
+                    }
+                ],
+                "pageArg":"isArcGIS",
+                "pageArgValue":"true"
             }
         ]
     },
@@ -578,6 +595,16 @@
                 "tooltip":"CSV Import not available with current role."
                 
             },{
+                "title":"ArcGIS",
+                "ref":"?do=layer.import_arcgis",
+                "perm":":Layers:Formats:SHP:View|Create",
+                "tooltip":"Import ArcGIS Server data"
+            },{
+                "title":"ArcGIS",
+                "ref":"",
+                "perm":":Layers:Formats:SHP:View|!Create",
+                "tooltip":"ArcGIS Server data not available with current role"
+            },{
                 "title": "ODBC",
                 "ref": "?do=import.odbc1",
                 "perm": ":Layers:Formats:ODBC:View|Create"
@@ -710,6 +737,23 @@
                 "perm": ":Layers:Formats:WMS:View|Edit",
                 "pageArg": "isRaster",
                 "pageArgValue": "true"                
+            },{
+                "title":"ArcGIS",
+                "ref":"?",
+                "fields": [
+                    {
+                        "name": "do",
+                        "value": "layer.edit_arcgis",
+                        "type": "static"
+                    },
+                    {
+                        "name": "layerId",
+                        "value": "layerId",
+                        "type": "pageArg"
+                    }
+                ],
+                "pageArg":"isArcGIS",
+                "pageArgValue":"true"
             }
             
         ]

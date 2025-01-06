@@ -18,6 +18,18 @@ ini_set("auto_detect_line_endings", true);
 define ( 'SL_INCLUDE_PATH', dirname ( __FILE__ ) . '/' );
 define ( 'WEBROOT', dirname ( dirname ( __FILE__ ) ) . '/' );
 define ( 'BASEDIR', WEBROOT );
+function LoadNS($ns) {
+   
+    $nsParts = explode("\\",$ns);
+    $nameSpaceFile = implode('/',$nsParts).'.php';
+  
+    if(file_exists(BASEDIR."classes/$nameSpaceFile")) {
+       
+        require_once(BASEDIR."classes/$nameSpaceFile");
+        return;
+    }
+    throw new InvalidArgumentException('LoadNS - Namespace file not found:php file for $ns was not found');
+}
 require_once(BASEDIR.'vendor/autoload.php');
 // Setup an simple_autoload as the autoloader
 //TODO: Consider refactoring - use ZendFramework 2's autoloader regration tech.

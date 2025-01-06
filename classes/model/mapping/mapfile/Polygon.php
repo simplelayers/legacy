@@ -19,10 +19,7 @@ class Point {
     }
 
     public static function SetFilteredSymbol($innerOuter, $map, $class, $symbol, $layerInfo, HilightDriver $hilightDriver, $outlineOnly) {
-        $opacity255 = ($opacity * 255);
-        $glopacity255 = ($glopacity * 255);
-
-        $symbolObj = new \symbolObj($this->map, $symbol);
+        $symbolObj = new \symbolObj($map, $symbol);
         $sr = $sg = $sb = $fr = $fg = $fb = - 1;
         $entrySize = $layerInfo->symbol_size;
         $entryStrokeColor = $layerInfo->stroke_color;
@@ -47,8 +44,12 @@ class Point {
         if ($innerOuter === 'outer') {
             $hilightDriver->SetStyleVars(\model\mapping\HilightDriver::UNDERLAY, $sr, $sg, $sb, $fr, $fg, $fb, $xpacity);
             $xpacity255 = 255 * $xpacity / 100;
+            /**
+             * $outerHilight \styleObj
+             */
             $outerHilight = ms_newStyleObj($class);
             // if($filtering) {$sr=$sg=$sb=0;}
+        
             $outerHilight->outlinecolor->setRGB($fr, $fg, $fb, $xpacity255);
             $outerHilight->set('width', 3);
             $outerHilight->set('opacity', $xpacity);
@@ -121,10 +122,10 @@ class Point {
       return $symbolObj;
       } */
 
-    public static function SetSymbol($map, $class, $symbol, $layerInfo, HilightDriver $hilightDriver) {
+    /*public static function SetSymbol($map, $class, $symbol, $layerInfo, HilightDriver $hilightDriver) {
 
 
-        $symbolObj = new \symbolObj($this->map, $symbol);
+        $symbolObj = new \symbolObj($map, $symbol);
 
         $sr = $sg = $sb = $fr = $fg = $fb = - 1;
         $hilightDriver->SetStyleVars(HilightDriver::NATURAL, $sr, $sg, $sb, $fr, $fg, $fb, $opacity);
@@ -212,7 +213,7 @@ class Point {
                 $fill->updateFromString("geomtransform (buffer([shape], -2))");
             }
         }
-    }
+    }*/
 
 }
 

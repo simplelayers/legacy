@@ -1,6 +1,7 @@
 <?php
 use auth\Creds;
 use auth\Context;
+use utils\PageUtil;
 use utils\ParamUtil;
 /**
  * Print the login screen.
@@ -38,13 +39,13 @@ function _dispatch_login($template, $args) {
 	$state = RequestUtil::Get('state','normal');
 
 	$context->SetLoginMessages($state, $template);
-
+	$args = PageUtil::GetPageArgs($template);
+	
 	// fetch the contact info for printing on the page
 	$template->assign ( 'contact_name', $world->config ['admin_name'] );
 	$template->assign ( 'contact_email', $world->config ['admin_email'] );
 	
 	$template->assign ( 'username', $creds->username);
-	
 	$template->assign ( 'user', null );
 	$template->assign ( 'login', BASEURL.'account/login' );
 	$template->assign('nav_area_class','hidden');

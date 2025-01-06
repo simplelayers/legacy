@@ -3,7 +3,7 @@ namespace subnav;
 
 use model\Permissions;
 class AccountSubnav extends Subnav {
-	function makeDefault(){
+	function makeDefault($obj,$user){
 		//$this->add('Organization')
 		$session = \SimpleSession::Get();
 		$permissions = $session['permissions'];

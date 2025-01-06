@@ -2,9 +2,13 @@
 
 namespace utils;
 
-class SQLUtil {
+use System;
 
-    public static function InsertToObj($insertQuery = null) {
+class SQLUtil
+{
+
+    public static function InsertToObj($insertQuery = null)
+    {
         \System::RequireSQLParser();
         $insertQuery = <<<QUERY
 INSERT INTO "vectordata_5695" ("objectid","recordtype","hyperlink","id","popup","apn","descript","dt_record","surveyor","lic_type","surveyed","cr_type","corner","street","cross_st","ref_case","lic_number","projectno","pagesuffix",the_geom) VALUES ('786','Corner Record','http://countyofsb.org/pwd/surveyor/cr_pdfs/700_799/CR0769.pdf','CR0769','<a href="http://countyofsb.org/pwd/surveyor/cr_pdfs/700_799/CR0769.pdf" target=_blank>CR0769</a>','069-261-015','Tract 11184 BK 77/84','20000412','Edmund R. Villa','PLS','19990803','Other','Left As Found','Coralino Road','Cambridge Drive',NULL,'6232','769',NULL,'0101000020E6100000BB310C2782F45DC024A09A1071394140');
@@ -13,16 +17,16 @@ QUERY;
         $parsed = $parser->parsed;
         $columns = array();
         $record = array();
-        foreach ($parsed ["INSERT"] ['columns'] as $column) {
-            $columns [] = trim($column ['base_expr'], " \"");
+        foreach ($parsed["INSERT"]['columns'] as $column) {
+            $columns[] = trim($column['base_expr'], " \"");
         }
 
         $i = 0;
-        $values = array_shift($parsed ["VALUES"]);
-        $values = $values ['data'];
+        $values = array_shift($parsed["VALUES"]);
+        $values = $values['data'];
 
         foreach ($values as $data) {
-            $data = trim($data ['base_expr'], " \t\n\r'");
+            $data = trim($data['base_expr'], " \t\n\r'");
 
             if ((strpos($data, '.'))) {
                 if (filter_var($data, FILTER_VALIDATE_FLOAT)) {
@@ -32,13 +36,14 @@ QUERY;
             } elseif (filter_var($data, FILTER_VALIDATE_INT)) {
                 $data = (int) $data;
             }
-            $record [$columns [$i]] = $data;
+            $record[$columns[$i]] = $data;
             $i++;
         }
         return $record;
     }
 
-    public static function GetDistance($lat1, $lon1, $lat2, $lon2) {
+    public static function GetDistance($lat1, $lon1, $lat2, $lon2)
+    {
         $db = \System::GetDB();
         // use the PosTGIS function distance_spheroid() to fetch the linear distance in meters
         $geom1 = "ST_GeometryFromText('POINT($lon1 $lat1)',4326)";
@@ -59,7 +64,8 @@ QUERY;
         return array($feet, $miles, $meters, $kilometers);
     }
 
-    public static function GetDistances($points, $order = 'latlon') {
+    public static function GetDistances($points, $order = 'latlon')
+    {
         $segments = array();
         $total = array('feet' => 0, 'miles' => 0, 'meters' => 0, 'kilometers' => 0);
         if (sizeof($points) < 2)
@@ -96,31 +102,115 @@ QUERY;
         }
         return array('total' => $total, 'segments' => $segments);
     }
+    public static function GetColumnsSans($table, $except = 'id')
+    {
+        $query = <<<QUERY
+SELECT FIRST_VALUE(SELECT string_agg(quote_ident(attname), ', ' ORDER BY attnum)
+FROM   pg_attribute
+WHERE  attrelid = 'public.$table'::regclass
+AND    NOT attisdropped  -- no dropped (dead) columns
+AND    attnum > 0        -- no system columns
+QUERY;
+        if ($except !== '') {
+            $exceptions = explode(',', $except);
+            $excepted = self::StringifyValues($exceptions, ',');
+            $query .= " AND    attname not ilike any(array[$excepted]))";
+        }
 
-    public static function MakeNewTable($table, $withGeom = true) {
+        $db = System::GetDB();
+        return $db->GetOne($query);
+    }
+
+    public static function StringifyValues(array $vals, $joinChar = false, $quote = '"')
+    {
+        $stringified = [];
+        while (count($vals) > 0) {
+            $stringified[] = $quote . array_shift($vals) . $quote;
+        }
+        if ($joinChar !== false) {
+            return implode($joinChar, $stringified);
+        }
+        return $stringified;
+    }
+
+    public static function DuplicateRow($table, $targetId, $idField, $excludeId = true)
+    {
+        $except = ($excludeId === true) ? $idField : false;
+        $columns = self::GetColumnsSans($table, $except);
+        $query = <<<QUERY
+SELECT INTO $table($columns) SELECT $columns from $table where id=$targetId
+QUERY;
+        $db = System::GetDB();
+        $result = $db->Execute($query);
+        if (!$result) {
+            return false;
+        } else {
+            return $db->insert_Id();
+        }
+    }
+
+    public static function SetIDSequence($table, $idField)
+    {
+        $seqName = $table . '_' . $idField . '_seq';
+        $db = System::GetDB();
+
+        $ok = $db->Execute('create sequence $seqName') !== false;
+        if (!$ok) {
+            return false;
+        }
+        $ok = $db->Execute("select setval($seqName,(select max($idField) as $idField from $table));") !== false;
+        if (!$ok) {
+            return false;
+        }
+        $ok = $db->Execute("alter table $table.$idField set not null;") !== false;
+        if (!$ok) {
+            return false;
+        }
+        $ok = $db->Execute('$query', "alter table $table.$idField set default nextval('$seqName'::regclass);") !== false;
+        return $ok;
+    }
+
+    public function Withify($sql, $with = false, $as = null)
+    {
+        $prefix = is_null($as) ? '' : (($with === false) ? ", $as as(" : "with $as as(");
+        $postFix = is_null($as) ? "" : ")";
+        return $prefix . $sql . $postFix;
+    }
+
+    public static function ReplaceTable($table, $withGeom = true, $xD = 2, $wName = true)
+    {
+        $db = \System::GetDB();
+        if (stripos($table, 'vectordata_') !== 0) throw new \Exception('SLQUtil::ReplaceTable - only allows deletion of tables with a vectordata_ prefix');
+        $db->Execute("DROP TABLE  if exists {$table}");
+        self::MakeNewTable($table, $withGeom, $xD, $wName);
+    }
+    public static function MakeNewTable($table, $withGeom = true)
+    {
         $db = \System::GetDB();
         $db->Execute("CREATE TABLE {$table} (gid serial,name text)");
         if ($withGeom === true) {
             $db->Execute("SELECT AddGeometryColumn('','{$table}','the_geom',4326,'GEOMETRY',2)");
         }
-        $db->Execute("CREATE INDEX {$table}_index_the_geom ON $layer->url USING GIST (the_geom)");
+        $db->Execute("CREATE INDEX {$table}_index_the_geom ON $table USING GIST (the_geom)");
     }
 
-    public static function MakeTempTable($table, $withGeom = true) {
+    public static function MakeTempTable($table, $withGeom = true)
+    {
         $db = \System::GetDB();
         $db->Execute("CREATE TEMP TABLE {$table} (gid serial,name text)");
         $db->Execute("SELECT AddGeometryColumn('','{$table}','the_geom',4326,'GEOMETRY',2)");
-        $db->Execute("CREATE INDEX {$table}_index_the_geom ON $layer->url USING GIST (the_geom)");
+        $db->Execute("CREATE INDEX {$table}_index_the_geom ON $table USING GIST (the_geom)");
     }
 
-    public static function SpatializeTable($table) {
+    public static function SpatializeTable($table)
+    {
         $db = \System::GetDB();
 
         $info = $db->Execute("select * from {$table} where 1=0");
         $fields = $info->fieldTypesArray();
         foreach ($fields as $field) {
             if ($field->name === 'the_geom') {
-               return true;
+                return true;
             }
         }
         $db->debug = true;
@@ -130,8 +220,4 @@ QUERY;
         }
         return true;
     }
-
-
 }
-
-?>

@@ -41,11 +41,15 @@ define(["dojo/_base/declare", "dojo/on", "dojo/dom-attr", "dojo/dom-style", "doj
                 this.layerId_lbl.innerHTML = this.data.layerId;
                 $(this.contentContainer).toggleClass('hidden', false);
                 let doc = '';
-                for (const key in this.data.SourceMetadata) {
+                console.log(this.data.SourceMetadata);
+                if(this.data.SourceMetadata) {
+                    doc += this.WriteNode('Source Metadata',this.data.SourceMetadata);
+                }
+                /*for (const key in this.data.SourceMetadata) {
                     if (!this.data.SourceMetadata.hasOwnProperty(key))
                         continue;
-                    doc += this.WriteNode('Source Metadata', this.data.SourceMetadata)
-                }
+                    doc += this.WriteNode('Source Metadata', this.data.SourceMetadata[key])
+                }*/
                 $(this.contentBody).append($(doc));
                 this.contentContainer.addEventListener('click', (event) => {
                     let node = $(event.target);
@@ -84,8 +88,8 @@ define(["dojo/_base/declare", "dojo/on", "dojo/dom-attr", "dojo/dom-style", "doj
             let template = this.$template.outerHTML;
             template = template.replace(/{{nodeId}}/g, this.ids);
             let attributes = [];
-            if (node._attributes) {
-                attributes = node._attributes;
+            if (node?._attributes) {
+                attributes = node?._attributes;
             }
             let atts = '';
             for (const att in attributes) {

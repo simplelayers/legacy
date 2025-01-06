@@ -10,8 +10,9 @@ use utils\LayerUtil;
 
 /**
  */
-function _config_kml() {
-    $config = Array();
+function _config_kml()
+{
+    $config = array();
     // Start config
     $config["header"] = false;
     $config["footer"] = false;
@@ -19,7 +20,8 @@ function _config_kml() {
     return $config;
 }
 
-function _dispatch_kml($template, $args) {
+function _dispatch_kml($template, $args)
+{
     $world = System::Get();
     $user = SimpleSession::Get()->GetUser();
     $ini = System::GetIni();
@@ -34,8 +36,12 @@ function _dispatch_kml($template, $args) {
 
     // load the layer and verify their access; note that the file download headers have already been sent
     // by the controller core (index.php) so all we can do is output the file content
-    $layer = $world->getLayerById($_REQUEST['id']);
-    $classes = $layer->colorscheme->getAllEntries();
+    $layer = Layer::Get($_REQUEST['id']);
+    /**
+     * @var $colorscheme \ColorScheme
+     */
+    $colorscheme = $layer->colorscheme;
+    $classes = $colorscheme->getAllEntries();
     if (!$layer or $layer->getPermissionById($user->id) < AccessLevels::COPY)
         return print 'You do not have permission to download that layer.';
 
@@ -56,8 +62,8 @@ function _dispatch_kml($template, $args) {
 
     // DB connection and fetch
     if ($layer->type == LayerTypes::VECTOR or $layer->type == LayerTypes::RELATIONAL) {
-        $where = count($gids > 0) ? " where gid IN ($gids)" : '';
-        $records = $world->db->Execute("SELECT " . implode(',', $atts) . ",ST_AsKML(the_geom) AS kml_geom FROM \"{$layer->url}\" where");
+        $where = (count($gidList) > 0) ? " where gid IN ($gids)" : '';
+        $records = $world->db->Execute("SELECT " . implode(',', $atts) . ",ST_AsKML(the_geom) AS kml_geom FROM \"{$layer->url}\" $where");
     } elseif ($layer->type == LayerTypes::ODBC) {
         $odbcinfo = $layer->url;
         $loncolumn = $odbcinfo->loncolumn;
@@ -72,7 +78,7 @@ function _dispatch_kml($template, $args) {
                 $records = $db->Execute("SELECT " . implode(',', $atts) . " FROM \"{$odbcinfo->table}\"");
                 break;
             case ODBCUtil::MSSQL:
-                list ($odbc, $odbcini, $freetdsconf) = $this->world->connectToODBC($odbcinfo, 'NOCONNECT');
+                list($odbc, $odbcini, $freetdsconf) = $this->world->connectToODBC($odbcinfo, 'NOCONNECT');
                 $db = NewADOConnection("mssql://{$odbcinfo->odbcuser}:{$odbcinfo->odbcpass}@dsn/{$odbcinfo->odbcbase}?port={$odbcinfo->odbcport}&fetchmode=" . ADODB_FETCH_ASSOC);
                 $records = $db->Execute("SELECT " . implode(',', $atts) . " FROM {$odbcinfo->table}");
                 break;
@@ -149,6 +155,7 @@ function _dispatch_kml($template, $args) {
         }
         fwrite($kmlfh, "</Style>\n");
     }
+    
     while (!$records->EOF) {
         $record = $records->fields;
         $records->MoveNext();
@@ -169,11 +176,11 @@ function _dispatch_kml($template, $args) {
 
             $description = str_replace('[' . $k . ']', $v, $description);
             if (in_array($k, array(
-                        'gid',
-                        'the_geom',
-                        'wkt_geom',
-                        'kml_geom'
-                    )))
+                'gid',
+                'the_geom',
+                'wkt_geom',
+                'kml_geom'
+            )))
                 continue;
 
             $extendedData .= '<Data name="' . $k . '" ><value>' . $v . ' </value></Data>';
@@ -221,5 +228,3 @@ function _dispatch_kml($template, $args) {
     chdir($path . '..');
     shell_exec("rm -rf $path");
 }
-
-?>

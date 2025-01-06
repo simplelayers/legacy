@@ -12,7 +12,8 @@ use model\Permissions;
 use model\SeatAssignments;
 use utils\PageUtil;
 
-class DMIContext extends Context {
+class DMIContext extends Context
+{
 
     private $isRetrievingAccount = false;
     private $isLoggingIn = false;
@@ -22,7 +23,8 @@ class DMIContext extends Context {
         'account/login'
     );
 
-    public function __construct(Creds $creds) {
+    public function __construct(Creds $creds)
+    {
         parent::__construct($creds);
         $ini = System::GetIni();
         $params = \WAPI::GetParams();
@@ -61,7 +63,7 @@ class DMIContext extends Context {
                 $override = $this->isAuth;
                 $session = $session->CreateSession(\System::Get()->getPersonByUsername($creds->username), array(
                     'application' => 'dmi'
-                        ), true, $override);
+                ), true, $override);
             }
         }
         if ($this->isLoggingIn) {
@@ -72,7 +74,7 @@ class DMIContext extends Context {
                 System::Get()->logUserLogin($user->username, $_SERVER['REMOTE_ADDR']);
                 $session = $session->CreateSession($user, array(
                     'application' => 'dmi'
-                        ), true, true);
+                ), true, true);
             }
         }
 
@@ -95,7 +97,7 @@ class DMIContext extends Context {
             $override = $this->fromLogin;
             $session = $session->CreateSession($user, array(
                 'application' => 'dmi'
-                    ), true, $override);
+            ), true, $override);
             $this->sessState = $session->sessionState;
             $this->sessMethod = $session->sessionMethod;
         } elseif (($this->authState == Auth::STATE_OK) && ($session->sessionState == SimpleSession::STATE_SESS_EXPIRED)) {
@@ -158,7 +160,8 @@ class DMIContext extends Context {
         }
     }
 
-    public function Exec(array $args = null) {
+    public function Exec(array $args = null)
+    {
         if (is_null($args))
             $args = $_REQUEST;
 
@@ -327,7 +330,7 @@ class DMIContext extends Context {
 
             if (stripos($actionItem, '_wapiold') > -1) {
                 $dispatcher .= str_replace('.', '/', $action) . '.php';
-                require_once ($dispatcher);
+                require_once($dispatcher);
                 return call_user_func($funcName . $actionItem, $template, $args);
             }
             $dispatcher .= str_replace('.', '/', $action) . '.php';
@@ -336,7 +339,7 @@ class DMIContext extends Context {
 
             if (stripos($dispatcher, '/download/')) {
                 $funcName .= $actionItem;
-                require_once ($dispatcher);
+                require_once($dispatcher);
                 return call_user_func($funcName, $template, $args);
             }
         }
@@ -421,31 +424,31 @@ class DMIContext extends Context {
 
         $adminOptions['view'] = Permissions::HasPerm($permissions, ':SysAdmin:General:', Permissions::VIEW, Permissions::EDIT);
         $adminOptions['logs']['view'] = Permissions::HasPerm($permissions, array(
-                    ':SysAdmin:Logs:AccountChanges:',
-                    ':SysAdmin:Logs:AccountLogins:',
-                    ':SysAdmin:Logs:LayerTransactions:',
-                    ':SysAdmin:Logs:MapUsage:'
-                        ), Permissions::VIEW);
+            ':SysAdmin:Logs:AccountChanges:',
+            ':SysAdmin:Logs:AccountLogins:',
+            ':SysAdmin:Logs:LayerTransactions:',
+            ':SysAdmin:Logs:MapUsage:'
+        ), Permissions::VIEW);
         $adminOptions['logs']['maps'] = Permissions::HasPerm($permissions, ':SysAdmin:Logs:MapUsage:', Permissions::VIEW);
         $adminOptions['logs']['layers'] = Permissions::HasPerm($permissions, ':SysAdmin:Logs:LayerTransactions:', Permissions::VIEW);
         $adminOptions['logs']['logins'] = Permissions::HasPerm($permissions, ':SysAdmin:Logs:AccountLogins:', Permissions::VIEW);
         $adminOptions['logs']['accounts'] = Permissions::HasPerm($permissions, ':SysAdmin:Logs:AccountChanges:', Permissions::VIEW);
         $adminOptions['organizations']['list'] = Permissions::HasPerm($permissions, ':SysAdmin:Organizations:', Permissions::VIEW);
         $adminOptions['defaults']['view'] = Permissions::HasPerm($permissions, array(
-                    ':SysAdmin:Defaults:Bookmarks:',
-                    ':SysAdmin:Defaults:Contacts:',
-                    ':SysAdmin:Defaults:Layers:',
-                    ':SysAdmin:Defaults:Maps:',
-                    ':SysAdmin:Defaults:Pricing:'
-                        ), Permissions::VIEW);
+            ':SysAdmin:Defaults:Bookmarks:',
+            ':SysAdmin:Defaults:Contacts:',
+            ':SysAdmin:Defaults:Layers:',
+            ':SysAdmin:Defaults:Maps:',
+            ':SysAdmin:Defaults:Pricing:'
+        ), Permissions::VIEW);
         $adminOptions['configuration']['view'] = Permissions::PrefixedHasPerm($permissions, ':SysAdmin:Config', array(
-                    'Perms:MasterList',
-                    'Plans',
-                    'Roles',
-                    'Seats',
-                    'Signups',
-                    'SystemIdentification'
-                        ), Permissions::VIEW) > 0;
+            'Perms:MasterList',
+            'Plans',
+            'Roles',
+            'Seats',
+            'Signups',
+            'SystemIdentification'
+        ), Permissions::VIEW) > 0;
         $adminOptions['configuration']['permissions'] = Permissions::HasPerm($permissions, ':SysAdmin:Config:Perms:MasterList:', Permissions::VIEW | Permissions::EDIT);
         $adminOptions['configuration']['plans'] = Permissions::HasPerm($permissions, ':SysAdmin:Config:Plans:', Permissions::VIEW | Permissions::EDIT);
         $adminOptions['configuration']['roles'] = Permissions::HasPerm($permissions, ':SysAdmin:Config:Roles:', Permissions::VIEW | Permissions::EDIT);
@@ -457,9 +460,9 @@ class DMIContext extends Context {
         $pageArgs['permissions'] = $permissions;
 
         $adminOptions['user_accounts']['view'] = Permissions::PrefixedHasPerm($permissions, ':SysAdmin:Config', array(
-                    'UserAccounts',
-                    'UserAccounts:Spoof'
-                        ), Permissions::VIEW);
+            'UserAccounts',
+            'UserAccounts:Spoof'
+        ), Permissions::VIEW);
 
         $template->assign('adminOptions', $adminOptions);
         $template->assign('inviteOptions', $inviteOptions);
@@ -501,6 +504,7 @@ class DMIContext extends Context {
                 $title[$i] = ucfirst($title[$i]);
             }
             $title = implode(' ', $title);
+
             $subnav = SubnavFactory::GetNav($rootContext);
             if ($subnav) {
                 $subnav->makeDefault($user, $title, $org, $pageArgs);
@@ -577,24 +581,21 @@ class DMIContext extends Context {
 
                 throw new \Exception('Requested resource not found:' . $dispatcher);
             }
-            require_once ($dispatcher);
+            require_once($dispatcher);
             $args['user'] = $user;
             $args['world'] = System::Get();
 
-            if ($isModule) {
-                
-            } else {
 
-                $pageArgs['permissions'] = $permissions;
-                $template->assign('pageArgs', json_encode($pageArgs));
+            $pageArgs['permissions'] = $permissions;
+            $template->assign('pageArgs', json_encode($pageArgs));
 
-                call_user_func($funcName, $template, $args, $org, $pageArgs);
-                $pageArgs = PageUtil::MixinMapArgs($template);
-                $pageArgs = PageUtil::MixinLayerArgs($template);
-                $pageArgs = PageUtil::MixinContactArgs($template);
-                $pageArgs = PageUtil::MixinGroupArgs($template);
-                $pageArgs = PageUtil::MixinPlanArgs($template);
-            }
+            call_user_func($funcName, $template, $args, $org, $pageArgs);
+            $pageArgs = PageUtil::MixinMapArgs($template);
+            $pageArgs = PageUtil::MixinLayerArgs($template);
+            $pageArgs = PageUtil::MixinContactArgs($template);
+            $pageArgs = PageUtil::MixinGroupArgs($template);
+            $pageArgs = PageUtil::MixinPlanArgs($template);
+
             $jsonArgs = json_encode($pageArgs);
             $template->assign('jsonArgs', $jsonArgs);
             $template->display("page.tpl");
@@ -603,11 +604,13 @@ class DMIContext extends Context {
         $template->display('footer.tpl');
     }
 
-    public function GetApp() {
+    public function GetApp()
+    {
         return "dmi";
     }
 
-    public function GetStart(&$pageArgs = null) {
+    public function GetStart(&$pageArgs = null)
+    {
         if (is_null($pageArgs))
             $pageArgs = array();
         $ini = System::GetIni();
@@ -693,7 +696,8 @@ class DMIContext extends Context {
         return $ini->default_page;
     }
 
-    public function SetLoginMessages($state, $template) {
+    public function SetLoginMessages($state, $template)
+    {
         $states = array_keys($this->stateStrings);
         if (!in_array($state, $states))
             $state = 'normal';
@@ -745,7 +749,4 @@ class DMIContext extends Context {
         }
         $template->assign('state', $state);
     }
-
 }
-
-?>

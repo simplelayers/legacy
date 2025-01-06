@@ -80,6 +80,7 @@ class ImportUtil
             $_FILES[$fileParam]['name'] = $targetName;
             
             $cmd = 'mv '.escapeshellarg($_FILES[$fileParam]['tmp_name']).' '.$whereTo.$targetName;
+            #var_dump($cmd);
             passthru($cmd);
             ob_end_clean();
             //copy($_FILES[$fileParam]['tmp_name'],$whereTo.$targetName);
@@ -246,12 +247,10 @@ class ImportUtil
 
     public static function RenameFile($file, $ext, $newExt = null, $prefix = null, $incDir = true, $preSep = '_', $suffSep = '.')
     {
-        if ($prefix == '')
-            $prefix = null;
+        if ($prefix == '') $prefix = null;
         $dir = dirname($file);
         $newFile = self::NewExt($file, $ext, $newExt);
         if (! is_null($prefix)) {
-            
             $newFile = $prefix . $preSep . $newFile;
         }
         if ($incDir)

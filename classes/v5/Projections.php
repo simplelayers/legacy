@@ -77,7 +77,7 @@ QUERY;
         $deprecated = ($info['deprecated'] === '') ? '' : ' and ' . $deprecated;
 
         $layer = $wapi->RequireALayer(LayerTypes::VECTOR, $args);
-        if (is_a($layer, ProjectLayer)) {
+        if (is_a($layer, \ProjectLayer::class)) {
             $layer = $layer->layer;
         }
         $whereCRS = ' and crstype ilike ';
@@ -232,6 +232,116 @@ QUERY;
     public static function SRID2SRS($id) {
         $db = System::GetDB();
         $srs = $db->GetOne('select srtext from spatial_ref_sys where id=?',[$id]);
+    }
+
+    public static function GetSRSFromPrjObj($obj) {
+        // Recursive function to locate the top-level AUTHORITY code
+       
+    
+        // Look for the main AUTHORITY code in the top component (e.g., GEOGCS or PROJCS)
+        foreach($obj as $l1) {
+            foreach($l1['value'] as $component) {
+                $epsgCode = self::FindAuthority($component);
+                if ($epsgCode !== null) {
+                    return $epsgCode;
+                }
+            }
+        }
+        return null;
+    }
+    public static function FindAuthority($node) {
+            if(!isset($node['name'])) return null;
+            if ($node["name"] === "AUTHORITY" && is_array($node["value"]) && count($node["value"]) === 2) {
+                return implode(':',$node["value"]);
+                #return $node["value"][1];  // EPSG code is usually the second item
+            }
+            return null;
+    }
+    public static function ParseWktToObj($wkt) {
+        // Clean up whitespace
+        $wkt = trim($wkt);
+    
+        // Regular expressions for parsing WKT components
+        $pattern = '/([A-Z_]+)\s*\[(.*)\]/';
+        $components = [];
+        
+        
+    
+        // Start parsing the top-level WKT
+        $components[] = self::ParseSRSComponent($wkt);
+    
+        return $components;
+    }
+    // Recursive function to parse WKT components
+    static function ParseSRSComponent($text) {
+        $result = [];
+        $pattern = '/([A-Z_]+)\s*\[(.*)\]/';
+
+        if (preg_match($pattern, $text, $matches)) {
+            $name = $matches[1];
+            $valueText = $matches[2];
+
+            // Split at commas, respecting nested brackets
+            $values = [];
+            $bracketLevel = 0;
+            $currentPart = '';
+
+            for ($i = 0; $i < strlen($valueText); $i++) {
+                $char = $valueText[$i];
+
+                if ($char === '[') {
+                    $bracketLevel++;
+                } elseif ($char === ']') {
+                    $bracketLevel--;
+                }
+
+                if ($char === ',' && $bracketLevel === 0) {
+                    $values[] = trim($currentPart);
+                    $currentPart = '';
+                } else {
+                    $currentPart .= $char;
+                }
+            }
+            if ($currentPart !== '') {
+                $values[] = trim($currentPart);
+            }
+
+            // Parse values recursively
+            $parsedValues = [];
+            foreach ($values as $value) {
+                if (preg_match($pattern, $value)) {
+                    $parsedValues[] = self::ParseSRSComponent($value);
+                } else {
+                    $parsedValues[] = trim($value, '"');
+                }
+            }
+
+            // Create the result as a structured object
+            $result = [
+                "name" => $name,
+                "value" => $parsedValues
+            ];
+        }
+
+        return $result;
+    }
+    
+    public static function GetAuthorityFromWkt($wkt){ 
+        $wktObj = self::ParseWktToObj($wkt);
+        // Check if the content resembles WKT format (starts with GEOGCS, PROJCS, or GEOGCRS, etc.)
+       
+        $epsgId = self::GetSRSFromPrjObj($wktObj);
+        return $epsgId;
+    }
+    public static function GetSRSFromPrj($filePath) {
+        // Check if file exists
+        if (!file_exists($filePath)) {
+            return false;
+        }
+    
+        // Read file content
+        $wktContent = file_get_contents($filePath);
+        return self::GetAuthorityFromWkt($wktContent);
     }
 
 }

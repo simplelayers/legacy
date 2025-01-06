@@ -34,6 +34,18 @@ function _dispatch_editvector1($template, $args, $org, $pageArgs) {
     $layer = $world->getLayerById($_REQUEST['id']);
     $pageArgs['pageSubnav'] = 'data';
     $pageArgs['layerId'] = $layer->id;
+ 
+    if($layer->custom_data) {
+        if($layer->custom_data['type'] === 'remote') {
+            if(!isset($layer->custom_data['service_type'])) {
+                $pageArgs['isArcGIS'] = 'true';
+            } else {
+                $pageArgs['isArcGIS'] = ($layer->custom_data['service_type'] == 'arcgis' ) ? 'true' : 'false';
+            }
+            
+        }
+    }
+ 
     PageUtil::SetPageArgs($pageArgs, $template);
     $pageArgs = PageUtil::MixinLayerArgs($template);
 

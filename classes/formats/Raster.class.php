@@ -44,7 +44,7 @@ class Raster extends LayerFormat
         
         // Step 2: Create a working temp folder
         $tempDir = ImportUtil::MoveUploaded(null,true,$imageParam,null,false);
-        
+       
         // Step 3: Move uploaded files to the working folder
         ImportUtil::MoveUploaded($tempDir,false,$worldParam,null,false);
         //$projFile = ImportUtil::MakeProjectionFile($tempDir, $projection);

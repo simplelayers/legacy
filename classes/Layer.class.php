@@ -23,7 +23,8 @@ use model\viewdefs\SLAttributeInfoView;
  */
 require_once 'ColorScheme.class.php';
 
-class Layer {
+class Layer
+{
 
     /**
      *
@@ -66,29 +67,30 @@ class Layer {
     public $filter_field = "gid";
     protected $layer_record = array();
 
-    function __construct(&$world, $id = null, $layer_record = null) {
+    function __construct(&$world, $id = null, $layer_record = null)
+    {
         if (is_null($id) && is_null($layer_record))
             throw new Exception('Invalid layer construction');
         $this->world = System::Get();
-        $this->id = is_null($layer_record) ? $id : (int) $layer_record ['id'];
+        $this->id = is_null($layer_record) ? $id : (int) $layer_record['id'];
 
         $this->RefreshLayerRecord($layer_record);
 
         $this->colorscheme = false;
 
-// fetch the layer type. this is used to verify that we exist, and also for the colorscheme
+        // fetch the layer type. this is used to verify that we exist, and also for the colorscheme
         $type = (int) $this->type;
 
 
         if (!$type) {
             $this->type = LayerTypes::VECTOR;
         }
-//throw new Exception ( "No such layerid: $id." );
+        //throw new Exception ( "No such layerid: $id." );
         if (in_array($type, array(
-                    LayerTypes::VECTOR,
-                    LayerTypes::ODBC,
-                    LayerTypes::RELATIONAL
-                ))) {
+            LayerTypes::VECTOR,
+            LayerTypes::ODBC,
+            LayerTypes::RELATIONAL
+        ))) {
             $this->colorscheme = new ColorScheme($this->world, $this);
         }
     }
@@ -96,7 +98,8 @@ class Layer {
     /**
      * Change the type on a given field
      */
-    public function ChangeFieldType($field, $newType) {
+    public function ChangeFieldType($field, $newType)
+    {
         $db = $this->world->admindb;
         $table = $this->url;
         $allowedTypes = DataTypes::GetAliases(); // CustomTypeFactory::GetTypes();
@@ -106,8 +109,8 @@ class Layer {
           return false;
           } */
         $type = false;
-        $isURL = in_array($newType,['url','cg_url']);
-        if ($isURL ) {
+        $isURL = in_array($newType, ['url', 'cg_url']);
+        if ($isURL) {
             $type = 'cg_url';
         } else {
             $type = $allowedTypes[$newType];
@@ -115,7 +118,7 @@ class Layer {
         if (!$type) {
             return false;
         }
-       
+
         # $db->debug = true;
         $query = "ALTER TABLE $table alter column $field TYPE $type USING $field::$type";
         $result = $db->GetRow($query);
@@ -125,7 +128,7 @@ class Layer {
                 if (stripos(strtolower($err), 'is out of range for type integer') > -1) {
                     $query = "ALTER TABLE $table alter column $field TYPE bigint USING ($field::numeric)";
                     $result = $db->GetRow($query);
-                    if(!$result) $type = 'int or bigint';
+                    if (!$result) $type = 'int or bigint';
                 }
             }
         }
@@ -137,7 +140,8 @@ class Layer {
         }
     }
 
-    public static function GetHasRecordsQuery() {
+    public static function GetHasRecordsQuery()
+    {
         $query = new SL_Query();
         $query->newTableQuery(self::TABLE);
         $query->AddInCriteria('type', array(LayerTypes::VECTOR, LayerTypes::RELATABLE, LayerTypes::RELATIONAL));
@@ -145,7 +149,8 @@ class Layer {
         return $query;
     }
 
-    public static function GetTypeQuery($type) {
+    public static function GetTypeQuery($type)
+    {
         $query = new SL_Query();
         $query->newTableQuery(self::TABLE);
         $query->AddEqualsCriteria('type', $type);
@@ -153,7 +158,8 @@ class Layer {
         return $query;
     }
 
-    function getHasRecords() {
+    function getHasRecords()
+    {
         if (in_array($this->type, array(LayerTypes::VECTOR, LayerTypes::RELATABLE, LayerTypes::RELATIONAL)))
             return true;
         $geom_type = $this->geom_type;
@@ -164,14 +170,16 @@ class Layer {
         return false;
     }
 
-    function getHasEditableRecords() {
+    function getHasEditableRecords()
+    {
 
         return in_array(+$this->type, array(LayerTypes::VECTOR, LayerTypes::RELATABLE));
     }
 
-// TODO Rename
+    // TODO Rename
 
-    function setLayerType($typeId = null) {
+    function setLayerType($typeId = null)
+    {
         $db = System::GetDB(System::DB_ACCOUNT_SU);
         if ($typeId) {
 
@@ -184,7 +192,8 @@ class Layer {
         return $this->type;
     }
 
-    function setLayerGeomType($typeId = null) {
+    function setLayerGeomType($typeId = null)
+    {
         if ($typeId) {
             $this->world->db->Execute("update " . self::TABLE . " set geom_type=$typeId where id=$this->id");
             return $typeId;
@@ -207,8 +216,8 @@ class Layer {
 
             if ((int) $is > 0) {
                 $geoms = GeomTypes::GetEnum();
-                $geom_type = $geoms [substr($type, 2)];
-// $geom_type = GeomTypes:: substr($type,2);//strip off 'is';
+                $geom_type = $geoms[substr($type, 2)];
+                // $geom_type = GeomTypes:: substr($type,2);//strip off 'is';
                 break;
             }
         }
@@ -226,7 +235,7 @@ class Layer {
         return ($geom_type == '') ? GeomTypes::UNKNOWN : $geom_type;
     }
 
-// /// make attributes directly fetchable and editable
+    // /// make attributes directly fetchable and editable
 
     /**
      *
@@ -235,20 +244,21 @@ class Layer {
      *
      *
      */
-    function __get($name) {
-// TODO: Optimize this function using case statments and removing redundant if's.
+    function __get($name)
+    {
+        // TODO: Optimize this function using case statments and removing redundant if's.
         $getter = '__get_' . $name;
 
         if (method_exists($this, $getter)) {
             return call_user_func([$this, $getter]);
         }
         $ini = System::GetIni();
-// simple sanity check
+        // simple sanity check
         if (preg_match('/\W/', $name))
             return false;
         if ($name == 'classification')
             return $this->colorscheme;
-// if they ask for the URL attribute, vectors and rasters are special cases, returning their datafile names
+        // if they ask for the URL attribute, vectors and rasters are special cases, returning their datafile names
         if ($name == 'url') {
             if ($this->type == LayerTypes::VECTOR)
                 return "vectordata_{$this->id}";
@@ -260,7 +270,7 @@ class Layer {
                 $value = $this->world->db->Execute("SELECT url FROM " . self::TABLE . " WHERE id=?", array(
                     $this->id
                 ));
-                $value = $value->fields ['url'];
+                $value = $value->fields['url'];
                 $value = json_decode($value);
                 return $value;
             }
@@ -268,13 +278,13 @@ class Layer {
                 $value = $this->world->db->Execute("SELECT url FROM " . self::TABLE . " WHERE id=?", array(
                     $this->id
                 ));
-                return $value->fields ['url'];
+                return $value->fields['url'];
             }
             if ($this->type == LayerTypes::RELATABLE)
                 return "vectordata_{$this->id}";
         }
 
-// make the artificial "geomtype" attribute, which says point, line, or polygon
+        // make the artificial "geomtype" attribute, which says point, line, or polygon
         if ($name == 'geomtype') {
             if ($this->type == LayerTypes::RASTER)
                 return GeomTypes::RASTER;
@@ -293,7 +303,7 @@ class Layer {
 
                 return $this->geom_type;
             }
-// must be VECTOR or RELATIONAL to have gotten this far
+            // must be VECTOR or RELATIONAL to have gotten this far
             /*
              * $value = $this->world->db->Execute ( 'SELECT type FROM geometry_columns WHERE f_table_name=?', array ( $this->url ) ); if (preg_match ( '/POINT/', $value->fields ['type'] )) { return GeomTypes::POINT; } elseif (preg_match ( '/POLYGON/', $value->fields ['type'] )) { return GeomTypes::POLYGON; } elseif (preg_match ( '/LINE/', $value->fields ['type'] )) { return GeomTypes::LINE; } else { return GeomTypes::UNKNOWN; }
              */
@@ -310,7 +320,7 @@ class Layer {
                     return LayerUtils::ToGeomTypeString($this);
                 }
             }
-            return $layerTypes [$this->type];
+            return $layerTypes[$this->type];
         }
         if ($name == 'geomtyperaw') {
             if ($this->type == LayerTypes::RASTER)
@@ -324,23 +334,23 @@ class Layer {
             $value = $this->world->db->Execute('SELECT type FROM geometry_columns WHERE f_table_name=?', array(
                 $this->url
             ));
-            return $value->fields ['type'];
+            return $value->fields['type'];
         }
-// convert last_modified to seconds
+        // convert last_modified to seconds
         if ($name == 'last_modified_seconds') {
             $value = $this->world->db->Execute("SELECT DATE_PART('epoch',now()-last_modified) AS seconds FROM " . self::TABLE . " WHERE id=?", array(
                 $this->id
             ));
-            return $value->fields ['seconds'];
+            return $value->fields['seconds'];
         }
         if ($name == 'last_modified_unix') {
             $value = $this->world->db->Execute("SELECT DATE_PART('epoch',last_modified) AS unixtime FROM " . self::TABLE . " WHERE id=?", array(
                 $this->id
             ));
-            return $value->fields ['unixtime'];
+            return $value->fields['unixtime'];
         }
 
-// make the artificial "diskusage" attribute, being the bytes of disk space occupied by this layer
+        // make the artificial "diskusage" attribute, being the bytes of disk space occupied by this layer
         if ($name == 'diskusage') {
             $type = (int) $this->type;
 
@@ -355,7 +365,7 @@ class Layer {
             if ($type == LayerTypes::RASTER)
                 return file_exists($this->url) ? filesize($this->url) : null;
 
-// else it must be a vector
+            // else it must be a vector
             $s = $this->world->db->GetOne("SELECT pg_relation_size('{$this->url}') AS size");
             return $s; // $s->fields['size'] / Units::MEGABYTE;
         }
@@ -371,10 +381,10 @@ class Layer {
             ));
             return $value->fields['value'];
         }
-// if we got here, it must be a direct attribute
-// a little fancy: return an object for some calls, e.g. a Person instead of a username or id
+        // if we got here, it must be a direct attribute
+        // a little fancy: return an object for some calls, e.g. a Person instead of a username or id
         if ($name == 'ownerid') {
-            return $this->layer_record ['owner'];
+            return $this->layer_record['owner'];
         }
 
 
@@ -405,10 +415,10 @@ class Layer {
         }
         if ($name === 'rich_tooltip') {
             if (in_array($value, array(
-                        false,
-                        '',
-                        null
-                    )) > - 1) {
+                false,
+                '',
+                null
+            )) > -1) {
                 return false;
             } else {
                 if (substr($value, 0, 4) === 'b64:') {
@@ -428,8 +438,8 @@ class Layer {
          * $this->world->db->Execute ( "SELECT \"$name\" AS value FROM layers WHERE id=?", array ( $this->id ) );
          */
 
-// value = $value ['value'];
-// error_log($name);
+        // value = $value ['value'];
+        // error_log($name);
 
         if ($name == 'owner') {
 
@@ -464,31 +474,32 @@ class Layer {
      *
      *
      */
-    function __set($name, $value) {
-// simple sanity check
+    function __set($name, $value)
+    {
+        // simple sanity check
 
         if (preg_match('/\W/', $name))
             return false;
 
-// a few items cannot be set
+        // a few items cannot be set
         switch ($name) {
 
-            case 'id' :
-            case 'type' :
-            case 'owner' :
-            case 'colorscheme' :
-            case 'geomtype' :
-            case 'diskusage' :
-            case 'last_modified' :
+            case 'id':
+            case 'type':
+            case 'owner':
+            case 'colorscheme':
+            case 'geomtype':
+            case 'diskusage':
+            case 'last_modified':
                 return false;
                 break;
-            case 'url' :
+            case 'url':
                 if ($this->type != LayerTypes::WMS and $this->type != LayerTypes::ODBC)
                     return false;
                 break;
-            case 'metadata' :
+            case 'metadata':
                 if (!is_null($value)) {
-//$this->deep_ksort ( $value );
+                    //$this->deep_ksort ( $value );
                     $value = base64_encode(gzcompress(serialize($value), 9));
 
                     $this->world->db->Execute("UPDATE " . self::TABLE . " SET metadata=? WHERE id=?", array(
@@ -499,9 +510,9 @@ class Layer {
                     return;
                 }
                 break;
-            case 'field_info' :
-            case 'custom_data' :
-            case 'import_info' :
+            case 'field_info':
+            case 'custom_data':
+            case 'import_info':
             case 'label_style':
                 if (is_string($value)) {
                     if ((stripos($value, '{"json":') === 0) || (stripos($value, "{'json':") == 0)) {
@@ -517,10 +528,10 @@ class Layer {
                 }
                 break;
         }
-// if we got here, we're making a change; so flag us as having been modified
+        // if we got here, we're making a change; so flag us as having been modified
         $this->touch();
-#$this->world->db->debug = true;	
-// if we got here, we must be setting a direct attribute
+        #$this->world->db->debug = true;	
+        // if we got here, we must be setting a direct attribute
         $this->world->db->Execute("UPDATE " . self::TABLE . " SET \"$name\"=? WHERE id=?", array(
             $value,
             $this->id
@@ -530,36 +541,40 @@ class Layer {
     /**
      * Update the Layer's last_modified to be the current date+time.
      */
-    public function touch() {
+    public function touch()
+    {
         $this->world->db->Execute('UPDATE ' . self::TABLE . ' SET last_modified=NOW() WHERE id=?', array(
             $this->id
         ));
 
         if (LayerTypes::IsFeatureSource($this->type)) {
-#$this->GenerateThumbnail(true,false);
+            #$this->GenerateThumbnail(true,false);
         }
 
         $this->RefreshLayerRecord();
     }
 
-    function RefreshLayerRecord($record = null) {
+    function RefreshLayerRecord($record = null)
+    {
 
         $this->layer_record = is_null($record) ? $this->world->db->GetRow("select * from " . self::TABLE . " where id=" . $this->id) : $record;
     }
 
-    function GetLayerRecord() {
+    function GetLayerRecord()
+    {
         return $this->layer_record;
     }
 
-// /// the self-destruct button: clean up files/tables
+    // /// the self-destruct button: clean up files/tables
 
     /**
      * Delete the layer from the system, handling dependencies e.g.
      * its presence in projects.
      */
-    function delete() {
+    function delete()
+    {
 
-// vector: drop the table hosting our info
+        // vector: drop the table hosting our info
         if ($this->type == LayerTypes::VECTOR) {
             $this->setDBOwnerToDatabase();
             $this->world->db->Execute("DROP TABLE {$this->url} CASCADE");
@@ -577,17 +592,18 @@ class Layer {
         elseif ($this->type == LayerTypes::RASTER) {
             unlink($this->url);
         }
-// delete the layer's entry in the DB
+        // delete the layer's entry in the DB
         $this->world->db->Execute('DELETE FROM ' . self::TABLE . ' WHERE id=?', array(
             $this->id
         ));
     }
 
-    function DropData() {
+    function DropData()
+    {
         switch ($this->type) {
             case LayerTypes::VECTOR:
                 $this->setDBOwnerToDatabase();
-// $this->world->db->debug=true;
+                // $this->world->db->debug=true;
 
                 /* $oid = $this->world->db->GetOne("select c.oid as oid from pg_class  c join pg_namespace n on n.oid=c.relnamespace where c.relname = '{$this->url}' and n.nspname='public'");
                   if($oid) {
@@ -609,9 +625,9 @@ class Layer {
         }
     }
 
-// ///
-// /// optimization techniques
-// ///
+    // ///
+    // /// optimization techniques
+    // ///
 
     /**
      * Optimize the layer for performance.
@@ -620,9 +636,10 @@ class Layer {
      *
      * @return boolean True if optimization was successful, false if not.
      */
-    function optimize() {
+    function optimize()
+    {
         switch ($this->type) {
-            case LayerTypes::VECTOR :
+            case LayerTypes::VECTOR:
                 $this->setDBOwnerToDatabase();
                 $this->world->db->Execute("VACUUM FULL ANALYZE {$this->url}");
                 $this->setDBOwnerToOwner();
@@ -637,7 +654,8 @@ class Layer {
      *
      * @return boolean True if purge was successful, false if not.
      */
-    function truncate() {
+    function truncate()
+    {
         if ($this->type == LayerTypes::VECTOR) {
             $table = $this->url;
             $seq = $this->url . '_gid_seq';
@@ -648,17 +666,17 @@ class Layer {
         } else if ($this->type == LayerTypes::ODBC) {
             $odbcinfo = $this->url;
             switch ($odbcinfo->driver) {
-                case ODBCUtil::MYSQL :
+                case ODBCUtil::MYSQL:
                     $db = NewADOConnection("mysql://{$odbcinfo->odbcuser}:{$odbcinfo->odbcpass}@{$odbcinfo->odbchost}/{$odbcinfo->odbcbase}?port={$odbcinfo->odbcport}&fetchmode=" . ADODB_FETCH_ASSOC);
                     $db->Execute("TRUNCATE TABLE `{$odbcinfo->table}`");
                     break;
-                case ODBCUtil::PGSQL :
+                case ODBCUtil::PGSQL:
                     $db = NewADOConnection("postgres://{$odbcinfo->odbcuser}:{$odbcinfo->odbcpass}@{$odbcinfo->odbchost}/{$odbcinfo->odbcbase}?port={$odbcinfo->odbcport}&fetchmode=" . ADODB_FETCH_ASSOC);
                     $db->Execute("TRUNCATE TABLE \"{$odbcinfo->table}\"");
                     $db->Execute("SELECT SETVAL ('{$odbcinfo->table}_id_seq',1)");
                     break;
-                case ODBCUtil::MSSQL :
-                    list ( $odbc, $odbcini, $freetdsconf ) = $this->world->connectToODBC($odbcinfo, 'NOCONNECT');
+                case ODBCUtil::MSSQL:
+                    list($odbc, $odbcini, $freetdsconf) = $this->world->connectToODBC($odbcinfo, 'NOCONNECT');
                     $db = NewADOConnection("mssql://{$odbcinfo->odbcuser}:{$odbcinfo->odbcpass}@dsn/{$odbcinfo->odbcbase}?port={$odbcinfo->odbcport}&fetchmode=" . ADODB_FETCH_ASSOC);
                     $db->Execute("DELETE FROM \"{$odbcinfo->table}\"");
                     break;
@@ -670,12 +688,14 @@ class Layer {
         return true;
     }
 
-    function getPermissionByUsername($username) {
+    function getPermissionByUsername($username)
+    {
         $id = $this->world->getUserIdFromUsername($username);
         return $this->getPermissionById($id);
     }
 
-    function getPermissionById($userId) {
+    function getPermissionById($userId)
+    {
         $id = (int) $userId;
 
         $ownerId = (int) $this->owner->id;
@@ -706,16 +726,17 @@ class Layer {
 			UNION 
 			SELECT null AS permission
 			) AS temp";
-        return $this->world->db->GetOne($query, Array(
-                    $this->id,
-                    $id,
-                    $this->id,
-                    $id,
-                    $this->id
+        return $this->world->db->GetOne($query, array(
+            $this->id,
+            $id,
+            $this->id,
+            $id,
+            $this->id
         ));
     }
 
-    function getRptLvlById($userId) {
+    function getRptLvlById($userId)
+    {
         $id = (int) $userId;
 
         $ownerId = (int) $this->owner->id;
@@ -747,12 +768,12 @@ class Layer {
 			UNION 
 			SELECT null AS permission
 			) AS temp";
-        return (double) $this->world->db->GetOne($query, Array(
-                    $this->id,
-                    $id,
-                    $this->id,
-                    $id,
-                    $this->id
+        return (float) $this->world->db->GetOne($query, array(
+            $this->id,
+            $id,
+            $this->id,
+            $id,
+            $this->id
         ));
     }
 
@@ -767,18 +788,20 @@ class Layer {
      * @param integer $level
      * 		A permission level from the AccessLevels::* defines.
      */
-    function setPermissionByUsername($username, $level) {
-// set the permission
+    function setPermissionByUsername($username, $level)
+    {
+        // set the permission
         $id = $this->world->getUserIdFromUsername($username);
         return $this->setPermissionById($id, $level);
     }
 
-    function setPermissionById($id, $level) {
+    function setPermissionById($id, $level)
+    {
         if ($id === $this->owner->id)
             return; // an owner setting their own permission would be silly
         if ($id == 0)
             return; // the admin always has access to everything
-// just set a permission entry for them
+        // just set a permission entry for them
         $this->world->db->Execute('INSERT INTO layersharing (layer,who,permission) VALUES (?,?,?)', array(
             $this->id,
             $id,
@@ -791,23 +814,25 @@ class Layer {
         ));
     }
 
-    function setGlobalPermission($level) {
+    function setGlobalPermission($level)
+    {
         $this->world->db->Execute('UPDATE ' . self::TABLE . ' SET sharelevel=? WHERE id=?', array(
             $level,
             $this->id
         ));
     }
 
-    function setContactPermissionById($id, $level) {
+    function setContactPermissionById($id, $level)
+    {
         if ($id === $this->owner->id)
             return;
         if ($id == 0)
             return;
         $result = $this->world->db->Execute('SELECT id FROM layersharing WHERE layer=? AND who=?', array(
-                    $this->id,
-                    $id
-                ))->FetchRow();
-        if ($result ["id"]) {
+            $this->id,
+            $id
+        ))->FetchRow();
+        if ($result["id"]) {
             if ($level > 0) {
                 $this->world->db->Execute('UPDATE layersharing SET permission=? WHERE layer=? AND who=?', array(
                     $level,
@@ -830,7 +855,8 @@ class Layer {
         }
     }
 
-    function setContactRptLvlById($id, $level) {
+    function setContactRptLvlById($id, $level)
+    {
         if ($id === $this->owner->id) {
             return;
         }
@@ -838,11 +864,11 @@ class Layer {
             return;
         }
         $result = $this->world->db->Execute('SELECT id FROM layersharing WHERE layer=? AND who=?', array(
-                    $this->id,
-                    $id
-                ))->FetchRow();
-        if ($result ["id"]) {
-            if ((double) $level > 0) {
+            $this->id,
+            $id
+        ))->FetchRow();
+        if ($result["id"]) {
+            if ((float) $level > 0) {
                 $this->world->db->Execute('UPDATE layersharing SET reporting_level=? WHERE layer=? AND who=?', array(
                     $level,
                     $this->id,
@@ -864,12 +890,13 @@ class Layer {
         }
     }
 
-    function setGroupPermissionById($id, $level) {
+    function setGroupPermissionById($id, $level)
+    {
         $result = $this->world->db->Execute('SELECT id FROM layersharing_socialgroups WHERE layer_id=? AND group_id=?', array(
-                    $this->id,
-                    $id
-                ))->FetchRow();
-        if ($result ["id"]) {
+            $this->id,
+            $id
+        ))->FetchRow();
+        if ($result["id"]) {
             if ($level > 0) {
                 $this->world->db->Execute('UPDATE layersharing_socialgroups SET permission=? WHERE layer_id=? AND group_id=?', array(
                     $level,
@@ -890,19 +917,20 @@ class Layer {
             ));
         }
         $results = $this->world->db->Execute('SELECT person_id FROM groups_members WHERE group_id=?', array(
-                    $id
-                ))->GetRows();
+            $id
+        ))->GetRows();
         foreach ($results as $result) {
-            $this->world->getPersonById($result ["person_id"])->notify($this->owner->id, "shared the layer:", $this->name, $this->id, "./?do=layer.info&id=" . $this->id, 3);
+            $this->world->getPersonById($result["person_id"])->notify($this->owner->id, "shared the layer:", $this->name, $this->id, "./?do=layer.info&id=" . $this->id, 3);
         }
     }
 
-    function setGroupRptLvlById($id, $level) {
+    function setGroupRptLvlById($id, $level)
+    {
         $result = $this->world->db->Execute('SELECT id FROM layersharing_socialgroups WHERE layer_id=? AND group_id=?', array(
-                    $this->id,
-                    $id
-                ))->FetchRow();
-        if ($result ["id"]) {
+            $this->id,
+            $id
+        ))->FetchRow();
+        if ($result["id"]) {
             if ($level > 0) {
                 $this->world->db->Execute('UPDATE layersharing_socialgroups SET reporting_level=? WHERE layer_id=? AND group_id=?', array(
                     $level,
@@ -923,30 +951,31 @@ class Layer {
             ));
         }
         $results = $this->world->db->Execute('SELECT person_id FROM groups_members WHERE group_id=?', array(
-                    $id
-                ))->GetRows();
+            $id
+        ))->GetRows();
         foreach ($results as $result) {
-            $this->world->getPersonById($result ["person_id"])->notify($this->owner->id, "shared the layer:", $this->name, $this->id, "./?do=layer.info&id=" . $this->id, 3);
+            $this->world->getPersonById($result["person_id"])->notify($this->owner->id, "shared the layer:", $this->name, $this->id, "./?do=layer.info&id=" . $this->id, 3);
         }
     }
 
-    function fixDBPermissions() {
+    function fixDBPermissions()
+    {
         if (!$this->getHasRecords())
             return false;
 
         $db = $this->world->admindb; // "avoid the dot" to prevent repeated object lookups
-// set the table's ownership back to its proper owner
+        // set the table's ownership back to its proper owner
 
         $this->setDBOwnerToOwner();
-// rescind all permissions from the table; this is sloppy and slow, but necessary since
-// PgSQL provides no usable mechanism for finding out existing permissions
+        // rescind all permissions from the table; this is sloppy and slow, but necessary since
+        // PgSQL provides no usable mechanism for finding out existing permissions
         $db->Execute("REVOKE all ON TABLE {$this->url} FROM public");
         foreach ($this->world->getAllPeople() as $u) {
-// if($db->Execute("SELECT 1 FROM pg_user WHERE username = '{$u->databaseusername}' LIMIT 1"))
+            // if($db->Execute("SELECT 1 FROM pg_user WHERE username = '{$u->databaseusername}' LIMIT 1"))
             $db->Execute("REVOKE all ON {$this->url} FROM \"{$u->databaseusername}\"");
         }
         $db->Execute("GRANT all ON TABLE {$this->url} TO " . WORLD_NAME);
-// based on the Layer's overall sharelevel, grant permission to it
+        // based on the Layer's overall sharelevel, grant permission to it
         $sharelevel = $this->sharelevel;
         if ($sharelevel == AccessLevels::READ)
             $db->Execute("GRANT select ON {$this->url} TO public");
@@ -954,23 +983,23 @@ class Layer {
             $db->Execute("GRANT select ON {$this->url} TO public");
         elseif ($sharelevel == AccessLevels::EDIT)
             $db->Execute("GRANT all ON {$this->url} TO public");
-// now go through the per-user permissions and grant those as well
+        // now go through the per-user permissions and grant those as well
         $permissions = $db->Execute("SELECT layersharing.permission,people.id FROM layersharing,people WHERE people.id=layersharing.who AND layersharing.layer=?", array(
-                    $this->id
-                ))->getRows();
+            $this->id
+        ))->getRows();
         foreach ($permissions as $p) {
-            $p = $this->world->getPersonById($p ['id']);
+            $p = $this->world->getPersonById($p['id']);
             if (!$p)
                 continue;
             $p = $p->databaseusername;
-            if ($p ['permission'] == AccessLevels::READ)
+            if ($p['permission'] == AccessLevels::READ)
                 $db->Execute("GRANT select ON {$this->url} TO \"$p\"");
-            if ($p ['permission'] == AccessLevels::COPY)
+            if ($p['permission'] == AccessLevels::COPY)
                 $db->Execute("GRANT select ON {$this->url} TO \"$p\"");
-            if ($p ['permission'] == AccessLevels::EDIT)
+            if ($p['permission'] == AccessLevels::EDIT)
                 $db->Execute("GRANT all ON {$this->url} TO \"$p\"");
         }
-// all set!
+        // all set!
         return;
     }
 
@@ -978,7 +1007,8 @@ class Layer {
      * Vector layers only; set the underlying DB table's ownership to the user account
      * This allows the owneruser (via raw DB) to do owner-only operations such as adding/dropping columns or indexes
      */
-    function setDBOwnerToOwner() {
+    function setDBOwnerToOwner()
+    {
         if (!$this->getHasRecords())
             return false;
         try {
@@ -987,7 +1017,6 @@ class Layer {
             $this->world->admindb->Execute("GRANT all ON {$this->url} TO \"" . WORLD_NAME . "\"");
             $this->world->admindb->Execute("GRANT all ON {$this->url}_gid_seq TO \"" . WORLD_NAME . "\"");
         } catch (Exception $e) {
-            
         }
     }
 
@@ -995,7 +1024,8 @@ class Layer {
      * Vector layers only; set the underlying DB table's ownership to the DMI account
      * This allows the DMI to do owner-only operations such as adding/dropping columns or indexes
      */
-    function setDBOwnerToDatabase() {
+    function setDBOwnerToDatabase()
+    {
 
         if (!$this->getHasRecords())
             return false;
@@ -1006,26 +1036,27 @@ class Layer {
             $this->world->admindb->Execute("GRANT all ON {$this->url}_gid_seq TO \"{$this->owner->databaseusername}\"");
             $this->world->admindb->Execute("ALTER SEQUENCE {$this->url}_gid_seq OWNER TO \"" . WORLD_NAME . "\"");
         } catch (Exception $e) {
-// do nothing
+            // do nothing
         }
     }
 
-// ////
-// //// methods for fetching and updating records
-// ////
+    // ////
+    // //// methods for fetching and updating records
+    // ////
 
     /**
      * Vector, Relational, ODBC layers only; How many records/features are in this Layer?
      *
      * @return integer Number of records found in the layer's PostGIS table.
      */
-    function getRecordCount() {
+    function getRecordCount()
+    {
 
         if (!LayerTypes::IsTabular($this->type))
             return false;
         $count = $this->world->db->Execute("SELECT count(*) AS count FROM {$this->url}");
 
-        return ($count === false) ? 0 : $count->fields ['count'];
+        return ($count === false) ? 0 : $count->fields['count'];
     }
 
     /**
@@ -1037,12 +1068,13 @@ class Layer {
      * 		 the associative array does not update the feature in the layer; use updateRecordById() for that.
      * 		 WARNING: This method can be very memory intensive and is not particularly fast. Don't use it.
      */
-    function getRecords($orderby = 'gid', $geomformat = null, &$paging = null) {
+    function getRecords($orderby = 'gid', $geomformat = null, &$paging = null)
+    {
         if ($this->type != LayerTypes::VECTOR and $this->type != LayerTypes::RELATIONAL)
             return false;
         if (is_null($paging))
             $paging = new Paging();
-// order by what field?
+        // order by what field?
         if (preg_match('/\W/', $orderby))
             $orderby = 'gid';
         $limit = isset($paging) ? $paging->toQueryString() : "";
@@ -1059,7 +1091,7 @@ class Layer {
 
         if (is_null($paging->count)) {
             $r = $this->world->db->GetRow("SELECT count(*) from (Select $fields FROM \"{$this->url}\" ORDER BY \"$orderby\") as q1");
-            $count = $r ['count'];
+            $count = $r['count'];
         }
 
         if ($orderby != '')
@@ -1067,8 +1099,8 @@ class Layer {
 
         $r = $this->world->db->Execute("SELECT $fields FROM \"{$this->url}\" $groupBy $orderby  $limit");
 
-// rows = (! $r) ? array () : $r->getRows ();
-// paging->setResults ( $rows, $count );
+        // rows = (! $r) ? array () : $r->getRows ();
+        // paging->setResults ( $rows, $count );
 
         return $r;
     }
@@ -1081,7 +1113,8 @@ class Layer {
      * @return array An associative array representing the feature. Note that altering the associative array
      * 		 does not update the feature in the layer; use updateRecordById() for that.
      */
-    function getRecordById($id, $ignoreGeom = true, $ignoreWKT = false) {
+    function getRecordById($id, $ignoreGeom = true, $ignoreWKT = false)
+    {
         if ($this->getHasRecords()) {
 
             $geom = $ignoreGeom ? "" : "the_geom::box2d as box_geom";
@@ -1090,60 +1123,60 @@ class Layer {
             $geomChecks = $wkt;
             if (!$ignoreGeom)
                 $geomChecks .= ",$geom";
-//$geomChecks = $ignoreWKT ? "" : (",$wkt". $ignoreGeom? "":",$geom");
+            //$geomChecks = $ignoreWKT ? "" : (",$wkt". $ignoreGeom? "":",$geom");
 
             $record = $this->world->db->Execute("SELECT * $geomChecks FROM \"{$this->url}\" WHERE gid=?", array(
                 $id
             ));
-//$this->world->db->debug=false;
+            //$this->world->db->debug=false;
             if (!$record)
                 die();
             if (!$record)
                 return null;
             $record = $record->fields;
             if (!$ignoreGeom) {
-                $record ['box_geom'] = str_replace('BOX(', '', $record ['box_geom']);
-                $record ['box_geom'] = str_replace(')', '', $record ['box_geom']);
-                $record ['box_geom'] = str_replace(' ', ',', $record ['box_geom']);
+                $record['box_geom'] = str_replace('BOX(', '', $record['box_geom']);
+                $record['box_geom'] = str_replace(')', '', $record['box_geom']);
+                $record['box_geom'] = str_replace(' ', ',', $record['box_geom']);
             } else {
 
-//unset($record['box_geom']);
+                //unset($record['box_geom']);
             }
 
             if ($ignoreWKT) {
-//unset($record['wkt_geom']);
+                //unset($record['wkt_geom']);
             }
 
-//unset ( $record ['the_geom'] );
-            unset($record ['field_info']);
+            //unset ( $record ['the_geom'] );
+            unset($record['field_info']);
         } else if ($this->type == LayerTypes::ODBC) {
             $odbcinfo = $this->url;
             switch ($odbcinfo->driver) {
-                case ODBCUtil::MYSQL :
+                case ODBCUtil::MYSQL:
                     $db = NewADOConnection("mysql://{$odbcinfo->odbcuser}:{$odbcinfo->odbcpass}@{$odbcinfo->odbchost}/{$odbcinfo->odbcbase}?port={$odbcinfo->odbcport}&fetchmode=" . ADODB_FETCH_ASSOC);
                     $record = $db->Execute("SELECT *, id AS gid FROM `{$odbcinfo->table}` WHERE id=?", array(
-                                $id
-                            ))->fields;
+                        $id
+                    ))->fields;
                     break;
-                case ODBCUtil::PGSQL :
+                case ODBCUtil::PGSQL:
                     $db = NewADOConnection("postgres://{$odbcinfo->odbcuser}:{$odbcinfo->odbcpass}@{$odbcinfo->odbchost}/{$odbcinfo->odbcbase}?port={$odbcinfo->odbcport}&fetchmode=" . ADODB_FETCH_ASSOC);
                     $record = $db->Execute("SELECT *, id AS gid FROM \"{$odbcinfo->table}\" WHERE id=?", array(
-                                $id
-                            ))->fields;
+                        $id
+                    ))->fields;
                     break;
-                case ODBCUtil::MSSQL :
-                    list ( $odbc, $odbcini, $freetdsconf ) = $this->world->connectToODBC($odbcinfo, 'NOCONNECT');
+                case ODBCUtil::MSSQL:
+                    list($odbc, $odbcini, $freetdsconf) = $this->world->connectToODBC($odbcinfo, 'NOCONNECT');
                     $db = NewADOConnection("mssql://{$odbcinfo->odbcuser}:{$odbcinfo->odbcpass}@dsn/{$odbcinfo->odbcbase}?port={$odbcinfo->odbcport}&fetchmode=" . ADODB_FETCH_ASSOC);
                     $record = $db->Execute("SELECT *, id AS gid FROM \"{$odbcinfo->table}\" WHERE id=?", array(
-                                $id
-                            ))->fields;
+                        $id
+                    ))->fields;
                     break;
             }
         } else {
             return false;
         }
-        unset($record ['field_info']);
-// done
+        unset($record['field_info']);
+        // done
         return $record;
     }
 
@@ -1153,9 +1186,12 @@ class Layer {
      * @param integer $id
      * 		The unique ID# (the gid) of the feature.
      */
-    function deleteRecordById($id) {
+    function deleteRecordById($id)
+    {
         if ($this->type == LayerTypes::VECTOR) {
             $this->setDBOwnerToDatabase();
+            if ($id == '') return;
+            if (is_null($id)) return;
             $this->world->db->Execute("DELETE FROM \"{$this->url}\" WHERE gid=?", array(
                 $id
             ));
@@ -1164,20 +1200,20 @@ class Layer {
         } else if ($this->type == LayerTypes::ODBC) {
             $odbcinfo = $this->url;
             switch ($odbcinfo->driver) {
-                case ODBCUtil::MYSQL :
+                case ODBCUtil::MYSQL:
                     $db = NewADOConnection("mysql://{$odbcinfo->odbcuser}:{$odbcinfo->odbcpass}@{$odbcinfo->odbchost}/{$odbcinfo->odbcbase}?port={$odbcinfo->odbcport}&fetchmode=" . ADODB_FETCH_ASSOC);
                     $db->Execute("DELETE FROM `{$odbcinfo->table}` WHERE id=?", array(
                         $id
                     ));
                     break;
-                case ODBCUtil::PGSQL :
+                case ODBCUtil::PGSQL:
                     $db = NewADOConnection("postgres://{$odbcinfo->odbcuser}:{$odbcinfo->odbcpass}@{$odbcinfo->odbchost}/{$odbcinfo->odbcbase}?port={$odbcinfo->odbcport}&fetchmode=" . ADODB_FETCH_ASSOC);
                     $db->Execute("DELETE FROM \"{$odbcinfo->table}\" WHERE id=?", array(
                         $id
                     ));
                     break;
-                case ODBCUtil::MSSQL :
-                    list ( $odbc, $odbcini, $freetdsconf ) = $this->world->connectToODBC($odbcinfo, 'NOCONNECT');
+                case ODBCUtil::MSSQL:
+                    list($odbc, $odbcini, $freetdsconf) = $this->world->connectToODBC($odbcinfo, 'NOCONNECT');
                     $db = NewADOConnection("mssql://{$odbcinfo->odbcuser}:{$odbcinfo->odbcpass}@dsn/{$odbcinfo->odbcbase}?port={$odbcinfo->odbcport}&fetchmode=" . ADODB_FETCH_ASSOC);
                     $db->Execute("DELETE FROM \"{$odbcinfo->table}\" WHERE id=?", array(
                         $id
@@ -1189,9 +1225,7 @@ class Layer {
         }
     }
 
-    function getRecordsExtent($layerId) {
-        
-    }
+    function getRecordsExtent($layerId) {}
 
     /**
      * Vector layers only; update a record/feature in the layer, given its unique ID# (gid) and an array of changes.
@@ -1203,21 +1237,22 @@ class Layer {
      * 		An associative array of fieldname=>value updates to be applied to the record.
      * @return array An associative array, being the result of getRecordById(id)
      */
-    function updateRecordById($gid, $changes) {
+    function updateRecordById($gid, $changes)
+    {
 
         $gid = (int) $gid;
-        unset($changes ['gid']);
-        unset($changes ['id']);
+        unset($changes['gid']);
+        unset($changes['id']);
         if ($this->type == LayerTypes::VECTOR) {
             $sql = "UPDATE {$this->url} SET ";
-            $updates = Array();
+            $updates = array();
             foreach ($changes as $column => $value) {
-                if (!in_array($column, Array(
-                            "wkt_geom",
-                            "box_geom"
-                        ))) {
+                if (!in_array($column, array(
+                    "wkt_geom",
+                    "box_geom"
+                ))) {
                     $sql .= '"' . $column . '"=?, ';
-                    $updates [] = $value;
+                    $updates[] = $value;
                 }
                 if ($column == 'wkt_geom') {
                     if (is_null($value) || ($value == '') || ($value == 'null')) {
@@ -1225,7 +1260,7 @@ class Layer {
                         $updates[] = null;
                     } else {
                         $sql .= '"the_geom"=ST_GeomFromText(\'' . $value . '\',4326) ,';
-//$updates[] = $value;
+                        //$updates[] = $value;
                     }
                 }
             }
@@ -1241,20 +1276,20 @@ class Layer {
         } else if ($this->type == LayerTypes::ODBC) {
             $odbcinfo = $this->url;
             switch ($odbcinfo->driver) {
-                case ODBCUtil::MYSQL :
+                case ODBCUtil::MYSQL:
                     $db = NewADOConnection("mysql://{$odbcinfo->odbcuser}:{$odbcinfo->odbcpass}@{$odbcinfo->odbchost}/{$odbcinfo->odbcbase}?port={$odbcinfo->odbcport}&fetchmode=" . ADODB_FETCH_ASSOC);
                     $rs = $db->Execute("SELECT * FROM `{$odbcinfo->table}` WHERE id=?", array(
                         $gid
                     ));
                     break;
-                case ODBCUtil::PGSQL :
+                case ODBCUtil::PGSQL:
                     $db = NewADOConnection("postgres://{$odbcinfo->odbcuser}:{$odbcinfo->odbcpass}@{$odbcinfo->odbchost}/{$odbcinfo->odbcbase}?port={$odbcinfo->odbcport}&fetchmode=" . ADODB_FETCH_ASSOC);
                     $rs = $db->Execute("SELECT * FROM \"{$odbcinfo->table}\" WHERE id=?", array(
                         $gid
                     ));
                     break;
-                case ODBCUtil::MSSQL :
-                    list ( $odbc, $odbcini, $freetdsconf ) = $this->world->connectToODBC($odbcinfo, 'NOCONNECT');
+                case ODBCUtil::MSSQL:
+                    list($odbc, $odbcini, $freetdsconf) = $this->world->connectToODBC($odbcinfo, 'NOCONNECT');
                     $db = NewADOConnection("mssql://{$odbcinfo->odbcuser}:{$odbcinfo->odbcpass}@dsn/{$odbcinfo->odbcbase}?port={$odbcinfo->odbcport}&fetchmode=" . ADODB_FETCH_ASSOC);
                     $rs = $db->Execute("SELECT * FROM \"{$odbcinfo->table}\" WHERE id=?", array(
                         $gid
@@ -1269,25 +1304,26 @@ class Layer {
             return false;
         }
 
-// if a geometry was submitted, that has to be handled separately, as both the fieldname and the quoting on it
-// are very delicate
-        if (isset($changes ['wkt_geom']) and $this->type == LayerTypes::VECTOR) {
+        // if a geometry was submitted, that has to be handled separately, as both the fieldname and the quoting on it
+        // are very delicate
+        if (isset($changes['wkt_geom']) and $this->type == LayerTypes::VECTOR) {
 
-//$changes ['wkt_geom'] = preg_replace ( '/[^\(\)\d\.\-\w\,]/', '', $changes ['wkt_geom'] );
+            //$changes ['wkt_geom'] = preg_replace ( '/[^\(\)\d\.\-\w\,]/', '', $changes ['wkt_geom'] );
             $query = "UPDATE \"{$this->url}\" SET the_geom=st_GeometryFromText('{$changes['wkt_geom']}',4326) WHERE gid=$gid";
-// $this->setDBOwnerToDatabase();
+            // $this->setDBOwnerToDatabase();
             $this->world->db->Execute($query);
-// $this->setDBOwnerToOwner();
+            // $this->setDBOwnerToOwner();
         }
 
-// flag the layer's modtime and return the new record
+        // flag the layer's modtime and return the new record
         $this->touch();
         return $this->getRecordById($gid);
     }
 
-    function GetBounds($recordIds = null, $ptBuffer = 0) {
+    function GetBounds($recordIds = null, $ptBuffer = 0)
+    {
         $records = is_null($recordIds) ? null : $recordIds;
-//if(is_null($records)) return $this->bbox;
+        //if(is_null($records)) return $this->bbox;
         if (is_array($records))
             $records = implode(',', $records);
 
@@ -1298,7 +1334,7 @@ class Layer {
 
 
 
-//$query = "select ST_MemUnion(  ST_BUFFER(the_geom,$ptBuffer)::box2d )::box2d as box_geom from {$this->url} $where";
+        //$query = "select ST_MemUnion(  ST_BUFFER(the_geom,$ptBuffer)::box2d )::box2d as box_geom from {$this->url} $where";
         $query = "SELECT min(x0) as x0,min(y0) as y0, max(x1) as x1, max(y1) as y1 from (select ST_XMin($the_geom) as x0,ST_YMin($the_geom) as y0,ST_XMax($the_geom) as x1,ST_YMax($the_geom) as y1 from {$this->url} $where) as q1";
 
         /* if($this->geomtypestring == 'point') {
@@ -1323,7 +1359,8 @@ class Layer {
     /**
      * @return int id number for the new record.
      */
-    function MakeRecord() {
+    function MakeRecord()
+    {
         $this->setDBOwnerToDatabase();
         $gid = $this->world->db->GetOne("INSERT INTO \"{$this->url}\" (gid) VALUES (DEFAULT) RETURNING gid");
         if ($gid === false)
@@ -1339,37 +1376,38 @@ class Layer {
      * @return array An associative array representing the newly-created record. Note that altering the associative array
      * 		 does not update the feature in the layer; use updateRecordById() for that.
      */
-    function insertRecord($content) {
+    function insertRecord($content)
+    {
         if ($this->type == LayerTypes::VECTOR) {
-// insert a perfectly blank record with nothing but a gid, then call updateRecordById() to do the updates
+            // insert a perfectly blank record with nothing but a gid, then call updateRecordById() to do the updates
             $this->setDBOwnerToDatabase();
-            $gid = $this->world->db->Execute("INSERT INTO \"{$this->url}\" (gid) VALUES (DEFAULT) RETURNING gid")->fields ['gid'];
+            $gid = $this->world->db->Execute("INSERT INTO \"{$this->url}\" (gid) VALUES (DEFAULT) RETURNING gid")->fields['gid'];
             $this->setDBOwnerToOwner();
         } else if ($this->type == LayerTypes::ODBC) {
             $odbcinfo = $this->url;
             switch ($odbcinfo->driver) {
-                case ODBCUtil::MYSQL :
+                case ODBCUtil::MYSQL:
                     $db = NewADOConnection("mysql://{$odbcinfo->odbcuser}:{$odbcinfo->odbcpass}@{$odbcinfo->odbchost}/{$odbcinfo->odbcbase}?port={$odbcinfo->odbcport}&fetchmode=" . ADODB_FETCH_ASSOC);
                     $db->Execute("INSERT INTO `{$odbcinfo->table}` (id) VALUES (NULL)");
-                    $gid = $db->Execute("SELECT max(id) AS id FROM `{$odbcinfo->table}`")->fields ['id'];
+                    $gid = $db->Execute("SELECT max(id) AS id FROM `{$odbcinfo->table}`")->fields['id'];
                     break;
-                case ODBCUtil::PGSQL :
+                case ODBCUtil::PGSQL:
                     $db = NewADOConnection("postgres://{$odbcinfo->odbcuser}:{$odbcinfo->odbcpass}@{$odbcinfo->odbchost}/{$odbcinfo->odbcbase}?port={$odbcinfo->odbcport}&fetchmode=" . ADODB_FETCH_ASSOC);
                     $db->Execute("INSERT INTO \"{$odbcinfo->table}\" (id) VALUES (nextval('{$odbcinfo->table}_id_seq'))");
-                    $gid = $db->Execute("SELECT max(id) AS id FROM \"{$odbcinfo->table}\"")->fields ['id'];
+                    $gid = $db->Execute("SELECT max(id) AS id FROM \"{$odbcinfo->table}\"")->fields['id'];
                     break;
-                case ODBCUtil::MSSQL :
-                    list ( $odbc, $odbcini, $freetdsconf ) = $this->world->connectToODBC($odbcinfo, 'NOCONNECT');
+                case ODBCUtil::MSSQL:
+                    list($odbc, $odbcini, $freetdsconf) = $this->world->connectToODBC($odbcinfo, 'NOCONNECT');
                     $db = NewADOConnection("mssql://{$odbcinfo->odbcuser}:{$odbcinfo->odbcpass}@dsn/{$odbcinfo->odbcbase}?port={$odbcinfo->odbcport}&fetchmode=" . ADODB_FETCH_ASSOC);
                     $db->Execute("INSERT INTO \"{$odbcinfo->table}\" (id) VALUES (NULL)"); // no diea here
-                    $gid = $db->Execute("SELECT max(id) FROM \"{$odbcinfo->table}\"")->fields ['id']; // no idea here
+                    $gid = $db->Execute("SELECT max(id) FROM \"{$odbcinfo->table}\"")->fields['id']; // no idea here
                     break;
             }
         } else {
             return false;
         }
 
-// flag the Layer as having been modified, and return that newly-created record
+        // flag the Layer as having been modified, and return that newly-created record
         $newrecord = $content ? $this->updateRecordById($gid, $content) : array(
             'gid' => $gid
         );
@@ -1379,7 +1417,8 @@ class Layer {
         return $newrecord;
     }
 
-    public static function SanitizeColumnName($colName) {
+    public static function SanitizeColumnName($colName)
+    {
         $colName = strtolower(preg_replace('/\W/', '_', $colName));
         return $colName;
     }
@@ -1390,14 +1429,15 @@ class Layer {
      * @return array An associative array; keys are fieldnames, values are the data type for that field.
      * 		 Data types are represented by one of the DataTypes::* defines, and are strings.
      */
-    function getAttributes($quoteAttributes = false, $excludeGid = false) {
-// not a valid layer type: it has no attributes
+    function getAttributes($quoteAttributes = false, $excludeGid = false)
+    {
+        // not a valid layer type: it has no attributes
         $cg_urls = array();
         if (!$this->getHasRecords())
             return array();
         $attributes = array();
 
-// connect to the database, be it local or ODBC, and fetch the raw column info
+        // connect to the database, be it local or ODBC, and fetch the raw column info
         $layertype = $this->type;
 
         $odbcinfo = $this->url;
@@ -1418,7 +1458,7 @@ QUERY;
             $results = $this->world->db->Execute($cg_urlQuery);
             if ($results->RecordCount() > 0) {
                 foreach ($results as $result) {
-                    array_push($cg_urls, $result ['field']);
+                    array_push($cg_urls, $result['field']);
                 }
             }
             $rs = $this->world->db->Execute("SELECT * FROM {$this->url} LIMIT 1");
@@ -1429,12 +1469,12 @@ QUERY;
             $db = NewADOConnection("postgres://{$odbcinfo->odbcuser}:{$odbcinfo->odbcpass}@{$odbcinfo->odbchost}/{$odbcinfo->odbcbase}?port={$odbcinfo->odbcport}&fetchmode=" . ADODB_FETCH_ASSOC);
             $rs = $db->Execute("SELECT * FROM {$odbcinfo->table} WHERE 1=0");
         } else if ($layertype == LayerTypes::ODBC and $odbcinfo->driver == ODBCUtil::MSSQL) {
-            list ( $odbc, $odbcini, $freetdsconf ) = $this->world->connectToODBC($odbcinfo, 'NOCONNECT');
+            list($odbc, $odbcini, $freetdsconf) = $this->world->connectToODBC($odbcinfo, 'NOCONNECT');
             $db = NewADOConnection("mssql://{$odbcinfo->odbcuser}:{$odbcinfo->odbcpass}@dsn/{$odbcinfo->odbcbase}?port={$odbcinfo->odbcport}&fetchmode=" . ADODB_FETCH_ASSOC);
             $rs = $db->Execute("SELECT * FROM {$odbcinfo->table} WHERE 1=0");
         }
 
-// iterate through the recordset, populating the $attributes to be fieldname->datatype
+        // iterate through the recordset, populating the $attributes to be fieldname->datatype
         $fieldtypes = array(
             'C' => DataTypes::TEXT,
             'X' => DataTypes::TEXT,
@@ -1463,31 +1503,33 @@ QUERY;
             if (($fieldname == "url") || in_array($fieldname, $cg_urls)) {
                 $fieldtype = "url";
             } else {
-                $fieldtype = $fieldtypes [$rs->MetaType($field->type)];
+                $fieldtype = $fieldtypes[$rs->MetaType($field->type)];
             }
-            $attributes [$fieldname] = $fieldtype;
+            $attributes[$fieldname] = $fieldtype;
         }
 
 
-// prune out a few "invisible" columns, then sort 'em and return 'em
-        unset($attributes ['the_geom']);
+        // prune out a few "invisible" columns, then sort 'em and return 'em
+        unset($attributes['the_geom']);
         return $attributes;
     }
 
-    function cmpZ($a, $b) {
-        return ($a ['z'] < $b ['z']) ? 1 : - 1;
+    function cmpZ($a, $b)
+    {
+        return ($a['z'] < $b['z']) ? 1 : -1;
     }
 
-    function getAttributesVerbose($includeGeom = false, $new = false, $includeMeta = false, $includeGid = false) {
-// var_dump($includeGeom,$new,$includeMeta,$includeGid);
-// not a valid layer type: it has no attributes
+    function getAttributesVerbose($includeGeom = false, $new = false, $includeMeta = false, $includeGid = false)
+    {
+        // var_dump($includeGeom,$new,$includeMeta,$includeGid);
+        // not a valid layer type: it has no attributes
         $layertype = $this->type;
 
         /* if (!$this->getHasRecords())
           return array(); */
         $attributes = array();
 
-// these type codes indicate what type of field should be drawn
+        // these type codes indicate what type of field should be drawn
         $fieldrequirements = array(
             'C' => 'text input',
             'X' => 'text area',
@@ -1547,8 +1589,8 @@ QUERY;
             )
         );
 
-// generate a recordset object, depending on the back-end data being used
-// connect to the database, be it local or ODBC, and fetch the raw column info
+        // generate a recordset object, depending on the back-end data being used
+        // connect to the database, be it local or ODBC, and fetch the raw column info
         $odbcinfo = $this->url;
         $cg_urls = array();
         $info = null;
@@ -1587,14 +1629,14 @@ QUERY;
             $rs = $db->Execute("SELECT * FROM {$odbcinfo->table} WHERE 1=0");
         } else
         if ($layertype == LayerTypes::ODBC and $odbcinfo->driver == ODBCUtil::MSSQL) {
-            list ($odbc, $odbcini, $freetdsconf) = $this->world->connectToODBC($odbcinfo, 'NOCONNECT');
+            list($odbc, $odbcini, $freetdsconf) = $this->world->connectToODBC($odbcinfo, 'NOCONNECT');
             $db = NewADOConnection("mssql://{$odbcinfo->odbcuser}:{$odbcinfo->odbcpass}@dsn/{$odbcinfo->odbcbase}?port={$odbcinfo->odbcport}&fetchmode=" . ADODB_FETCH_ASSOC);
             $rs = $db->Execute("SELECT * FROM {$odbcinfo->table} WHERE 1=0");
         }
         if (!$rs)
             return (!$attributes) ? array() : $attributes;
 
-// iterate over the list of fields and collect the data type and field requirements
+        // iterate over the list of fields and collect the data type and field requirements
 
         $j = 0;
         for ($i = 0; $i < $rs->FieldCount(); $i++) {
@@ -1623,7 +1665,7 @@ QUERY;
                         if (!isset($row['searchable']))
                             $row['searchable'] = false;
                         $row['display'] = ($row['display'] == '') ? $fieldname : $row['display'];
-                        $fieldData = Array(
+                        $fieldData = array(
                             'requires' => $fieldType,
                             'type' => $fieldType,
                             'display' => $row["display"],
@@ -1640,14 +1682,14 @@ QUERY;
                     }
                 }
             } elseif (!is_null($info)) {
-// var_dump('check2');
-// var_dump($info);
+                // var_dump('check2');
+                // var_dump($info);
                 foreach ($info as $row) {
                     if ($row["name"] == $fieldname) {
                         if (!isset($row['searchable']))
                             $row['searchable'] = false;
                         $row['display'] = ($row['display'] == '') ? $fieldname : $row['display'];
-                        $fieldData = Array(
+                        $fieldData = array(
                             'requires' => $fieldType,
                             'type' => $type,
                             'display' => $row["display"],
@@ -1664,8 +1706,8 @@ QUERY;
                     }
                 }
             } else {
-// var_dump($fieldname);
-                $fieldData = Array(
+                // var_dump($fieldname);
+                $fieldData = array(
                     "name" => $fieldname,
                     "requires" => $fieldType,
                     'type' => $type,
@@ -1675,7 +1717,7 @@ QUERY;
                     'z' => $j--,
                     'maxlength' => $field->max_length
                 );
-// var_dump($fieldData);
+                // var_dump($fieldData);
 
                 if ($includeMeta) {
                     $fieldData['meta_type'] = $rs->MetaType($field->type);
@@ -1694,7 +1736,7 @@ QUERY;
             $this,
             "cmpZ"
         ));
-// prune out a few "invisible" columns, then sort 'em and return 'em
+        // prune out a few "invisible" columns, then sort 'em and return 'em
         if (!$includeGeom)
             unset($attributes['the_geom']);
 
@@ -1717,17 +1759,18 @@ QUERY;
      * 		The name of the column/field to check.
      * @return boolean True/false indicating whether the layer has the specified field.
      */
-    function hasAttribute($colname) {
+    function hasAttribute($colname)
+    {
         if (!in_array($this->type, array(
-                    LayerTypes::VECTOR,
-                    LayerTypes::RELATIONAL,
-                    LayerTypes::ODBC
-                ))) {
+            LayerTypes::VECTOR,
+            LayerTypes::RELATIONAL,
+            LayerTypes::ODBC
+        ))) {
             return false;
         }
         $attribs = $this->getAttributes();
 
-        return isset($attribs [$colname]);
+        return isset($attribs[$colname]);
     }
 
     /**
@@ -1736,7 +1779,8 @@ QUERY;
      * @param string $colname
      * 		The name of the column/field to drop.
      */
-    function dropAttribute($colname) {
+    function dropAttribute($colname)
+    {
         if (preg_match('/\W/', $colname))
             return;
 
@@ -1752,16 +1796,16 @@ QUERY;
         } else if ($this->type == LayerTypes::ODBC) {
             $odbcinfo = $this->url;
             switch ($odbcinfo->driver) {
-                case ODBCUtil::MYSQL :
+                case ODBCUtil::MYSQL:
                     $db = NewADOConnection("mysql://{$odbcinfo->odbcuser}:{$odbcinfo->odbcpass}@{$odbcinfo->odbchost}/{$odbcinfo->odbcbase}?port={$odbcinfo->odbcport}&fetchmode=" . ADODB_FETCH_ASSOC);
                     $db->Execute("ALTER TABLE `{$odbcinfo->table}` DROP COLUMN `{$colname}`");
                     break;
-                case ODBCUtil::PGSQL :
+                case ODBCUtil::PGSQL:
                     $db = NewADOConnection("postgres://{$odbcinfo->odbcuser}:{$odbcinfo->odbcpass}@{$odbcinfo->odbchost}/{$odbcinfo->odbcbase}?port={$odbcinfo->odbcport}&fetchmode=" . ADODB_FETCH_ASSOC);
                     $db->Execute("ALTER TABLE \"{$odbcinfo->table}\" DROP COLUMN \"{$colname}\"");
                     break;
-                case ODBCUtil::MSSQL :
-                    list ( $odbc, $odbcini, $freetdsconf ) = $this->world->connectToODBC($odbcinfo, 'NOCONNECT');
+                case ODBCUtil::MSSQL:
+                    list($odbc, $odbcini, $freetdsconf) = $this->world->connectToODBC($odbcinfo, 'NOCONNECT');
                     $db = NewADOConnection("mssql://{$odbcinfo->odbcuser}:{$odbcinfo->odbcpass}@dsn/{$odbcinfo->odbcbase}?port={$odbcinfo->odbcport}&fetchmode=" . ADODB_FETCH_ASSOC);
                     $db->Execute("ALTER TABLE \"{$odbcinfo->table}\" DROP COLUMN \"{$colname}\"");
                     break;
@@ -1774,7 +1818,8 @@ QUERY;
         return true;
     }
 
-    function ValidateColumnNames() {
+    function ValidateColumnNames()
+    {
         $db = System::GETDB(System::DB_ACCOUNT_SU);
         $layertype = $this->type;
 
@@ -1787,7 +1832,7 @@ QUERY;
             $db = NewADOConnection("postgres://{$odbcinfo->odbcuser}:{$odbcinfo->odbcpass}@{$odbcinfo->odbchost}/{$odbcinfo->odbcbase}?port={$odbcinfo->odbcport}&fetchmode=" . ADODB_FETCH_ASSOC);
             $rs = $db->Execute("SELECT * FROM {$odbcinfo->table} WHERE 1=0");
         } elseif ($layertype == LayerTypes::ODBC and $odbcinfo->driver == ODBCUtil::MSSQL) {
-            list ( $odbc, $odbcini, $freetdsconf ) = $this->world->connectToODBC($odbcinfo, 'NOCONNECT');
+            list($odbc, $odbcini, $freetdsconf) = $this->world->connectToODBC($odbcinfo, 'NOCONNECT');
             $db = NewADOConnection("mssql://{$odbcinfo->odbcuser}:{$odbcinfo->odbcpass}@dsn/{$odbcinfo->odbcbase}?port={$odbcinfo->odbcport}&fetchmode=" . ADODB_FETCH_ASSOC);
             $rs = $db->Execute("SELECT * FROM {$odbcinfo->table} WHERE 1=0");
         }
@@ -1809,7 +1854,8 @@ QUERY;
         $this->ValidateFieldInfo();
     }
 
-    public function ValidateFieldInfo() {
+    public function ValidateFieldInfo()
+    {
         $info = $this->field_info;
 
         if (!$info)
@@ -1836,7 +1882,8 @@ QUERY;
      * @param string $type
      * 		The data type of the column, one of the DataTypes::* defines.
      */
-    function addAttribute($colname, $type, $alias = null) {
+    function addAttribute($colname, $type, $alias = null)
+    {
         if (is_null($alias))
             $alias = $colname;
         $colname = substr(strtolower(preg_replace('/\W/', '_', $colname)), 0, 30);
@@ -1862,16 +1909,16 @@ QUERY;
         } elseif ($this->type == LayerTypes::ODBC) {
             $odbcinfo = $this->url;
             switch ($odbcinfo->driver) {
-                case ODBCUtil::MYSQL :
+                case ODBCUtil::MYSQL:
                     $db = NewADOConnection("mysql://{$odbcinfo->odbcuser}:{$odbcinfo->odbcpass}@{$odbcinfo->odbchost}/{$odbcinfo->odbcbase}?port={$odbcinfo->odbcport}&fetchmode=" . ADODB_FETCH_ASSOC);
                     $db->Execute("ALTER TABLE `{$odbcinfo->table}` ADD COLUMN `{$colname}` $type");
                     break;
-                case ODBCUtil::PGSQL :
+                case ODBCUtil::PGSQL:
                     $db = NewADOConnection("postgres://{$odbcinfo->odbcuser}:{$odbcinfo->odbcpass}@{$odbcinfo->odbchost}/{$odbcinfo->odbcbase}?port={$odbcinfo->odbcport}&fetchmode=" . ADODB_FETCH_ASSOC);
                     $db->Execute("ALTER TABLE \"{$odbcinfo->table}\" ADD COLUMN \"{$colname}\" $type");
                     break;
-                case ODBCUtil::MSSQL :
-                    list ( $odbc, $odbcini, $freetdsconf ) = $this->world->connectToODBC($odbcinfo, 'NOCONNECT');
+                case ODBCUtil::MSSQL:
+                    list($odbc, $odbcini, $freetdsconf) = $this->world->connectToODBC($odbcinfo, 'NOCONNECT');
                     $db = NewADOConnection("mssql://{$odbcinfo->odbcuser}:{$odbcinfo->odbcpass}@dsn/{$odbcinfo->odbcbase}?port={$odbcinfo->odbcport}&fetchmode=" . ADODB_FETCH_ASSOC);
                     $db->Execute("ALTER TABLE \"{$odbcinfo->table}\" ADD COLUMN \"{$colname}\" $type");
                     break;
@@ -1892,20 +1939,21 @@ QUERY;
      * @param string $newname
      * 		The new name of the column.
      */
-    function renameAttribute($oldname, $newname) {
-//$oldname = substr ( strtolower ( preg_replace ( '/\W/', '_', $oldname ) ), 0, 30 );
+    function renameAttribute($oldname, $newname)
+    {
+        //$oldname = substr ( strtolower ( preg_replace ( '/\W/', '_', $oldname ) ), 0, 30 );
         $newname = substr(strtolower(preg_replace('/\W/', '_', $newname)), 0, 30);
         if (in_array($newname, array(
-                    'gid',
-                    'the_geom',
-                    'wkt_geom'
-                )))
+            'gid',
+            'the_geom',
+            'wkt_geom'
+        )))
             return false;
         if (in_array($oldname, array(
-                    'gid',
-                    'the_geom',
-                    'wkt_geom'
-                )))
+            'gid',
+            'the_geom',
+            'wkt_geom'
+        )))
             return false;
         if ($this->hasAttribute($newname))
             return false;
@@ -1929,18 +1977,18 @@ QUERY;
         } elseif ($this->type == LayerTypes::ODBC) {
             $odbcinfo = $this->url;
             switch ($odbcinfo->driver) {
-                case ODBCUtil::MYSQL :
+                case ODBCUtil::MYSQL:
                     $type = $this->getAttributes();
-                    $type = $type [$oldname];
+                    $type = $type[$oldname];
                     $db = NewADOConnection("mysql://{$odbcinfo->odbcuser}:{$odbcinfo->odbcpass}@{$odbcinfo->odbchost}/{$odbcinfo->odbcbase}?port={$odbcinfo->odbcport}&fetchmode=" . ADODB_FETCH_ASSOC);
                     $db->Execute("ALTER TABLE `{$odbcinfo->table}` CHANGE COLUMN `$oldname` `$newname` $type");
                     break;
-                case ODBCUtil::PGSQL :
+                case ODBCUtil::PGSQL:
                     $db = NewADOConnection("postgres://{$odbcinfo->odbcuser}:{$odbcinfo->odbcpass}@{$odbcinfo->odbchost}/{$odbcinfo->odbcbase}?port={$odbcinfo->odbcport}&fetchmode=" . ADODB_FETCH_ASSOC);
                     $db->Execute("ALTER TABLE \"{$odbcinfo->table}\" RENAME COLUMN \"$oldname\" TO \"$newname\"");
                     break;
-                case ODBCUtil::MSSQL :
-                    list ( $odbc, $odbcini, $freetdsconf ) = $this->world->connectToODBC($odbcinfo, 'NOCONNECT');
+                case ODBCUtil::MSSQL:
+                    list($odbc, $odbcini, $freetdsconf) = $this->world->connectToODBC($odbcinfo, 'NOCONNECT');
                     $db = NewADOConnection("mssql://{$odbcinfo->odbcuser}:{$odbcinfo->odbcpass}@dsn/{$odbcinfo->odbcbase}?port={$odbcinfo->odbcport}&fetchmode=" . ADODB_FETCH_ASSOC);
                     $db->Execute("ALTER TABLE \"{$odbcinfo->table}\" RENAME COLUMN \"$oldname\" TO \"$newname\"");
                     break;
@@ -1953,10 +2001,11 @@ QUERY;
         return true;
     }
 
-// ///
-// /// methods for fetching the layer's spatial extent
-// ///
-    public function MergeAttributeInfo(&$attVerbose) {
+    // ///
+    // /// methods for fetching the layer's spatial extent
+    // ///
+    public function MergeAttributeInfo(&$attVerbose)
+    {
         $record = SLAttributeInfoView::GetAttributeInfo($this, $attVerbose['name']);
 
         if (!$record) {
@@ -1998,13 +2047,14 @@ QUERY;
      *
      * @return string Some HTML showing the layer's extent in a table.
      */
-    function getExtentPretty() {
+    function getExtentPretty()
+    {
         $extent = $this->getExtent();
-// $area = $this->area;
+        // $area = $this->area;
         $retstr = "<table style=\"border-collapse:collapse;border-style:none;\">\n";
         $retstr .= "	<tr><td>Lat:</td><td>{$extent[1]}</td><td> to </td><td>{$extent[3]}</td></tr>\n";
         $retstr .= "	<tr><td>Lon:</td><td>{$extent[0]}</td><td> to </td><td>{$extent[2]}</td></tr>\n";
-// if($area !== false) $retstr .= " <tr><td>Area:</td><td colspan=\"3\">".round($area["miles"], 4)." Sq. Miles&nbsp;&nbsp;".round($area["kilometers"], 4)." Sq. Kilometers</td></tr>\n";
+        // if($area !== false) $retstr .= " <tr><td>Area:</td><td colspan=\"3\">".round($area["miles"], 4)." Sq. Miles&nbsp;&nbsp;".round($area["kilometers"], 4)." Sq. Kilometers</td></tr>\n";
         $retstr .= "</table>\n";
         return $retstr;
     }
@@ -2014,7 +2064,8 @@ QUERY;
      *
      * @return string An extent in space-joined format, e.g. "12.34 56.78 9.012 3.45"
      */
-    function getSpaceExtent() {
+    function getSpaceExtent()
+    {
         return implode(" ", $this->getExtent());
     }
 
@@ -2023,7 +2074,8 @@ QUERY;
      *
      * @return string An extent in comma-joined format, e.g. "12.34,56.78,9.012,3.45"
      */
-    function getCommaExtent() {
+    function getCommaExtent()
+    {
         return implode(",", $this->getExtent());
     }
 
@@ -2033,7 +2085,8 @@ QUERY;
      *
      * @return array An array of 4 values, being the bounding box coordinates for the layer's coverage.
      */
-    function getExtent() {
+    function getExtent()
+    {
         if ($this->type == LayerTypes::COLLECTION) {
             $subs = LayerCollection::GetSubs($this->world, $this->id);
             if (count($subs) == 0) {
@@ -2041,11 +2094,11 @@ QUERY;
             }
             $maxX = -1000;
             $minX = 1000;
-            $maxY = - 1000;
+            $maxY = -1000;
             $minY = 1000;
 
             foreach ($subs as $sub) {
-                list ( $xmin, $ymin, $xmax, $ymax ) = $sub->getExtent();
+                list($xmin, $ymin, $xmax, $ymax) = $sub->getExtent();
 
                 $maxX = max($maxX, $xmax);
                 $maxY = max($maxY, $ymax);
@@ -2060,9 +2113,9 @@ QUERY;
             );
         }
 
-// WMS layers are simple:we call the value from the bbox field in the
-// Layers table, and if it doesn't exist, then we set it to zoom out to
-// a world view.
+        // WMS layers are simple:we call the value from the bbox field in the
+        // Layers table, and if it doesn't exist, then we set it to zoom out to
+        // a world view.
         if ($this->type == LayerTypes::WMS) {
             $bboxval = $this->bbox;
             if ($bboxval) {
@@ -2070,10 +2123,10 @@ QUERY;
                     $bboxval
                 );
             } else {
-// if the bbox field has no value, revert to world view extent
+                // if the bbox field has no value, revert to world view extent
                 return array(
-                    - 180,
-                    - 90,
+                    -180,
+                    -90,
                     180,
                     90
                 );
@@ -2085,7 +2138,7 @@ QUERY;
             if (!$extent)
                 $extent = 'BOX(-180 -90,180 90)';
             $extent = trim(preg_replace('/[^\d\.\s\-]/', ' ', $extent));
-            list ( $x1, $y1, $x2, $y2 ) = explode(' ', $extent);
+            list($x1, $y1, $x2, $y2) = explode(' ', $extent);
 
             if (($x1 == $x2) && ($y1 == $y2)) {
 
@@ -2094,7 +2147,7 @@ QUERY;
                 if (!$extent)
                     $extent = 'BOX(-180 -90,180 90)';
                 $extent = trim(preg_replace('/[^\d\.\s\-]/', ' ', $extent));
-                list ( $x1, $y1, $x2, $y2 ) = explode(' ', $extent);
+                list($x1, $y1, $x2, $y2) = explode(' ', $extent);
             }
 
             $minx = min($x1, $x2);
@@ -2111,23 +2164,23 @@ QUERY;
             );
         }
 
-// a raster, call gdalinfo and parse the string output
+        // a raster, call gdalinfo and parse the string output
         elseif ($this->type == LayerTypes::RASTER) {
             $output = `gdalinfo {$this->url}`;
             @preg_match('/Lower Left\s+\(\s*([\d\.\-]+)\s*,\s*([\d\.\-]+)\s*\)/', $output, $extent1);
             @preg_match('/Upper Right\s+\(\s*([\d\.\-]+)\s*,\s*([\d\.\-]+)\s*\)/', $output, $extent2);
             return array(
-                $extent1 [1],
-                $extent1 [2],
-                $extent2 [1],
-                $extent2 [2]
+                $extent1[1],
+                $extent1[2],
+                $extent2[1],
+                $extent2[2]
             );
         }
 
-// ODBC layers are easy, albeit slow and a bit barbaric since not truly spatial
+        // ODBC layers are easy, albeit slow and a bit barbaric since not truly spatial
         elseif ($this->type == LayerTypes::ODBC) {
             $odbcinfo = $this->url;
-            list ( $odbc, $odbcini, $freetdsconf ) = $this->world->connectToODBC($odbcinfo);
+            list($odbc, $odbcini, $freetdsconf) = $this->world->connectToODBC($odbcinfo);
 
             if (!$odbc)
                 return array();
@@ -2145,15 +2198,15 @@ QUERY;
             );
         }
 
-// huh? well, return null and they'll probably barf and bring attention to whatever went wrong
+        // huh? well, return null and they'll probably barf and bring attention to whatever went wrong
         else {
             return null;
         }
     }
 
-// ///
-// /// methods for searching the dataset (vector only)
-// ///
+    // ///
+    // /// methods for searching the dataset (vector only)
+    // ///
 
     /**
      * Given a bounding box, return a list of rows which are in this Layer and inside that box.
@@ -2170,11 +2223,12 @@ QUERY;
      * @param string $geometry
      * 		Optional, whether to include the geometry with each returned row. Defaults to false to not return geometry. Can be true to include geometry as WKT. Can be 'GML' to include geometry in GML.
      */
-    function searchFeaturesByBbox($llx, $lly, $urx, $ury, $geom = false, $projection = 4326, $order = 'gid', $orderDir = "DESC") {
+    function searchFeaturesByBbox($llx, $lly, $urx, $ury, $geom = false, $projection = 4326, $order = 'gid', $orderDir = "DESC")
+    {
         if ($this->type != LayerTypes::VECTOR and $this->type != LayerTypes::RELATIONAL)
             return array();
 
-// construct the WKT for finding the intersection		 
+        // construct the WKT for finding the intersection		 
         $llx = (float) $llx;
         $lly = (float) $lly;
         $urx = (float) $urx;
@@ -2182,7 +2236,7 @@ QUERY;
 
         $geometry = "st_GeometryFromText('POLYGON(($llx $lly, $llx $ury, $urx $ury, $urx $lly, $llx $lly))',4326)";
 
-// fetch all fields, plus any geometry frields based on the $geom parameter
+        // fetch all fields, plus any geometry frields based on the $geom parameter
         $atts = $this->getAttributes(true);
         $atts = array_keys($atts);
         $fields = implode(',', $atts);
@@ -2192,7 +2246,7 @@ QUERY;
         else if ($geom)
             $fields .= ',st_asText(the_geom) as wkt_geom';
 
-// do the fetch, easy
+            // do the fetch, easy
         ;
 
         $orderBy = ' order by ' . $order . ' ' . $orderDir;
@@ -2206,14 +2260,15 @@ QUERY;
         return $features; // array_map ( create_function ( '$a', 'unset($a["the_geom"]);return $a;' ), $features->getRows () );
     }
 
-    function searchFeaturesWithinBBox($bbox, $projection, $criteria, $paging, $geom = true, $method = "OR", $order = "gid", $joinLayers = array()) {
+    function searchFeaturesWithinBBox($bbox, $projection, $criteria, $paging, $geom = true, $method = "OR", $order = "gid", $joinLayers = array())
+    {
         if ($this->type != LayerTypes::VECTOR and $this->type != LayerTypes::RELATIONAL and $this->type != LayerTypes::ODBC)
             return array();
 
         $atts = $this->getAttributes(true);
         $fields = implode(',', array_keys($atts));
 
-        list ( $llx, $lly, $urx, $ury ) = explode(",", $bbox);
+        list($llx, $lly, $urx, $ury) = explode(",", $bbox);
         $llx = (float) $llx;
         $lly = (float) $lly;
         $urx = (float) $urx;
@@ -2230,21 +2285,21 @@ QUERY;
         }
 
         if ($paging == null)
-            $paging = new Paging ();
+            $paging = new Paging();
 
         $myfields = $this->getAttributes();
         $compareStrings = array();
         foreach ($criteria as &$item) {
-            list ( $field, $compareOp, $value ) = $item;
+            list($field, $compareOp, $value) = $item;
             if ($compareOp == "=") {
                 $compareOp = "contains";
             }
-            $isnumber = $myfields [$field] != DataTypes::TEXT;
+            $isnumber = $myfields[$field] != DataTypes::TEXT;
             $item = $this->world->criteria_to_sql($field, $compareOp, $value, $databasedriver, $isnumber);
             array_push($compareStrings, $item);
         }
 
-// $fields = join(",",$fields);
+        // $fields = join(",",$fields);
         $compareString = join(" $method ", $compareStrings);
         $compareClause = ($compareString == "") ? "" : "AND ($compareString)";
 
@@ -2256,58 +2311,58 @@ QUERY;
                 $countQuery = "SELECT COUNT(*) FROM {$this->url} WHERE st_intersects(st_transform( the_geom, $projection),$geometry) $compareClause";
 
                 $count = $this->world->db->Execute($countQuery)->getRows();
-                $count = $count [0] ['count'];
+                $count = $count[0]['count'];
             }
             $query = "SELECT $fields FROM {$this->url} WHERE st_intersects( st_transform( the_geom, $projection),$geometry) $compareClause $order $limit";
 
             $features = $this->world->db->Execute($query);
-// features = ($features) ? $features->getRows () : array ();
-// if they wanted geometry, fix the bbox to be llx,lly,urx,ury format
+            // features = ($features) ? $features->getRows () : array ();
+            // if they wanted geometry, fix the bbox to be llx,lly,urx,ury format
             if ($geom) {
                 foreach ($features as $f) {
-                    if (!isset($f ['box_geom']))
+                    if (!isset($f['box_geom']))
                         continue;
-                    $f ['box_geom'] = str_replace('BOX(', '', $f ['box_geom']);
-                    $f ['box_geom'] = str_replace(')', '', $f ['box_geom']);
-                    $f ['box_geom'] = str_replace(' ', ',', $f ['box_geom']);
+                    $f['box_geom'] = str_replace('BOX(', '', $f['box_geom']);
+                    $f['box_geom'] = str_replace(')', '', $f['box_geom']);
+                    $f['box_geom'] = str_replace(' ', ',', $f['box_geom']);
                 }
             }
-// finally! run the SQL and prune out the the_geom fields
+            // finally! run the SQL and prune out the the_geom fields
             $returnFeatures = $features; // array_map ( create_function ( '$a', 'unset($a["the_geom"]);return $a;' ), $features );
         } else { // must be a ODBC layer, a whole monster unto itself
-// make the connection
+            // make the connection
             if ($odbcinfo->driver == ODBCUtil::MYSQL) {
                 $db = NewADOConnection("mysql://{$odbcinfo->odbcuser}:{$odbcinfo->odbcpass}@{$odbcinfo->odbchost}/{$odbcinfo->odbcbase}?port={$odbcinfo->odbcport}&fetchmode=" . ADODB_FETCH_ASSOC);
             } else if ($odbcinfo->driver == ODBCUtil::PGSQL) {
                 $db = NewADOConnection("postgres://{$odbcinfo->odbcuser}:{$odbcinfo->odbcpass}@{$odbcinfo->odbchost}/{$odbcinfo->odbcbase}?port={$odbcinfo->odbcport}&fetchmode=" . ADODB_FETCH_ASSOC);
             } else if ($odbcinfo->driver == ODBCUtil::MSSQL) {
-                list ( $odbc, $odbcini, $freetdsconf ) = $this->world->connectToODBC($odbcinfo, 'NOCONNECT');
+                list($odbc, $odbcini, $freetdsconf) = $this->world->connectToODBC($odbcinfo, 'NOCONNECT');
                 $db = NewADOConnection("mssql://{$odbcinfo->odbcuser}:{$odbcinfo->odbcpass}@dsn/{$odbcinfo->odbcbase}?port={$odbcinfo->odbcport}&fetchmode=" . ADODB_FETCH_ASSOC);
             }
 
-// since this is NOT a spatial database, we make it up
+            // since this is NOT a spatial database, we make it up
             $spatialQuery = sprintf("%s >= %d AND %s >= %d AND %s <= %d AND %s <= %d", $odbcinfo->loncolumn, $llx, $odbcinfo->latcolumn, $lly, $odbcinfo->loncolumn, $urx, $odbcinfo->latcolumn, $ury);
 
-// fetch a count for paging purposes
+            // fetch a count for paging purposes
             $count = $paging->count;
             if ($count == null) {
                 $countQuery = "SELECT count(*) AS howmany FROM {$odbcinfo->table} WHERE $spatialQuery $compareClause $order $limit";
                 $count = $db->Execute($countQuery);
-                $count = $count->fields ['howmany'];
+                $count = $count->fields['howmany'];
             }
 
-// do the fetch
+            // do the fetch
             $features = $db->Execute("SELECT $fields FROM {$odbcinfo->table} WHERE $spatialQuery $compareClause $order $limit")->getRows();
 
-// make up the gid attribute, being the same as an 'id' attribute; THIS STILL MAY NOT EXIST!
+            // make up the gid attribute, being the same as an 'id' attribute; THIS STILL MAY NOT EXIST!
             for ($i = 0; $i < sizeof($features); $i++) {
-                $features [$i] ['gid'] = $features [$i] ['id'];
+                $features[$i]['gid'] = $features[$i]['id'];
             }
 
-// if they wanted geometry, fix the bbox to be llx,lly,urx,ury format
+            // if they wanted geometry, fix the bbox to be llx,lly,urx,ury format
             if ($geom) {
                 for ($i = 0; $i < sizeof($features); $i++) {
-                    $features [$i] ['box_geom'] = sprintf('%f,%f,%f,%f', $features [$i] ['loncolumn'] - 1, $features [$i] ['latcolumn'] - 1, $features [$i] ['loncolumn'] + 1, $features [$i] ['latcolumn'] + 1);
+                    $features[$i]['box_geom'] = sprintf('%f,%f,%f,%f', $features[$i]['loncolumn'] - 1, $features[$i]['latcolumn'] - 1, $features[$i]['loncolumn'] + 1, $features[$i]['latcolumn'] + 1);
                 }
             }
         }
@@ -2316,7 +2371,8 @@ QUERY;
         return $features;
     }
 
-    function SearchByCriteria(SearchCriteria $criteria, $countOnly = false, $pxBox = null, $gids = null, $intersectionMode = 0) {
+    function SearchByCriteria(SearchCriteria $criteria, $countOnly = false, $pxBox = null, $gids = null, $intersectionMode = 0)
+    {
 
         $where = $criteria->GetQuery(false, $pxBox, $gids, $intersectionMode);
 
@@ -2343,7 +2399,8 @@ QUERY;
      * @param
      * 		criteria assoc array of attribute=value pairs.
      */
-    function searchFeatures($criteria, $paging, $geom = true, $method = "OR", $order = "gid", $joinLayers = array()) {
+    function searchFeatures($criteria, $paging, $geom = true, $method = "OR", $order = "gid", $joinLayers = array())
+    {
         $atts = $this->getAttributes(true);
         $fields = implode(',', array_keys($atts));
         if ($this->type != LayerTypes::VECTOR and $this->type != LayerTypes::RELATIONAL and $this->type != LayerTypes::ODBC)
@@ -2366,9 +2423,9 @@ QUERY;
         foreach ($criteria as $item) {
 
             if (count($item) > 3) {
-                list ( $field, $compareOp, $value, $logic ) = $item;
+                list($field, $compareOp, $value, $logic) = $item;
             } else {
-                list ( $field, $compareOp, $value ) = $item;
+                list($field, $compareOp, $value) = $item;
                 $logic = ($i > 0) ? 'or' : null;
             }
 
@@ -2377,24 +2434,24 @@ QUERY;
             if (is_null($field))
                 continue;
             if (($compareOp == "=") || ($compareOp == '==')) {
-//$compareOp = "contains";
+                //$compareOp = "contains";
             }
 
-            $isnumber = $myfields [$field] != DataTypes::TEXT;
+            $isnumber = $myfields[$field] != DataTypes::TEXT;
             $item = $this->world->criteria_to_sql($field, $compareOp, $value, $databasedriver, $isnumber);
 
             switch ($logic) {
-                case 'and' :
-                case 'or' :
+                case 'and':
+                case 'or':
                     $item = "$logic ($item)";
                     break;
-                case '!and' :
+                case '!and':
                     $item = "AND NOT ($item)";
                     break;
-                case '!or' :
+                case '!or':
                     $item = "OR NOT ($item)";
                     break;
-                case 'not' :
+                case 'not':
                     $item = "NOT ($item)";
                     break;
             }
@@ -2402,10 +2459,10 @@ QUERY;
             $i++;
         }
 
-// $fields = join(",",$fields);
+        // $fields = join(",",$fields);
         $compareStrings = join(" ", $compareStrings);
         if ($paging == null)
-            $paging = new Paging ();
+            $paging = new Paging();
         $limit = $paging->toQueryString();
 
         if ($this->type != LayerTypes::ODBC) {
@@ -2414,53 +2471,53 @@ QUERY;
                 $countQuery = "SELECT count(*) FROM {$this->url} WHERE $compareStrings";
                 $count = $this->world->db->Execute($countQuery);
                 $count = ($count) ? $count->getRows() : 0;
-                $count = $count [0] ['count'];
+                $count = $count[0]['count'];
             }
             $where = ($compareStrings == "") ? "" : "WHERE $compareStrings";
             $query = "SELECT $fields FROM {$this->url} $where $order $limit";
 
             $features = $this->world->db->Execute($query);
 
-// $features = ($features) ? $features->getRows () : array ();
-// if they wanted geometry, fix the bbox to be llx,lly,urx,ury format
+            // $features = ($features) ? $features->getRows () : array ();
+            // if they wanted geometry, fix the bbox to be llx,lly,urx,ury format
             /*
              * if ($geom) { foreach ( $features as &$f ) { if (! isset ( $f ['box_geom'] )) continue; $f ['box_geom'] = str_replace ( 'BOX(', '', $f ['box_geom'] ); $f ['box_geom'] = str_replace ( ')', '', $f ['box_geom'] ); $f ['box_geom'] = str_replace ( ' ', ',', $f ['box_geom'] ); } }
              */
-// finally! run the SQL and prune out the the_geom fields
+            // finally! run the SQL and prune out the the_geom fields
             $returnFeatures = $features;
-// returnFeatures = array_map ( create_function ( '$a', 'unset($a["the_geom"]);return $a;' ), $features );
+            // returnFeatures = array_map ( create_function ( '$a', 'unset($a["the_geom"]);return $a;' ), $features );
         } else { // must be a ODBC layer, a whole monster unto itself
-// make the connection
+            // make the connection
             if ($odbcinfo->driver == ODBCUtil::MYSQL) {
                 $db = NewADOConnection("mysql://{$odbcinfo->odbcuser}:{$odbcinfo->odbcpass}@{$odbcinfo->odbchost}/{$odbcinfo->odbcbase}?port={$odbcinfo->odbcport}&fetchmode=" . ADODB_FETCH_ASSOC);
             } else if ($odbcinfo->driver == ODBCUtil::PGSQL) {
                 $db = NewADOConnection("postgres://{$odbcinfo->odbcuser}:{$odbcinfo->odbcpass}@{$odbcinfo->odbchost}/{$odbcinfo->odbcbase}?port={$odbcinfo->odbcport}&fetchmode=" . ADODB_FETCH_ASSOC);
             } else if ($odbcinfo->driver == ODBCUtil::MSSQL) {
-                list ( $odbc, $odbcini, $freetdsconf ) = $this->world->connectToODBC($odbcinfo, 'NOCONNECT');
+                list($odbc, $odbcini, $freetdsconf) = $this->world->connectToODBC($odbcinfo, 'NOCONNECT');
                 $db = NewADOConnection("mssql://{$odbcinfo->odbcuser}:{$odbcinfo->odbcpass}@dsn/{$odbcinfo->odbcbase}?port={$odbcinfo->odbcport}&fetchmode=" . ADODB_FETCH_ASSOC);
             }
 
-// fetch a count for paging purposes
+            // fetch a count for paging purposes
             $count = $paging->count;
             if ($count == null) {
                 $countQuery = "SELECT count(*) AS howmany FROM {$odbcinfo->table} WHERE $compareStrings";
                 $count = $db->Execute($countQuery);
-                $count = $count->fields ['howmany'];
+                $count = $count->fields['howmany'];
             }
 
-// do the fetch
+            // do the fetch
             $features = $db->Execute("SELECT $fields FROM {$odbcinfo->table} WHERE $compareStrings $order $limit")->getRows();
 
-// make up the gid attribute, being the same as an 'id' attribute; THIS STILL MAY NOT EXIST!
+            // make up the gid attribute, being the same as an 'id' attribute; THIS STILL MAY NOT EXIST!
             for ($i = 0; $i < sizeof($features); $i++) {
                 foreach ($features as &$f)
-                    $features [$i] ['gid'] = $features [$i] ['id'];
+                    $features[$i]['gid'] = $features[$i]['id'];
             }
 
-// if they wanted geometry, fix the bbox to be llx,lly,urx,ury format
+            // if they wanted geometry, fix the bbox to be llx,lly,urx,ury format
             if ($geom) {
                 for ($i = 0; $i < sizeof($features); $i++) {
-                    $features [$i] ['box_geom'] = sprintf('%f,%f,%f,%f', $features [$i] ['loncolumn'] - 1, $features [$i] ['latcolumn'] - 1, $features [$i] ['loncolumn'] + 1, $features [$i] ['latcolumn'] + 1);
+                    $features[$i]['box_geom'] = sprintf('%f,%f,%f,%f', $features[$i]['loncolumn'] - 1, $features[$i]['latcolumn'] - 1, $features[$i]['loncolumn'] + 1, $features[$i]['latcolumn'] + 1);
                 }
             }
 
@@ -2471,7 +2528,8 @@ QUERY;
         return $returnFeatures;
     }
 
-    function searchByFeature($featureId, $layerId, $paging = null, $geom = false, $method = "OR", $order = "gid", $joinLayers = array()) {
+    function searchByFeature($featureId, $layerId, $paging = null, $geom = false, $method = "OR", $order = "gid", $joinLayers = array())
+    {
         $atts = $this->getAttributes(true);
         $layer = $this->world->getLayerById($layerId);
         $fields = implode(',', array_keys($atts));
@@ -2485,7 +2543,7 @@ QUERY;
         $compareStrings = array();
 
         if ($paging == null)
-            $paging = new Paging ();
+            $paging = new Paging();
         $limit = $paging->toQueryString();
 
         $count = $paging->count;
@@ -2493,7 +2551,7 @@ QUERY;
             $countQuery = "SELECT count(*) from {$this->url} WHERE ST_Intersects(the_geom, (select the_geom from {$layer->url} where gid={$featureId}))";
             $count = $this->world->db->Execute($countQuery);
             $count = ($count) ? $count->getRows() : 0;
-            $count = $count [0] ['count'];
+            $count = $count[0]['count'];
         }
         $atts = $this->getAttributes(true);
         $atts = array_keys($atts);
@@ -2509,13 +2567,13 @@ QUERY;
         $query = "SELECT $fields from {$this->url} WHERE ST_Intersects(the_geom, (select the_geom from {$layer->url} where gid={$featureId}))";
         $features = $this->world->db->Execute($query);
 
-//$features = ($features) ? $features->getRows () : array ();
-// if they wanted geometry, fix the bbox to be llx,lly,urx,ury format
+        //$features = ($features) ? $features->getRows () : array ();
+        // if they wanted geometry, fix the bbox to be llx,lly,urx,ury format
         /*
          * if ($geom) { foreach ( $features as &$f ) { if (! isset ( $f ['box_geom'] )) continue; $f ['box_geom'] = str_replace ( 'BOX(', '', $f ['box_geom'] ); $f ['box_geom'] = str_replace ( ')', '', $f ['box_geom'] ); $f ['box_geom'] = str_replace ( ' ', ',', $f ['box_geom'] ); } }
          */
-// finally! run the SQL and prune out the the_geom fields
-// returnFeatures = array_map ( create_function ( '$a', 'unset($a["the_geom"]);return $a;' ), $features );
+        // finally! run the SQL and prune out the the_geom fields
+        // returnFeatures = array_map ( create_function ( '$a', 'unset($a["the_geom"]);return $a;' ), $features );
 
         $paging->setResults($features, $count);
 
@@ -2539,14 +2597,15 @@ QUERY;
      * @param unknown_type $geom
      * 		optional false - no geometry, true-include geometry, 'gml' return geometry as geographic markup language.
      */
-    function searchFeaturesByDistance($ptx, $pty, $meterDistance, $geom = false) {
+    function searchFeaturesByDistance($ptx, $pty, $meterDistance, $geom = false)
+    {
         $atts = $this->getAttributes(true);
 
         $fields = implode(',', array_keys($atts));
 
-// use the PostGIS function distance_spheroid() to fetch the linear distance in meters
+        // use the PostGIS function distance_spheroid() to fetch the linear distance in meters
         $target = "ST_GeometryFromText('POINT($ptx $pty)',4326)";
-// fetch all fields, plus any geometry frields based on the $geom parameter
+        // fetch all fields, plus any geometry frields based on the $geom parameter
 
         if ($geom == 'GML')
             $fields .= ',st_asGML(the_geom) as gml_geom';
@@ -2554,9 +2613,9 @@ QUERY;
             $fields .= ',ST_asText(the_geom) as wkt_geom';
 
         $where = "where cg_distance <= $meterDistance and the_geom IS NOT NULL";
-// if($roi) $where .= " && $roi AND st_intersects(the_geom,$roi)";
+        // if($roi) $where .= " && $roi AND st_intersects(the_geom,$roi)";
         $spheroid = 'SPHEROID["WGS 84",6378137,298.257223563]';
-// features = $this->world->db->Execute("select * from (SELECT *, distance_spheroid($target,the_geom,'$spheroid') AS cg_distance from {$this->url}) as q1 $where");
+        // features = $this->world->db->Execute("select * from (SELECT *, distance_spheroid($target,the_geom,'$spheroid') AS cg_distance from {$this->url}) as q1 $where");
         $query = "select $fields from {$this->url} where ST_INTERSECTS(CAST(ST_BUFFER(ST_GeographyFromText('POINT($ptx $pty)'),$meterDistance) as GEOMETRY),the_geom) and the_geom IS NOT NULL";
 
         $features = $this->world->db->Execute($query);
@@ -2566,24 +2625,25 @@ QUERY;
         return $features; // array_map ( create_function ( '$a', 'unset($a["the_geom"]);return $a;' ), $features->getRows () );
     }
 
-// ///
-// /// methods for finding who is using this Layer
-// ///
+    // ///
+    // /// methods for finding who is using this Layer
+    // ///
 
     /**
      * Fetch a list of all users who have this layer bookmarked.
      *
      * @return array An array of Person objects.
      */
-    function usersBookmarked() {
+    function usersBookmarked()
+    {
         $people = $this->world->db->Execute('SELECT owner FROM layer_bookmarks WHERE layer=?', array(
-                    $this->id
-                ))->getRows();
+            $this->id
+        ))->getRows();
         $people = array_map(create_function('$a', 'return $a["owner"];'), $people);
         $people = array_map(array(
             $this->world,
             'getPersonById'
-                ), $people);
+        ), $people);
         return $people;
     }
 
@@ -2592,19 +2652,21 @@ QUERY;
      *
      * @return array An array of Person objects.
      */
-    function projectsUsing() {
+    function projectsUsing()
+    {
         $projects = $this->world->db->Execute('SELECT project FROM project_layers WHERE layer=?', array(
-                    $this->id
-                ))->getRows();
+            $this->id
+        ))->getRows();
         $projects = array_map(create_function('$a', 'return $a["project"];'), $projects);
         $projects = array_map(array(
             $this->world,
             'getProjectById'
-                ), $projects);
+        ), $projects);
         return $projects;
     }
 
-    public function importMetadata($xmlFile, $asString = false) {
+    public function importMetadata($xmlFile, $asString = false)
+    {
         if (!$asString) {
             $xmlFileSize = filesize($xmlFile);
 
@@ -2619,26 +2681,29 @@ QUERY;
             fclose($xmlFileStream);
             unlink($xmlFile);
         }
-        $converter = new Convert ();
+        $converter = new Convert();
         $this->metadata = $converter->xmlToPhp($data);
     }
 
-    function hasMetadata() {
-        if ($this->metadata != "" && $this->metadata != Array() && $this->metadata != null) {
+    function hasMetadata()
+    {
+        if ($this->metadata != "" && $this->metadata != array() && $this->metadata != null) {
             return true;
         } else {
             return false;
         }
     }
 
-    function clearMetadata() {
+    function clearMetadata()
+    {
         $this->world->db->Execute("UPDATE " . self::TABLE . " SET \"metadata\"=? WHERE id=?", array(
             null,
             $this->id
         ));
     }
 
-    private function deep_ksort(&$arr) {
+    private function deep_ksort(&$arr)
+    {
         ksort($arr);
         foreach ($arr as &$a) {
             if (is_array($a) && !empty($a)) {
@@ -2647,7 +2712,8 @@ QUERY;
         }
     }
 
-    function setOwner($ownerId, $adder = null) {
+    function setOwner($ownerId, $adder = null)
+    {
         $recipient = $this->world->getPersonById($ownerId);
         if ($recipient->id != $this->owner->id) {
             $recipient->notify($this->owner->id, "gave you ownership of layer:", $this->name, $this->id, "./?do=layer.edit1&id=" . $this->id, 12);
@@ -2665,13 +2731,15 @@ QUERY;
      * function notify($address) { $fromUser = $this->owner; $from = sprintf ( "From: %s <%s>\r\n", $fromUser->realname, $fromUser->email ); $from .= "Content-type: text/html\r\n"; $to = sprintf ( "%s", $address ); $email = new Templater (); $message = ''; $devpath = ''; // $devpath = '~doug/cartograph/'; $subject = sprintf ( "[%s] You have been given a layer on SimpleLayers: ", $this->name ); $message .= sprintf ( "You have been given a map layer by %s named %s.<br/><br/>", $fromUser->realname, $this->name ); if ($this->description != "" || $this->description != " ") $message .= sprintf ( "The layer has the following description:<br/>%s<br/><br/>", $this->description ); $message .= sprintf ( "<a style=\"text-decoration:none;\" href=\"https://www.cartograph.com/%s?do=layer.edit1&id=%s\">View the layer</a>", $devpath, $this->id ); $email->assign ( 'group', $this ); $email->assign ( 'subject', $subject ); $email->assign ( 'message', $message ); $email->assign ( 'devpath', $devpath ); mail ( $to, $subject, $email->fetch ( 'group/email.tpl' ), $from ); }
      */
 
-    function getTransactions() {
+    function getTransactions()
+    {
         return $this->world->db->Execute('SELECT * FROM _transactions WHERE layer_id = ?', array(
-                    $this->id
-                ))->GetAssoc();
+            $this->id
+        ))->GetAssoc();
     }
 
-    function backup() {
+    function backup()
+    {
         $url = $this->url;
         $this->backup = $url . "_cg_bak";
         pgsql2pgsql($this->world, $url, $url . "_cg_bak");
@@ -2680,7 +2748,8 @@ QUERY;
         ));
     }
 
-    function rollback() {
+    function rollback()
+    {
         if (!$this->backup)
             return false;
         $url = $this->url;
@@ -2692,7 +2761,8 @@ QUERY;
         return $this->backup;
     }
 
-    public static function CloneVector($layerId) {
+    public static function CloneVector($layerId)
+    {
 
         $layer = self::GetLayer($layerId, false);
         if (!$layer['type'] == LayerTypes::VECTOR)
@@ -2721,8 +2791,9 @@ QUERY;
      * 		string The name of the new Layer; Optional, defaults to the original Layer's name.
      * @return Layer A Layer object, or null if the original was not found.
      */
-    function SaveAs($layerId, $name = null, $userId, $adderId) {
-// fetch the old Layer and its name
+    function SaveAs($layerId, $name = null, $userId, $adderId)
+    {
+        // fetch the old Layer and its name
         $old = self::GetLayer($layerId);
         if (!$old)
             return null;
@@ -2735,38 +2806,38 @@ QUERY;
 
 
 
-// depending on the data type, create it and then populate the data
+        // depending on the data type, create it and then populate the data
         switch ($old->type) {
-            case LayerTypes::WMS :
-// copying WMS data is simple; just copy the URL of the WMS server
+            case LayerTypes::WMS:
+                // copying WMS data is simple; just copy the URL of the WMS server
                 $new = self::CreateLayer($name, LayerTypes::WMS, $userId, $adderId, false);
                 $new->url = $old->url;
                 break;
-            case LayerTypes::RASTER :
-// copying raster data is also easy; just copy the image file
+            case LayerTypes::RASTER:
+                // copying raster data is also easy; just copy the image file
                 $new = self::CreateLayer($name, LayerTypes::RASTER, $userId, $adderId, false);
                 copy($old->url, $new->url);
                 break;
-            case LayerTypes::RELATIONAL :
+            case LayerTypes::RELATIONAL:
                 $new = self::CreateLayer($name, LayerTypes::VECTOR, $userId, $adderId, false);
                 $filename = md5(mt_rand() . mt_rand());
                 $shapefile = pgsql2shp($sys, $old->url, $filename, true);
-                $shapefile = $shapefile [0];
+                $shapefile = $shapefile[0];
                 shp2pgsql($sys, $shapefile, $new->url, true);
                 break;
-            case LayerTypes::VECTOR :
+            case LayerTypes::VECTOR:
                 $new = $this->createLayer($name, LayerTypes::VECTOR, $userId, $adderId, false);
                 pgsql2pgsql($sys, $old, $new, true);
                 break;
-            case LayerTypes::ODBC :
-// create the new vector layer, and set up its indexes etc.
+            case LayerTypes::ODBC:
+                // create the new vector layer, and set up its indexes etc.
                 $new = $this->createLayer($name, LayerTypes::VECTOR);
                 $db->Execute("CREATE TABLE {$new->url} (gid serial)");
                 $db->Execute("SELECT AddGeometryColumn('','{$new->url}','the_geom',4326,'POINT',2)");
                 $db->Execute("CREATE INDEX {$new->url}_index_the_geom ON $new->url USING GIST (the_geom)");
                 $db->Execute("CREATE INDEX {$new->url}_index_oid ON $new->url (oid)");
 
-// populate the vector layer's columns
+                // populate the vector layer's columns
                 foreach ($old->getAttributes() as $colname => $type) {
                     if ($colname == 'gid')
                         continue;
@@ -2777,33 +2848,33 @@ QUERY;
                     $new->addAttribute($colname, $type);
                 }
 
-// connect to the ODBC...
+                // connect to the ODBC...
                 $odbcinfo = $old->url;
                 switch ($odbcinfo->driver) {
-                    case ODBCUtil::MYSQL :
+                    case ODBCUtil::MYSQL:
                         $db = NewADOConnection("mysql://{$odbcinfo->odbcuser}:{$odbcinfo->odbcpass}@{$odbcinfo->odbchost}/{$odbcinfo->odbcbase}?port={$odbcinfo->odbcport}&fetchmode=" . ADODB_FETCH_ASSOC);
                         $records = $db->Execute("SELECT * FROM `{$odbcinfo->table}`");
                         break;
-                    case ODBCUtil::PGSQL :
+                    case ODBCUtil::PGSQL:
                         $db = NewADOConnection("postgres://{$odbcinfo->odbcuser}:{$odbcinfo->odbcpass}@{$odbcinfo->odbchost}/{$odbcinfo->odbcbase}?port={$odbcinfo->odbcport}&fetchmode=" . ADODB_FETCH_ASSOC);
                         $records = $db->Execute("SELECT * FROM \"{$odbcinfo->table}\"");
                         break;
-                    case ODBCUtil::MSSQL :
-                        list ( $odbc, $odbcini, $freetdsconf ) = $sys->connectToODBC($odbcinfo, 'NOCONNECT');
+                    case ODBCUtil::MSSQL:
+                        list($odbc, $odbcini, $freetdsconf) = $sys->connectToODBC($odbcinfo, 'NOCONNECT');
                         $db = NewADOConnection("mssql://{$odbcinfo->odbcuser}:{$odbcinfo->odbcpass}@dsn/{$odbcinfo->odbcbase}?port={$odbcinfo->odbcport}&fetchmode=" . ADODB_FETCH_ASSOC);
                         $records = $db->Execute("SELECT * FROM {$odbcinfo->table}");
                         break;
                 }
 
-// iterate over the ODBC records, copying them into the new vector table with a point geometry
+                // iterate over the ODBC records, copying them into the new vector table with a point geometry
                 while (!$records->EOF) {
                     $record = $records->fields;
-                    $record ['wkt_geom'] = sprintf("POINT(%f %f)", $record [$odbcinfo->loncolumn], $record [$odbcinfo->latcolumn]);
+                    $record['wkt_geom'] = sprintf("POINT(%f %f)", $record[$odbcinfo->loncolumn], $record[$odbcinfo->latcolumn]);
                     $new->insertRecord($record);
                     $records->MoveNext();
                 }
 
-// done copying the ODBC layer to a new Vector layer
+                // done copying the ODBC layer to a new Vector layer
                 $new->setDBOwnerToOwner();
                 break;
         }
@@ -2811,14 +2882,14 @@ QUERY;
 
 
 
-// populate some more simple attributes
+        // populate some more simple attributes
         $new->originalid = $layerId;
-// if this is a vector layer, copy the color scheme
+        // if this is a vector layer, copy the color scheme
         if ($new->type == LayerTypes::VECTOR) {
-//$new->tooltip = $old->tooltip;
-// $new->rich_tooltip = $old->rich_tooltip;
-//$new->labelitem = $old->labelitem;
-//$new->label_style = $old->label_style;
+            //$new->tooltip = $old->tooltip;
+            // $new->rich_tooltip = $old->rich_tooltip;
+            //$new->labelitem = $old->labelitem;
+            //$new->label_style = $old->label_style;
             $colorSchemeEntries = $old->colorscheme->getAllEntries(true);
             $new->name = 'Copy of ' . $new->name;
             $new->colorschemetype = $old->colorschemetype;
@@ -2828,7 +2899,7 @@ QUERY;
             }
         }
         $new->touch();
-// done
+        // done
         return $new;
     }
 
@@ -2841,9 +2912,10 @@ QUERY;
      * 		integer The layer's type, one of the LayerTypes::* defines.
      * @return Layer A Layer object.
      */
-    public static function CreateLayer($name, $type, $ownerId, $adderId, $includeClass = true) {
+    public static function CreateLayer($name, $type, $ownerId, $adderId, $includeClass = true)
+    {
 
-// f($this->community && count($this->listLayers()) >= 3) return false;
+        // f($this->community && count($this->listLayers()) >= 3) return false;
         $db = System::GetDB(System::DB_ACCOUNT_SU);
 
         $layerId = $db->GetOne('INSERT INTO ' . self::TABLE . ' (owner,name,type,adder) VALUES (?,?,?,?) RETURNING id', array(
@@ -2862,13 +2934,14 @@ QUERY;
         return $layer;
     }
 
-    public function newReply($user, $parent, $post) {
+    public function newReply($user, $parent, $post)
+    {
         $new = $this->world->db->Execute("INSERT INTO layer_discussions (id, text, owner, layer_id, parent) VALUES (DEFAULT, ?, ? ,?, ?) RETURNING id;", array(
-                    nl2br(htmlentities($post)),
-                    $user->id,
-                    $this->id,
-                    $parent
-                ))->fields ["id"];
+            nl2br(htmlentities($post)),
+            $user->id,
+            $this->id,
+            $parent
+        ))->fields["id"];
         $results = $this->world->db->Execute("WITH RECURSIVE parentTree(id, parent, owner) AS(
 				SELECT id, parent, owner FROM layer_discussions WHERE id = ?
 				UNION ALL
@@ -2880,51 +2953,54 @@ QUERY;
 				JOIN parentTree rt ON rt.parent = t.id
 			)
 			SELECT owner FROM parentTree GROUP BY owner", array(
-                    $parent
-                ))->getRows();
+            $parent
+        ))->getRows();
         foreach ($results as $result) {
-            $this->world->getPersonById($result ["owner"])->notify($user->id, "commented on layer:", $this->name, $this->id, "./?do=layer.discussion&id=" . $this->id . "#" . $new, 11);
+            $this->world->getPersonById($result["owner"])->notify($user->id, "commented on layer:", $this->name, $this->id, "./?do=layer.discussion&id=" . $this->id . "#" . $new, 11);
         }
         $this->owner->notify($user->id, "commented on layer:", $this->name, $this->id, "./?do=layer.discussion&id=" . $this->id . "#" . $new, 11);
         return $new;
     }
 
-    public function getReply($id = false) {
-        $retrive = Array(
+    public function getReply($id = false)
+    {
+        $retrive = array(
             $this->id
         );
         if ($id)
-            $retrive [] = $id;
+            $retrive[] = $id;
         $query = "SELECT * FROM layer_discussions AS d WHERE layer_id = ?" . (($id) ? " AND id=?" : "") . " ORDER BY created";
         $results = $this->world->db->Execute($query, $retrive);
         return $results->getRows();
     }
 
-    private function nestResults($results, $id) {
-        $return = Array();
+    private function nestResults($results, $id)
+    {
+        $return = array();
         foreach ($results as $result) {
-            if ($result ["parent"] == $id) {
-                $result ["fromnow"] = timeToHowLongAgo(time() - strtotime($result ["created"]));
-                $return [$result ["id"]] = Array(
+            if ($result["parent"] == $id) {
+                $result["fromnow"] = timeToHowLongAgo(time() - strtotime($result["created"]));
+                $return[$result["id"]] = array(
                     "data" => $result
                 );
             }
         }
         foreach ($return as $key => &$result) {
-            $result ["children"] = $this->nestResults($results, $key);
+            $result["children"] = $this->nestResults($results, $key);
         }
         return $return;
     }
 
-    public function getNestedReplies() {
+    public function getNestedReplies()
+    {
         $query = "SELECT * FROM layer_discussions AS d WHERE layer_id = ? ORDER BY created";
         $results = $this->world->db->Execute($query, array(
             $this->id
         ));
         $return = $this->nestResults($results, 0);
-        $return = Array(
-            0 => Array(
-                "data" => Array(
+        $return = array(
+            0 => array(
+                "data" => array(
                     "id" => 0,
                     "text" => $this->description,
                     "owner" => $this->owner->id,
@@ -2939,31 +3015,36 @@ QUERY;
         return $return;
     }
 
-    public function deleteReply($id) {
+    public function deleteReply($id)
+    {
         $this->world->db->Execute("UPDATE layer_discussions SET text='Comment Removed' WHERE id = ?", array(
             $id
         ));
     }
 
-    public function getSharingInfo() {
+    public function getSharingInfo()
+    {
         $db = System::GetDB(System::DB_ACCOUNT_SU);
         $sharingData = $db->GetAll('select * from layersharing where layer=' . $this->id);
         return $sharingData;
     }
 
-    public function getGroupSharingInfo() {
+    public function getGroupSharingInfo()
+    {
         $db = System::GetDB(System::DB_ACCOUNT_SU);
         $sharingData = $db->GetAll('select * from layersharing_socialgroups where layer_id=' . $this->id);
         return $sharingData;
     }
 
-    public function getBookmarkInfo() {
+    public function getBookmarkInfo()
+    {
         $db = System::GetDB(System::DB_ACCOUNT_SU);
         $data = $db->GetAll('select * from	layer_bookmarks where layer=' . $this->id);
         return $data;
     }
 
-    public function getCollectionInfo($asParent = true) {
+    public function getCollectionInfo($asParent = true)
+    {
         $db = System::GetDB(System::DB_ACCOUNT_SU);
 
         if ($asParent) {
@@ -2972,7 +3053,13 @@ QUERY;
         return $db->GetAll('select * from layer_collections where parent_id =' . $this->id);
     }
 
-    public static function GetLayer($layerId, $asLayer = true) {
+    public static function Get($layerId): Layer
+    {
+        $sys = System::Get();
+        return new Layer($sys, $layerId);
+    }
+    public static function GetLayer($layerId, $asLayer = true)
+    {
         if ($asLayer) {
             $sys = System::Get();
             return new Layer($sys, $layerId);
@@ -2980,42 +3067,46 @@ QUERY;
         $layer = self::GetLayer($layerId, true);
         $record = $layer->layer_record;
         $layer->RefreshLayerRecord();
-        $record ['metadata'] = $layer->metadata;
-        $record ['custom_data'] = $layer->custom_data;
-        $record ['import_info'] = $layer->import_info;
-        $record ['field_info'] = $layer->field_info;
+        $record['metadata'] = $layer->metadata;
+        $record['custom_data'] = $layer->custom_data;
+        $record['import_info'] = $layer->import_info;
+        $record['field_info'] = $layer->field_info;
 
         return $record;
     }
 
-    public static function GetLayerByVectorURL($layerURL, $asLayer = true) {
+    public static function GetLayerByVectorURL($layerURL, $asLayer = true)
+    {
         $layerURL = trim($layerURL);
         $layerId = 0 + substr($layerURL, 11);
         return self::GetLayer($layerId, $asLayer);
     }
 
-    public static function DumpArray($layerId) {
+    public static function DumpArray($layerId)
+    {
         $layer = self::GetLayer($layerId);
         $colorscheme = $layer->colorscheme->getAllEntries(false);
         $layerInfo = self::GetLayer($layerId, false);
         $layerData = array();
-        $layerData ['classification'] = $colorscheme;
-        $layerData ['layer'] = $layerInfo;
-        $layerData ['sharing'] = $layer->getSharingInfo();
-        $layerData ['group_sharing'] = $layer->getGroupSharingInfo();
-        $layerData ['collection_info'] ['as_parent'] = $layer->getCollectionInfo();
-        $layerData ['collection_info'] ['as_child'] = $layer->getCollectionInfo(false);
+        $layerData['classification'] = $colorscheme;
+        $layerData['layer'] = $layerInfo;
+        $layerData['sharing'] = $layer->getSharingInfo();
+        $layerData['group_sharing'] = $layer->getGroupSharingInfo();
+        $layerData['collection_info']['as_parent'] = $layer->getCollectionInfo();
+        $layerData['collection_info']['as_child'] = $layer->getCollectionInfo(false);
         return $layerData;
     }
 
-    public function GetCachefileName() {
+    public function GetCachefileName()
+    {
         $ini = System::GetIni();
         $cacheFile = "{$ini->thumbdir}{$ini->name}/layer.{$this->id}.png";
 
         return $cacheFile;
     }
 
-    public function GenerateThumbnail($force = false, $returnImage = true) {
+    public function GenerateThumbnail($force = false, $returnImage = true)
+    {
         $ini = System::GetIni();
         $cacheFile = $this->GetCacheFileName();
 
@@ -3039,21 +3130,21 @@ QUERY;
             }
         }
 
-// if the extent is all zeroes, then fudge it to at least be valid
+        // if the extent is all zeroes, then fudge it to at least be valid
         $extent = $this->getExtent();
 
-// create a new Mapper...
+        // create a new Mapper...
         $sys = System::Get();
         $mapper = $sys->getMapper();
 
-// $mapper->debugMapFile = true;
-// TODO: Update with PixoSpatial
+        // $mapper->debugMapFile = true;
+        // TODO: Update with PixoSpatial
         $projector = new Projector_MapScript();
 
         $projector->SetProjection($sys->projections->defaultProj4);
         $projector->SetViewExtents($extent);
         $projector->SetViewSize($ini->thumbnail_width, $ini->thumbnail_height);
-        $projector->CenterAt($ini->thumbnail_width / 2, $ini->thumbnail_height / 2, - 1.75);
+        $projector->CenterAt($ini->thumbnail_width / 2, $ini->thumbnail_height / 2, -1.75);
 
         $mapper->labels = true;
 
@@ -3064,7 +3155,7 @@ QUERY;
          * $mapper->height = ( int ) $ini->thumbnail_height;
          * $mapper->extent = $extent;
          */
-// add the basemap
+        // add the basemap
         if ($this->type == LayerTypes::VECTOR or $this->type == LayerTypes::RELATIONAL or $this->type == LayerTypes::ODBC or $this->type == LayerTypes::WMS) {
             $public = $sys->getPersonById(0);
             $basemap = $public->getLayerById($ini->basemap);
@@ -3073,16 +3164,16 @@ QUERY;
                 $mapper->addLayer($basemap, 1.0, false, null, null, true);
         }
 
-// add the requested layer
+        // add the requested layer
         $mapper->addLayer($this, 1.0, false, null, null, true, false);
-// $mapper->debugMapFile=true;
-// mapper->init();
-// render the image, saving its content to the cache file
-// file_put_contents($cachefile,
+        // $mapper->debugMapFile=true;
+        // mapper->init();
+        // render the image, saving its content to the cache file
+        // file_put_contents($cachefile,
 
         try {
-// WAPI::SetWapiHeaders(WAPI::FORMAT_PNG);
-#$mapper->debugMapFile = true;
+            // WAPI::SetWapiHeaders(WAPI::FORMAT_PNG);
+            #$mapper->debugMapFile = true;
 
             $mapper->renderStream($force, $cacheFile, false);
         } catch (Exception $e) {
@@ -3099,7 +3190,8 @@ QUERY;
         readfile($cacheFile);
     }
 
-    public function GetSubs() {
+    public function GetSubs()
+    {
         $subsRes = $this->world->db->Execute('select id from layers where parent=? order by abs(z)', $this->id);
         $subs = array();
         foreach ($subsRes as $subId) {
@@ -3108,12 +3200,14 @@ QUERY;
         return $subs;
     }
 
-    public function GetSubsAsIdPairs() {
+    public function GetSubsAsIdPairs()
+    {
         $subsRes = System::GetDB()->Execute('select id,layer_id as layerId from layer_collections where parent_id=? order by z', $this->id);
         return $subsRes;
     }
 
-    function Merge(Layer $oldLayer) {
+    function Merge(Layer $oldLayer)
+    {
         $record = $oldLayer->GetLayerRecord();
 
         unset($record['id']);
@@ -3122,12 +3216,13 @@ QUERY;
         }
 
         $db = System::GetDB();
-//$db->debug = true;
+        //$db->debug = true;
         $result = $db->AutoExecute('layers', $record, 'UPDATE', 'id=' . $this->id);
         $this->layer_record = $db->GetRow('select * from layers where id=' . $this->id);
     }
 
-    function __get_import_info() {
+    function __get_import_info()
+    {
         $db = System::GetDB();
         $info = $db->GetOne('select import_info from layers where id=?', [$this->id]);
         if ($info) {
@@ -3136,7 +3231,8 @@ QUERY;
         return $info;
     }
 
-    public function Spatialize($geomtype) {
+    public function Spatialize($geomtype)
+    {
 
         if (intval($this->type) === LayerTypes::RELATABLE) {
             $ok = SQLUtil::SpatializeTable($this->url);
@@ -3150,15 +3246,16 @@ QUERY;
         }
     }
 
-    public function ProcessFieldInfo($value) {
+    public function ProcessFieldInfo($value)
+    {
         if (is_null($value) || ($value == '')) {
             return null;
         }
         if (is_string($value)) {
             if ((stripos($value, '{"json":') === 0) || (stripos($value, "{'json':") == 0)) {
                 $value = ParamUtil::GetJSON(array(
-                            'arg' => $value
-                                ), 'arg');
+                    'arg' => $value
+                ), 'arg');
             } else {
                 $value = json_decode($value, true);
             }
@@ -3204,7 +3301,8 @@ QUERY;
         return $value;
     }
 
-    public function HasTable() {
+    public function HasTable()
+    {
         if (!is_null($this->_hasTable)) {
             return $this->_hasTable;
         }
@@ -3221,7 +3319,8 @@ QUERY;
         return $hasTable;
     }
 
-    public function GetViewDef() {
+    public function GetViewDef()
+    {
         if (!in_array($this->type, [LayerTypes::RELATIONAL, LayerTypes::SMART_LAYER])) {
             throw Exception("layer definition problem:" . $this->url . ' is not a relational layer');
         }
@@ -3237,7 +3336,4 @@ QUERY;
         }
         return $def;
     }
-
 }
-
-?>

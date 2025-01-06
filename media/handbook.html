@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF.js Multi-Page Example</title>
+    <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.4.120/build/pdf.min.js"></script>
+</head>
+<body>
+    <div id="pdf-container"></div>
+    <style>
+        canvas {
+            border: none !important;
+            border-collapse: collapse;
+        }
+    </style>
+    <script>
+        var url = 'https://dev.simplelayers.com/media/handbook.pdf';
+        
+        // Load the PDF document
+        pdfjsLib.getDocument(url).promise.then(function(pdf) {
+            var totalPages = pdf.numPages;
+            var pdfContainer = document.getElementById('pdf-container');
+
+            // Loop through all pages and render each one
+            for (let pageNum = 1; pageNum <= totalPages; pageNum++) {
+                pdf.getPage(pageNum).then(function(page) {
+                    var scale = .925;
+                    var viewport = page.getViewport({ scale: scale });
+
+                    // Create a new canvas for each page
+                    var canvas = document.createElement('canvas');
+                    var context = canvas.getContext('2d');
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+                    pdfContainer.appendChild(canvas);
+
+                    // Render the page on the canvas
+                    var renderContext = {
+                        canvasContext: context,
+                        viewport: viewport,
+                    };
+                    page.render(renderContext);
+                });
+            }
+        }).catch(function(error) {
+            console.error('Error loading PDF:', error);
+        });
+    </script>
+</body>
+</html>

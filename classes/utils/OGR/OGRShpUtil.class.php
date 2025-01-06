@@ -2,9 +2,11 @@
 
 namespace utils\OGR;
 
+use formats\Shp;
 use utils\EncodingUtil;
 use utils\ParamUtil;
 use utils\OGR\OGRUtil;
+use v5\Projections;
 
 /**
  * OGR, part of GDAL, is a set of libraries that are used for working with
@@ -71,19 +73,19 @@ class OGRShpUtil
     protected $layerInfo;
 
     public $hasGeom = true;
-    
+
     public $xmlFile;
 
     public function Import($params)
     {
-        list ($file, $layerId, $layerBaseName, $srs) = ParamUtil::ListValues($params, 'file', 'layerId', 'basename', 'srs');
+        list($file, $layerId, $layerBaseName, $srs) = ParamUtil::ListValues($params, 'file', 'layerId', 'basename', 'srs');
         $dbInfo = OGRUtil::GetDBInfo();
-        
+
         $this->layerId = $layerId;
         $this->layer = \Layer::GetLayer($this->layerId);
-        
+
         $this->layerInfo = $this->layer->DumpArray($this->layerId);
-        
+
         $this->srs = $srs;
         $this->dbInfo = $dbInfo;
         $file = str_replace(' ', '\\ ', $file);
@@ -96,29 +98,31 @@ class OGRShpUtil
         if (! file_exists($this->xmlFile))
             $this->xmlFile = null;
         $this->prjFile = $filename_common . '.prj';
-        if (! file_exists($this->prjFile))
+        if (! file_exists($this->prjFile)) {
             $this->prjFile = null;
-        
+            throw new \model\reporting\ReportError('No Prj file: A prj file was not detected for this layer', ['status' => 'problem'], $this->layer);
+        }
         $this->metadata = $this->getLayer($this->srcFile);
-        if($this->prjFile && file_exists($this->prjFile)) {
-            $this->metadata['srs']= file_get_contents($this->prjFile);
+        #var_dump(file_get_contents($this->prjFile));
+        if ($this->prjFile && file_exists($this->prjFile)) {
+            $this->metadata['srs'] = file_get_contents($this->prjFile);
         }
         $this->convertFile($file);
-        if($this->xmlFile) {
+        if ($this->xmlFile) {
             $this->layer->importMetadata($this->xmlFile);
         }
         // $this->getTableSQL ( $file, $layerId, $layerBaseName );
-        
+
         // this->makeRecords($file);
         // ie();
     }
 
     public function insertRecords()
     {
-       
+
         $report = array();
         $report['problems'] = array();
-        
+
         $code = $this->GetEncodingCode($this->dbfFile);
         $W = ""; // Holds the -W encodingname flag for the shp2pgsql command.
         $info = EncodingUtil::GetEncoding($code);
@@ -128,12 +132,12 @@ class OGRShpUtil
         } else {
             $report['encoding'] = 'Unknown Encoding';
         }
-        
+
         $report['info'] = $this->metadata;
         $db = \System::GetDB(\System::DB_ACCOUNT_SU);
-        
+
         $pgsql = "psql -h {$this->dbInfo['host']} --username={$this->dbInfo['user']} -w -1 --dbname={$this->dbInfo['db']}";
-        
+
         /*
          * $cmds = implode ( ' ', $this->commands );
          * $cmd = "export PGPASSWORD='{$this->dbInfo['pw']}';";
@@ -141,46 +145,46 @@ class OGRShpUtil
          * $cmd .= "psql -h {$this->dbInfo['host']} --username={$this->dbInfo['user']} -w -1 --dbname={$this->dbInfo['db']};";
          * $cmd .= "export PGPASSWORD='';";
          */
-        
+
         // $res = shell_exec ( escapeshellcmd ( $cmd ) );
         $resultFile = $this->sqlFile . '.out';
-        
+
         $logFile = $this->sqlFile . 'log';
-        
+
         $report['import']['records_to_import'] = intval(trim($this->metadata['info']['count']));
         $report['prev_layer'] = $this->layerInfo;
-        
+
         $cmd = <<<SED
 		 perl -pi -e "s/INTO/UNTO/g" {$this->sqlFile}
 SED;
         // $res = shell_exec ( escapeshellcmd ( $cmd ));
-        
+
         $cmd = "export PGPASSWORD='{$this->dbInfo['pw']}';";
         $cmd .= "$pgsql -E -L $logFile --set ON_ERROR_STOP=on  < {$this->sqlFile} > $resultFile  2>&1 >/dev/null | GREP ^[EL]";
         ob_start();
         passthru($cmd, $res);
-        
+
         $res = ob_get_clean();
         $cmd = "export PGPASSWORD='';";
         $res = shell_exec($cmd);
-        
+
         $cmd = "grep -c 'INSERT 0 1' < $logFile";
-        
+
         ob_start();
         passthru($cmd);
         $numAttempted = intval(trim(ob_get_clean()));
         ob_end_flush();
-        
+
         $report['import']['num_attempted'] = $numAttempted;
-        
+
         $numInserted = $db->GetOne("select count(*) from " . $this->layer->url);
         if ($numInserted === false)
             $numInserted = '0';
         $numInserted = intval($numInserted);
-        
+
         $report['import']['numInserted'] = $numInserted;
         if ($numInserted < $report['import']['records_to_import']) {
-            
+
             ob_start();
             passthru("grep ^[EL] < $resultFile");
             $errorInfo = ob_get_clean();
@@ -196,7 +200,7 @@ SED;
                 $error[$key] = $val;
             }
             $report['status'] = 'problem';
-            
+
             ob_start();
             passthru("grep '^INSERT' < $logFile | tail --lines=1");
             $lastLine = ob_get_clean();
@@ -205,9 +209,9 @@ SED;
         } else {
             $report['status'] = 'ok';
         }
-        
+
         // $importReport = new ImportReport ();
-        
+
         // $importReport->CreateReport ( $this->layerId, $report );
         // error_log(json_encode($report->GetReport($layerId)));
         return $report;
@@ -282,25 +286,49 @@ SED;
     protected function convertFile($file, $srid = 4326)
     {
         $srs = "";
-        if (file_exists(substr($file, 0, - 4) . ".tmp.sql"))
-            shell_exec("rm " . substr($file, 0, - 4) . ".tmp.*");
-        $tmp = substr($file, 0, - 4) . ".tmp.sql";
+        if (file_exists(substr($file, 0, -4) . ".tmp.sql"))
+            shell_exec("rm " . substr($file, 0, -4) . ".tmp.*");
+        $tmp = substr($file, 0, -4) . ".tmp.sql";
         $this->sqlFile = $tmp;
+
         if ($this->metadata['info']) {
             $infoSrs = $this->metadata['info']['srs'];
-            if ((stripos($infoSrs, 'unknown') > - 1)) {
+            if ((stripos($infoSrs, 'unknown') === false)) {
                 $this->srs = $infoSrs;
-                $srs = '-s_srs ' . $this->srs;
-            } else {
-                if (! is_null($this->srs))
-                    $srs = '-s_srs ' . $this->srs;
+                $srsAuth = Projections::FindAuthority($infoSrs);
+                if ($srsAuth) {
+                    //list($a,$c) = explode(':',$srsAuth);
+                    if (stripos($srsAuth, 'ESPG')) {
+                        $srs = "-s_srs $srsAuth";
+                    } else {
+                        $this->srs = Projections::GetSRS($srsAuth);
+                        $srs = "-s_srs  '{$this->srs}'";
+                    }
+                }
+            }
+        }
+
+        if ($srs == '') {
+            $epsgId = Projections::FindAuthority($this->prjFile);
+            if ($epsgId) {
+                if (stripos($epsgId, 'ESPG') > -1) {
+                    $srs = "-s_srs $epsgId";
+                }
+            }
+            if ($srs == '') {
+                if (! is_null($this->srs)) {
+                    $srs = "-s_srs '{$this->srs}'";
+                }
             }
         }
         $table = $this->layer->url;
-        
-        $command = "ogr2ogr  -lco FID=gid -lco DROP_TABLE=IF_EXISTS -lco PRECISION=NO -lco GEOMETRY_NAME=the_geom -lco LINEFORMAT=LF -lco GEOM_TYPE=geometry -t_srs EPSG:4326 -f PGDump $tmp $file -nln $table -nlt GEOMETRY 2>&1";
+
+        $command = "ogr2ogr $srs -lco FID=gid -lco DROP_TABLE=IF_EXISTS -lco PRECISION=NO -lco GEOMETRY_NAME=the_geom -lco GEOM_TYPE=geometry -t_srs EPSG:4326 -f PGDump $tmp $file -nln $table -nlt GEOMETRY 2>&1";
         // "ogr2ogr -t_srs EPSG:4326 $tmp $file 2>&1";
+        #var_dump($command);
         $res = shell_exec($command);
+        #var_dump($res);
+
     }
 
     protected function getTableSQL($file, $layerId, $layerBaseName = "")
@@ -370,17 +398,17 @@ SED;
         $info = explode("\n", $info);
         array_shift($info);
         array_shift($info);
-       
+
         $layers = array();
-        
+
         foreach ($info as $i => $line) {
             if (trim($line) == "")
                 continue;
-            
-            list ($index, $layername) = explode(":", $line);
+
+            list($index, $layername) = explode(":", $line);
             $index = (int) $index;
             $layername = trim($layername);
-            list ($layer, $type) = explode(' ', $layername);
+            list($layer, $type) = explode(' ', $layername);
             $layer = trim($layer);
             $type = trim(str_replace(array(
                 '(',
@@ -392,7 +420,7 @@ SED;
                 'type' => strtolower($type)
             );
             $layer['info'] = $this->getInfo($shpFile, $layer);
-            
+
             return $layer;
         }
     }
@@ -429,12 +457,12 @@ SED;
                             $wkt = "";
                             while (strrpos($info[$i2], ',') == (strlen($info[$i2]) - 1)) {
                                 $wkt .= trim($info[$i2]);
-                                $i2 ++;
+                                $i2++;
                             }
                             $i = $i2;
                             $i = $i2;
                             $wkt .= trim($info[$i2]);
-                            
+
                             $layerInfo['srs'] = trim($wkt);
                             break;
                         default:
@@ -444,11 +472,9 @@ SED;
                 }
             }
         }
-        
+
         return $layerInfo;
     }
 }
 // dbInfo = array('db'=>'cartograph','pw'=>'5l1pp3ry!');
 // reader = new OGRReader($shpFile,'0arttest','newdata',$dbInfo);
-
-?>

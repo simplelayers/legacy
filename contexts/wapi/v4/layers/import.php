@@ -4,6 +4,7 @@ use utils\PageUtil;
 
 function _exec()
 {
+    
     $args = WAPI::GetParams();
     
     $world = System::Get();
@@ -16,7 +17,7 @@ function _exec()
     $formatObj = LayerFormats::GetFormatInstance ( $importFmt );
     
     $format = WAPI::GetFormat();
-   
+ 
     $report = $formatObj->Import($args );
     #$format =   'json';
     switch($format) {
@@ -28,5 +29,4 @@ function _exec()
             break;
             
     }
-    
 }

@@ -10,7 +10,8 @@ use utils\DOUtil;
 class AppContext extends Context {
     public $app = null;
     public $params = null;
-    
+    public $isloggingIn = false;
+	
 	public function __construct(Creds $creds) {
 		parent::__construct ( $creds );
 		// Handle Exceptions through the wapi exception handler which serves as a global exception handler.

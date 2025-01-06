@@ -6,12 +6,13 @@
 }
 
 #page_content tr.align_left td {
-    text-align:left;	
+    text-align: left;
 }
 
 .spaceBefore_5 {
     margin-top: 5px;
 }
+
 button {
     padding: 4px 8px 4px 8px !important;
 }
@@ -21,6 +22,7 @@ button {
     white-space: pre;
     overflow: hidden;
 }
+
 .colorbrewer_palette {
     width: 200px !important;
     height: 25px !important;
@@ -33,46 +35,49 @@ button {
 
 .swatch {
     margin-top: 18px;
-    margin-left: 4px;	
+    margin-left: 4px;
 }
 
 .wrapped {
-    white-space:normal;	
+    white-space: normal;
 }
 
 .autowidth {
-    width:auto;
+    width: auto;
 }
 
 .bordered td {
     text-align: top !important;
     padding: 5px !important;
     font-size: 10pt !important;
-    line-height: 12pt !important;	
+    line-height: 12pt !important;
 }
 
 html {
-    height:100%;
-    width:100%;
-    padding:0px;
-    margin:0px;
-    background:#fff;
-    overflow-x:auto;
+    height: 100%;
+    width: 100%;
+    padding: 0px;
+    margin: 0px;
+    background: #fff;
+    overflow-x: auto;
 }
+
 body {
-    font-size: 11pt !important; 
-    margin:0px;
-    padding:0px;
-    height:100%;
-    width:100%;
+    font-size: 11pt !important;
+    margin: 0px;
+    padding: 0px;
+    height: 100%;
+    width: 100%;
     overflow: auto !important;
 }
+
 table {
     border-width: 0px;
     border-collapse: collapse;
-    border:none;
+    border: none;
 
 }
+
 h3 {
     font-size: 12pt;
     line-height: 14pt;
@@ -87,50 +92,57 @@ h3.section_head {
     margin-top: 12pt;
     margin-bottom: 8pt !important;
 }
+
 .section_head {
     font-style: normal;
     font-weight: bold;
     font-size: 12pt;
     margin-bottom: 8pt !important;
 }
+
 h2 span.subhead {
     font-size: 14pt;
     font-style: italic;
 }
+
 tr {
-    vertical-align:top;
+    vertical-align: top;
 
 }
+
 td {
-    vertical-align:top;
-    padding:0px;
+    vertical-align: top;
+    padding: 0px;
 }
+
 .pageLayout {
-    width:100%;	
-    border:none;
-    border-style:none;
+    width: 100%;
+    border: none;
+    border-style: none;
 
 }
+
 .workarea_layout {
-    width:100%;
-    height:100%;
-    border:none;
+    width: 100%;
+    height: 100%;
+    border: none;
     border-collapse: collapse;
     border-spacing: 0px;
 }
 
 .empty_right {
-    width:100%;
+    width: 100%;
 }
 
-#page_content td{
-    vertical-align:top;
+#page_content td {
+    vertical-align: top;
 }
 
 #page_content form td {
     vertical-align: middle;
 
 }
+
 #page_content form td:nth-child(1) {
     padding-right: 10px;
 }
@@ -140,24 +152,25 @@ td {
     line-height: 0px !important;
     vertical-align: top;
 
-    height:0px;
-    background:#ccc;
+    height: 0px;
+    background: #ccc;
 
 }
 
-.pageLayout td, .dijitDialogPaneContent td {
+.pageLayout td,
+.dijitDialogPaneContent td {
     border-collapse: collapse;
     border-spacing: 0px;
     vertical-align: middle;
-    display:table-cell;
-    margin:0px;
-    padding:0px;
+    display: table-cell;
+    margin: 0px;
+    padding: 0px;
     line-height: 20pt;
 
 }
 
 .pageLayout .mainContent {
-    padding-left:10px;	
+    padding-left: 10px;
 }
 
 .scrollable_listing {
@@ -170,20 +183,19 @@ td {
 }
 
 .mainContent td.workArea {
-    vertical-align:top;
+    vertical-align: top;
 }
 
-#toolbar,#toolbarMenuContent {
+#toolbar,
+#toolbarMenuContent {
     left: 0px;
     right: 0px;
 }
 
-#contentWrapper {
-
-}
+#contentWrapper {}
 
 #nav_row {
-    background: #eee !important;	
+    background: #eee !important;
 }
 
 #subnav_row {
@@ -194,9 +206,10 @@ td {
 
 #subnav_row #contact_selector {
 
-    display:inline-block;
+    display: inline-block;
 }
-display: grid !important;
+
+/*display: grid !important;
 align-content: center;
 align-items: center;
 grid-template-columns: auto 1fr;
@@ -205,6 +218,7 @@ justify-content: start;
 grid-gap: 0px;
 grid-template-rows: auto;
 justify-items: end;
+*/
 #pageTitle {
     padding-left: 10px;
     background: #eee;
@@ -226,14 +240,14 @@ justify-items: end;
 }
 
 #subnav table {
-    display:inline-block;
+    display: inline-block;
     border-spacing: 0;
     white-space: nowrap;
     overflow: hidden;
 
 }
 
-.subnavTable  tr {
+.subnavTable tr {
     white-space: nowrap !important;
 }
 
@@ -272,7 +286,7 @@ justify-items: end;
 #navRow {
     padding: 10px;
     background: #f8f8f8;
-    height:3em; 
+    height: 3em;
 }
 
 .subnavHeader {
@@ -282,6 +296,7 @@ justify-items: end;
 #lastUpdated {
     float: right;
 }
+
 #subnav #navRow:not(.hidden) {
     display: grid !important;
     align-content: center;
@@ -293,12 +308,15 @@ justify-items: end;
     grid-template-rows: auto;
     justify-items: end;
 }
+
 #subnav #navRow .form-select {
     width: fit-content;
 }
+
 #subnav #navRow #contact_selector {
     display: flex;
 }
+
 #navRow.flex-row {
     white-space: nowrap !important;
     flex-flow: row;
@@ -307,23 +325,25 @@ justify-items: end;
     align-content: flex-start;
 }
 
-#navRow .filterNav{
+#navRow .filterNav {
     white-space: no-wrap;
     flex-grow: 0;
     max-width: 25em;
-    align-items:baseline;
+    align-items: baseline;
 }
+
 #navRow .filterNav .form-label {
     margin-right: .5em;
     font-weight: bold;
 }
+
 #list .type {
     text-align: center;
 }
 
 .workarea {
-    width:100% !important;
-    height:auto;
+    width: 100% !important;
+    height: auto;
 
 }
 
@@ -350,7 +370,7 @@ justify-items: end;
 
 .tundra .dijitInputContainer input {
     font-size: 10pt !important;
-    padding:3px !important;
+    padding: 3px !important;
 
 }
 
@@ -367,22 +387,26 @@ input.invalid {
     width: 100%;
 }
 
-.dijitTextBox, input {
+.dijitTextBox,
+input {}
 
-}
-
-.deleted input, .deleted .dijitInputContainer, .deleted .dijitTextBox {
-    border:none !important;
-    background:transparent !important;
+.deleted input,
+.deleted .dijitInputContainer,
+.deleted .dijitTextBox {
+    border: none !important;
+    background: transparent !important;
     text-decoration: line-through;
 
 }
 
-.deleted label,.deleted a {
+.deleted label,
+.deleted a {
     text-decoration: line-through;
 }
 
-.changed input, .changed .dijitInputContainer, .changed .dijitTextBox {
+.changed input,
+.changed .dijitInputContainer,
+.changed .dijitTextBox {
     font-style: italic;
     border-color: #269CE9 !important;
     border-width: 2px !important;
@@ -392,9 +416,8 @@ input.invalid {
 .instructions {
     font-style: italic !important;
 }
-.cell_max_height {
 
-}
+.cell_max_height {}
 
 .dijitMenuItemLabel {
     font-size: 10pt !important;
@@ -408,26 +431,34 @@ input.invalid {
     font-size: 10pt !important;
     padding: 2px 10px 2px 5px !important;
 
-} 
+}
+
 .dijitArrowButtonContainer {
     background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjUxJSIgc3RvcC1jb2xvcj0iI2U2ZTZlNiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNlNmU2ZTYiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+) !important;
-    background: -moz-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(230,230,230,1) 51%, rgba(230,230,230,1) 100%) !important; /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,1)), color-stop(51%,rgba(230,230,230,1)), color-stop(100%,rgba(230,230,230,1))) !important; /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(230,230,230,1) 51%,rgba(230,230,230,1) 100%) !important; /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(230,230,230,1) 51%,rgba(230,230,230,1) 100%) !important; /* Opera 11.10+ */
-    background: -ms-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(230,230,230,1) 51%,rgba(230,230,230,1) 100%) !important; /* IE10+ */
-    background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(230,230,230,1) 51%,rgba(230,230,230,1) 100%) !important; /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e6e6e6',GradientType=0 ) !important; /* IE6-8 */
+    background: -moz-linear-gradient(top, rgba(255, 255, 255, 1) 0%, rgba(230, 230, 230, 1) 51%, rgba(230, 230, 230, 1) 100%) !important;
+    /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(255, 255, 255, 1)), color-stop(51%, rgba(230, 230, 230, 1)), color-stop(100%, rgba(230, 230, 230, 1))) !important;
+    /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, rgba(255, 255, 255, 1) 0%, rgba(230, 230, 230, 1) 51%, rgba(230, 230, 230, 1) 100%) !important;
+    /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, rgba(255, 255, 255, 1) 0%, rgba(230, 230, 230, 1) 51%, rgba(230, 230, 230, 1) 100%) !important;
+    /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, rgba(255, 255, 255, 1) 0%, rgba(230, 230, 230, 1) 51%, rgba(230, 230, 230, 1) 100%) !important;
+    /* IE10+ */
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 1) 0%, rgba(230, 230, 230, 1) 51%, rgba(230, 230, 230, 1) 100%) !important;
+    /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#e6e6e6', GradientType=0) !important;
+    /* IE6-8 */
 }
 
 .full_width {
-    width:100%;
+    width: 100%;
 }
 
 
-#shared_layers  {
+#shared_layers {
     padding-top: 28px;
-    padding-bottom:25px;
+    padding-bottom: 25px;
     margin-right: 50px;
 }
 
@@ -438,15 +469,18 @@ input.invalid {
 .dataTable .action {
     white-space: nowrap;
 }
+
 #selector img,
 #loading {
     width: 1.25em;
     height: 1.25em;
 }
+
 .loader-container {
     height: 100%;
-    padding: .25em;   
+    padding: .25em;
 }
+
 #selector select {
     width: auto;
     flex-grow: 0;
