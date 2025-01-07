@@ -55,7 +55,7 @@ function openViewer(projectid,event) {
            appURL = 'https://apps-staging.simplelayers.com/dmi/sl-viewer/'+projectid;
            break;
        case 'secure':
-           appURL = 'https://apps.simplelayers.com/viewer/dmi/sl-viewer/'+projectid;
+           appURL = 'https://apps.simplelayers.com/dmi/sl-viewer/'+projectid;
            break;
    }
    window.open(appURL,'_blank');
