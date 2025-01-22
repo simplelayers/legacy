@@ -3,7 +3,12 @@
 .import_report {
 	margin-top: 20px;
 }
-
+#page_content {
+	display:block;
+}
+.mainContent {
+	opacity:1 !important;
+}
 .dijitSelect {
 	margin-left:5px !important;
 }

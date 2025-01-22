@@ -504,11 +504,14 @@ class DMIContext extends Context
                 $title[$i] = ucfirst($title[$i]);
             }
             $title = implode(' ', $title);
+            
+            if (!$this->isAuth) {
+                $subnav = SubnavFactory::GetNav($rootContext);
+                if ($subnav) {
 
-            $subnav = SubnavFactory::GetNav($rootContext);
-            if ($subnav) {
-                $subnav->makeDefault($user, $title, $org, $pageArgs);
-                echo $subnav->fetch();
+                    // $subnav->makeDefault($user, $title, $org, $pageArgs);
+                    echo $subnav->fetch();
+                }
             } else {
                 echo "<div class='mainContent'></div>";
             }

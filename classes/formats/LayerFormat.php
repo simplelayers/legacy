@@ -12,7 +12,7 @@ use v5\Projections;
 
 class LayerFormat
 {
-
+    protected $label = '';
     public $importReport = null;
     public $inputTemplate = null;
     public $reimportTemplate = null;
@@ -177,7 +177,7 @@ class LayerFormat
         // if reimporting we should have the data
         // if not then we need to create the layer record and determine the table name.
 
-        $desiredName = ImportUtil::RenameFile($file, $this->ext, null, $this->baseName, false);
+        $desiredName = ImportUtil::RenameFile($file, $this->ext, null, $this->basename, false);
 
         $this->desiredNames[$file] = $desiredName;
         $projection = ParamUtil::Get($params, 'projection');
@@ -228,10 +228,10 @@ class LayerFormat
     {
 
         $metadata = $ogrLayer->metadata;
-
+   
         $db = \System::GetDB(\System::DB_ACCOUNT_SU);
         $layerId = $layer->id;
-
+       
         if ($ogrLayer->hasGeom === false) {
             //$layer->setLayerGeomType(\GeomTypes::RELATABLE);
             $layer->setLayerType(\LayerTypes::RELATABLE);
@@ -239,11 +239,6 @@ class LayerFormat
             $layer->setLayerGeomType($layer->geomtype);
         }
 
-        /*if ($ogrLayer->hasGeom === false) {
-            $layer->setLayerGeomType(\GeomTypes::RELATABLE);
-        } else {
-            $layer->setLayerGeomType($layer->geomtype);
-        }*/
 
         $report = $ogrLayer->InsertRecords();
         /*@var $layer \Layer  */
@@ -259,10 +254,10 @@ class LayerFormat
             if ($report['prev_layer'])
                 unset($report['prev_layer']);
         }
-
+     
         $layer->setDBOwnerToDatabase();
 
-        if (! $isOk) {
+        if ($isOk = false) {
             if ($report['sl_message']) {
                 throw new \Exception($report['sl_message']);
             }
@@ -306,6 +301,7 @@ class LayerFormat
         $this->importReport->AddLayerReport($layer->id, $report);
         $layer->report_id = $report['id'];
         chdir('..');
+      
         return $report;
     }
 

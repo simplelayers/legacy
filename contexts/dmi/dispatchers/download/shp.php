@@ -19,12 +19,11 @@ function _config_shp() {
 }
 
 function _dispatch_shp($template, $args) {
-  
     $wapi = System::GetWapi();
     $args = $wapi->GetParams();
     $args['srs'] = 'layer';
     LayerToShp::Export($args);
-    return;
+
     $world = System::Get();
     $user = SimpleSession::Get()->GetUser();
     $ini = System::GetIni();
@@ -79,8 +78,6 @@ function _dispatch_shp($template, $args) {
         } else {
             $files = pgsql2shp($world, $layer->url, $layername);
         }
-        var_dump($files);
-        die();
         $tempDir = dirname($files[0]);
     } else if ($layer->type == LayerTypes::ODBC) {
         $odbcinfo = $layer->url;

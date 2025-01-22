@@ -51,7 +51,7 @@ class Layer
      *
      *
      */
-    public $colorscheme = array(); // the ColorScheme object for this layer
+    public $colorscheme; // the ColorScheme object for this layer
 
     /**
      *
