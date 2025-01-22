@@ -32,10 +32,10 @@ define(["dojo/_base/declare",
     		widget,
     		sl_button,
     		template){
-        return declare('sl_pages/organization/invites',[_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
+        return declare('sl_pages/import/reports/layers',[_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
             // Some default values for our author
             // These typically map to whatever you're passing to the constructor
-        	baseClass:'invites',
+        	baseClass:'import-reports',
         	templateString: template,
         	permissions:null,
         	imporetViewed:false,
@@ -44,12 +44,16 @@ define(["dojo/_base/declare",
         	roles:null,
         	orgId:null,
         	constructor:function() {
-        	   	pages.SetPageArg('pageSubnav','data');
+				var div = document.createElement('div');
+				div.classList.toggle('mainContent',true);
+				
+        		document.getElementById('page_content').appendChild(div);
+
+				pages.SetPageArg('pageSubnav','data');
         	   	pages.SetPageArg('pageTitle','Data: Import Report');
-        	   	
+				
         	},
         	postCreate:function(){
-        		
         		domClass.add(this.domNode,pages.GetPageActor());
         	}
         });

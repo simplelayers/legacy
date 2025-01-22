@@ -122,7 +122,6 @@ class OGRShpUtil
 
         $report = array();
         $report['problems'] = array();
-
         $code = $this->GetEncodingCode($this->dbfFile);
         $W = ""; // Holds the -W encodingname flag for the shp2pgsql command.
         $info = EncodingUtil::GetEncoding($code);
@@ -137,7 +136,7 @@ class OGRShpUtil
         $db = \System::GetDB(\System::DB_ACCOUNT_SU);
 
         $pgsql = "psql -h {$this->dbInfo['host']} --username={$this->dbInfo['user']} -w -1 --dbname={$this->dbInfo['db']}";
-
+        
         /*
          * $cmds = implode ( ' ', $this->commands );
          * $cmd = "export PGPASSWORD='{$this->dbInfo['pw']}';";

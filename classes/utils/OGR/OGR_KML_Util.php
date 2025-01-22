@@ -1,7 +1,9 @@
 <?php
+
 namespace utils\OGR;
 
 use utils\OGR\OGRUtil;
+
 /**
  * OGR, part of GDAL, is a set of libraries that are used for working with
  * feature data stored in a variety of formats.
@@ -34,7 +36,8 @@ use utils\OGR\OGRUtil;
  * @author Arthur
  *        
  */
-class OGR_KML_Util {
+class OGR_KML_Util
+{
 	/**
 	 * Stores info retrieved from ogrinfo about the target shp file.
 	 *
@@ -55,189 +58,198 @@ class OGR_KML_Util {
 	protected $kmlFile;
 	protected $prjFile;
 	protected $format = "KML";
-	
+
 	/* OGR call to create just the copy commands.
 	 * ogr2ogr -lco LAUNDER=YES  -lco CREATE_SCHEMA=OFF  -lco CREATE_TABLE=OFF  -lco FID=gid --config PG_USE_COPY YES -f PGDump  /home/art/public_html/simplelayers/_tests/temp/files/test.tmp.sql /home/art/public_html/simplelayers/_tests/temp/files/test.kml
 	 */
-	public function Import($file, $layerId) {
-		$srs =null;
+	public function Import($file, $layerId)
+	{
+		$srs = null;
 		$ini = \System::GetIni();
-		
+
 		$this->layerId = $layerId;
 		$this->srs = $srs;
 		$this->dbInfo = OGRUtil::GetDBInfo();
-		$file = str_replace ( ' ', '\\ ', $file );
+		$file = str_replace(' ', '\\ ', $file);
 		$this->srcFile = $file;
-		$filename_common = explode ( '.', $file );
-		$filename_common = implode ( ".", $filename_common );
-		
-		$this->metadata = OGRUtil::GetLayerInfo( $file );
-		$this->ConvertFile ( $file );
-		$this->GetTableSQL ( $this->tmpFile, $layerId );
+		$filename_common = explode('.', $file);
+		$filename_common = implode(".", $filename_common);
+		$this->metadata = OGRUtil::GetLayerInfo($file);
+		$this->ConvertFile($file);
+		$this->GetTableSQL($this->tmpFile, $layerId);
 		$this->InsertRecords();
-
 	}
-	public function InsertRecords() {
-		$stats = array ();
-		$stats ['problems'] = array ();
+	public function InsertRecords()
+	{
+		$stats = array();
+		$stats['problems'] = array();
 
-		if (! file_exists ( $this->copyFile )) {
-			throw new \Exception ( "Unable to produce sql file: " . $this->copyFile );
+		if (! file_exists($this->copyFile)) {
+			throw new \Exception("Unable to produce sql file: " . $this->copyFile);
 		}
-		
-		$pgsql = "psql -h {$this->dbInfo['host']} --username={$this->dbInfo['user']} -w -1 --dbname={$this->dbInfo['db']}";		
 
-		$db = \System::GetDB ( \System::DB_ACCOUNT_SU );
+		$pgsql = "psql -h {$this->dbInfo['host']} --username={$this->dbInfo['user']} -w -1 --dbname={$this->dbInfo['db']}";
+
+		$db = \System::GetDB(\System::DB_ACCOUNT_SU);
 		$file = $this->srcFile;
-		
-		$cmds = implode ( ' ', $this->commands );
-		
+
+		$cmds = implode(' ', $this->commands);
+
 		$cmd = "export PGPASSWORD='{$this->dbInfo['pw']}';";
-		$cmd .= "echo " . escapeshellarg ( $cmds ) . " |";
-		$cmd .= $pgsql." ;";
-		$res = shell_exec ( $cmd );
-		
+		$cmd .= "echo " . escapeshellarg($cmds) . " |";
+		$cmd .= $pgsql . " ;";
+		$res = shell_exec($cmd);
+
 		// $cmd = "export PGPASSWORD='{$this->dbInfo['pw']}';";
-		
+
 		$cmd = "export PGPASSWORD='{$this->dbInfo['pw']}';";
-		$cmd.= 	"$pgsql < {$this->copyFile}";
-	
-		$res = shell_exec ( $cmd );
-			
+		$cmd .= 	"$pgsql < {$this->copyFile}";
+		$res = shell_exec($cmd);
+
 		$cmd = "export PGPASSWORD='';";
-		$res = shell_exec ( $cmd );
-		
-		return;
+		$res = shell_exec($cmd);
+		$report = [];
+		$report['info'] = $this->metadata;
+		$report['import'] = [];
+		if (isset($this->metdata['info']['count'])) {
+			$report['import']['records_to_import'] = intval(trim($this->metadata['info']['count']));
+		}
+		if($this->layerId) {
+			$inserted = $db->GetOne('select count(*) from vectordata_'.$this->layerId);
+			$report['import']['numInserted'] = $inserted;
+		}
+		$report['status'] = 'ok';
+		return $report;
 	}
-	protected function GetEncodingCode($dbf) {
-		$file = fopen ( $dbf, 'r' );
+	protected function GetEncodingCode($dbf)
+	{
+		$file = fopen($dbf, 'r');
 		if (! $file)
 			return false;
-		fseek ( $file, 29 );
-		$code = ord ( fread ( $file, 1 ) );
-		fclose ( $file );
+		fseek($file, 29);
+		$code = ord(fread($file, 1));
+		fclose($file);
 		return $code;
 	}
-	protected function GetRecordInfo($record, &$stats) {
-		if (! isset ( $stats ['url_fields'] )) {
-			$stats ['url_fields'] = array ();
-			$stats ['tagged_fields'] = array ();
-			$stats ['added'] = 0;
-			$stats ['fields'] = array ();
+	protected function GetRecordInfo($record, &$stats)
+	{
+		if (! isset($stats['url_fields'])) {
+			$stats['url_fields'] = array();
+			$stats['tagged_fields'] = array();
+			$stats['added'] = 0;
+			$stats['fields'] = array();
 		}
-		foreach ( $record as $field => $data ) {
-			if (strlen ( $field ) == 1)
+		foreach ($record as $field => $data) {
+			if (strlen($field) == 1)
 				continue;
-			
-			$isURL = (stripos ( $data, 'http' ) === 0);
-			$isURL = $isURL || (stripos ( $data, 'ftp' ) === 0);
-			$isURL = $isURL || (stripos ( $data, 'sftp' ) === 0);
-			$isURL = $isURL || (stripos ( $data, 'sftp' ) === 0);
-			$isURL = $isURL || (stripos ( $data, 'mailto' ) === 0);
-			$isURL = $isURL || (stripos ( $data, 'gopher' ) === 0);
-			$isURL = $isURL || (stripos ( $data, 'news' ) === 0);
-			$isURL = $isURL || (stripos ( $data, 'telnet' ) === 0);
-			$isURL = $isURL || (stripos ( $data, 'ssh' ) === 0);
-			$isURL = $isURL || (stripos ( $data, '\\' ) === 0);
-			
+
+			$isURL = (stripos($data, 'http') === 0);
+			$isURL = $isURL || (stripos($data, 'ftp') === 0);
+			$isURL = $isURL || (stripos($data, 'sftp') === 0);
+			$isURL = $isURL || (stripos($data, 'sftp') === 0);
+			$isURL = $isURL || (stripos($data, 'mailto') === 0);
+			$isURL = $isURL || (stripos($data, 'gopher') === 0);
+			$isURL = $isURL || (stripos($data, 'news') === 0);
+			$isURL = $isURL || (stripos($data, 'telnet') === 0);
+			$isURL = $isURL || (stripos($data, 'ssh') === 0);
+			$isURL = $isURL || (stripos($data, '\\') === 0);
+
 			if ($isURL) {
-				if (! in_array ( $field, $stats ['url_fields'] ))
-					$stats ['url_fields'] [] = $field;
+				if (! in_array($field, $stats['url_fields']))
+					$stats['url_fields'][] = $field;
 			}
-			if ($data != strip_tags ( $data )) {
-				if (! in_array ( $field, $stats ['tagged_fields'] ))
-					$stats ['tagged_fields'] [] = $field;
+			if ($data != strip_tags($data)) {
+				if (! in_array($field, $stats['tagged_fields']))
+					$stats['tagged_fields'][] = $field;
 			}
-			if (is_int ( $data ) || is_float ( $data )) {
-				if (! isset ( $stats ['fields'] [$field] )) {
-					$stats ['fields'] [$field] ['nulls'] = ($data == 'NULL') ? 0 : 1;
+			if (is_int($data) || is_float($data)) {
+				if (! isset($stats['fields'][$field])) {
+					$stats['fields'][$field]['nulls'] = ($data == 'NULL') ? 0 : 1;
 					if (! ($data == 'NULL')) {
-						$stats ['fields'] [$field] ['min'] = $data;
-						$stats ['fields'] [$field] ['max'] = $data;
+						$stats['fields'][$field]['min'] = $data;
+						$stats['fields'][$field]['max'] = $data;
 					}
 				} else {
 					if ($data == 'NULL') {
-						$stats ['fields'] [$field] ['nulls'] += 1;
+						$stats['fields'][$field]['nulls'] += 1;
 					} else {
-						$stats ['fields'] [$field] ['min'] = min ( $stats ['fields'] [$field] ['min'], $data );
-						$stats ['fields'] [$field] ['max'] = max ( $stats ['fields'] [$field] ['max'], $data );
+						$stats['fields'][$field]['min'] = min($stats['fields'][$field]['min'], $data);
+						$stats['fields'][$field]['max'] = max($stats['fields'][$field]['max'], $data);
 					}
 				}
 			} else {
-				if (! isset ( $stats [$field] )) {
-					$stats ['fields'] [$field] = array ();
+				if (! isset($stats[$field])) {
+					$stats['fields'][$field] = array();
 				}
-				$stats ['fields'] [$field] ['nulls'] = ($data == 'NULL') ? 0 : 1;
+				$stats['fields'][$field]['nulls'] = ($data == 'NULL') ? 0 : 1;
 			}
 		}
-		$stats ['added'] += 1;
+		$stats['added'] += 1;
 	}
-	protected function ConvertFile($file,  $srid = 4326) {
-		
+	protected function ConvertFile($file,  $srid = 4326)
+	{
+
 		$srs = "";
-		if (file_exists ( substr ( $file, 0, - 4 ) . ".tmp.sql" ))
-			shell_exec ( "rm " . substr ( $file, 0, - 4 ) . ".tmp.*" );
-		$tmp = substr ( $file, 0, - 4 ) . ".tmp.sql";
-		
-		if ($this->metadata ['info']) {
-			$infoSrs = $this->metadata ['info'] ['srs'];
-			if ((stripos ( $infoSrs, 'unknown' ) > - 1)) {
+		if (file_exists(substr($file, 0, -4) . ".tmp.sql"))
+			shell_exec("rm " . substr($file, 0, -4) . ".tmp.*");
+		$tmp = substr($file, 0, -4) . ".tmp.sql";
+
+		if ($this->metadata['info']) {
+			$infoSrs = $this->metadata['info']['srs'];
+			if ((stripos($infoSrs, 'unknown') > -1)) {
 				$this->srs = $infoSrs;
 				$srs = '-s_srs ' . $this->srs;
 			} else {
-				if (! is_null ( $this->srs ))
+				if (! is_null($this->srs))
 					$srs = '-s_srs ' . $this->srs;
 			}
 		}
-		$command = "ogr2ogr -lco FID=gid -lco DROP_TABLE=IF_EXISTS -lco GEOMETRY_NAME=the_geom -lco LINEFORMAT=LF -f PGDump -t_srs EPSG:4326  $tmp $file -nln vectordata_".$this->layerId." 2>&1";
-		$res = shell_exec ( $command );
-		$file2 = $tmp.'.copy';
+		$command = "ogr2ogr -lco FID=gid -lco DROP_TABLE=IF_EXISTS -lco GEOMETRY_NAME=the_geom -lco LINEFORMAT=LF -f PGDump -t_srs EPSG:4326  $tmp $file -nln vectordata_" . $this->layerId . " 2>&1";
+		$res = shell_exec($command);
+		$file2 = $tmp . '.copy';
 		$this->tmpFile = $tmp;
-		
-		$command = "ogr2ogr -lco LAUNDER=YES -lco GEOMETRY_NAME=the_geom -lco CREATE_SCHEMA=OFF  -lco CREATE_TABLE=OFF  -lco FID=gid  -f PGDump $file2 $file -nln vectordata_".$this->layerId;
-		$res = shell_exec ( $command );
+
+		$command = "ogr2ogr -lco LAUNDER=YES -lco GEOMETRY_NAME=the_geom -lco CREATE_SCHEMA=OFF  -lco CREATE_TABLE=OFF  -lco FID=gid  -f PGDump $file2 $file -nln vectordata_" . $this->layerId;
+		$res = shell_exec($command);
 		$this->copyFile = $file2;
 	}
-	
-	protected function GetTableSQL($file, $layerId, $layerBaseName = "") {
+
+	protected function GetTableSQL($file, $layerId, $layerBaseName = "")
+	{
 		//$cmd = "shp2pgsql -p -s 4326 " . substr ( $file, 0, - 4 ) . ".tmp.shp";
- 
+
 		$tableInfo = file_get_contents($file);
-		
-		$tableInfo = explode ( "\n", $tableInfo );
-		$layerName = $layerBaseName == "" ? $this->metadata ['layer'] : $layerBaseName . "_" . $this->metadata ['layer'];
-		$this->table = strtolower ( "vectordata_$layerId" );
-		$commands = array ();
+
+		$tableInfo = explode("\n", $tableInfo);
+		$layerName = $layerBaseName == "" ? $this->metadata['layer'] : $layerBaseName . "_" . $this->metadata['layer'];
+		$this->table = strtolower("vectordata_$layerId");
+		$commands = array();
 		//$commands [] = "DROP TABLE IF EXISTS {$this->table};";
-		
-		foreach ( $tableInfo as $i => $line ) {
-			
-			$targetLayer = '"public"."'.strtolower ( $this->metadata ['layer'] ).'"';
-			
-			if(stripos(trim($line),'INSERT')!== false) {
+
+		foreach ($tableInfo as $i => $line) {
+
+			$targetLayer = '"public"."' . strtolower($this->metadata['layer']) . '"';
+
+			if (stripos(trim($line), 'INSERT') !== false) {
 				break;
-			} elseif(stripos ( $line, 'SELECT AddGeometryColumn' ) === 0) {
-				$geomColumnSQL = str_replace ( "'$targetLayer'", "'{$this->table}'", $line );
-				
-				$geomColumnSQL = str_replace ( "'geom'", "'the_geom'", $geomColumnSQL );
-				
-				$geomColumnSQL = str_replace ( 'MULTI', '', $geomColumnSQL );
-				
-				$params = explode ( ',', $geomColumnSQL );
-				$type = str_replace ( "'", '', $params [4] );
+			} elseif (stripos($line, 'SELECT AddGeometryColumn') === 0) {
+				$geomColumnSQL = str_replace("'$targetLayer'", "'{$this->table}'", $line);
+
+				$geomColumnSQL = str_replace("'geom'", "'the_geom'", $geomColumnSQL);
+
+				$geomColumnSQL = str_replace('MULTI', '', $geomColumnSQL);
+
+				$params = explode(',', $geomColumnSQL);
+				$type = str_replace("'", '', $params[4]);
 				$multitype = 'MULTI' . $type;
 			}
-			 
-			$commands[] = $line; 
-			
+
+			$commands[] = $line;
 		}
-		
-		$commands [] = "alter table $this->table drop constraint IF EXISTS enforce_geotype_the_geom ;";
-		$commands [] = "alter table $this->table add constraint enforce_geotype_the_geom CHECK(geometrytype(the_geom) = '$type' OR geometrytype(the_geom) = '$multitype' OR the_geom IS NULL);";
+
+		$commands[] = "alter table $this->table drop constraint IF EXISTS enforce_geotype_the_geom ;";
+		// $commands [] = "alter table $this->table add constraint enforce_geotype_the_geom CHECK(geometrytype(the_geom) = '$type' OR geometrytype(the_geom) = '$multitype' OR the_geom IS NULL);";
 		$commands[] = "COMMIT;";
 		$this->commands = $commands;
 	}
-	
 }
-
-?>

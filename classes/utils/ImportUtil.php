@@ -222,7 +222,6 @@ class ImportUtil
             
         }
         chdir($dir);
-        
       
         return $targets;
     }

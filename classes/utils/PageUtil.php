@@ -148,6 +148,8 @@ class PageUtil
         $pageArgs['layerAccess'] = $accessLevel;
         
         $license = new License();
+        $orgId = $pageArgs['userOrgId'];
+        $org = \Organization::GetOrg($orgId);
         $limits = $license->GetLimitLookup($org->id);
         if ($limits['max_layers']) {
             if (! is_array($limits['max_layers]'])) {

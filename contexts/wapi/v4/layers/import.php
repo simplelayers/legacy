@@ -19,6 +19,7 @@ function _exec()
     $format = WAPI::GetFormat();
  
     $report = $formatObj->Import($args );
+   
     #$format =   'json';
     switch($format) {
         case 'html':

@@ -3,12 +3,13 @@
 namespace subnav;
 use \LayerTypes;
 use \AccessLevels;
+use Exception;
 use \GeomTypes;
 use model\Permissions;
 
 
 class LayerSubnav extends Subnav {
-	function makeDefault($layer, $user){
+	function makeDefault($layer,$user){
 		$session = \SimpleSession::Get();
 		$permissions = $session['permissions'];
 		

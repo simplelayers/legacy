@@ -45,5 +45,5 @@ try {
 	$message = "There was a problem during import: \n" . $e->getMessage() . "\n"; print javascriptalert($message);
 }
 javascriptalert($message);
-//return print redirect('layer.list');
+return print redirect('layer.list');
 }?>

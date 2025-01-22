@@ -18,6 +18,7 @@ class Subnav {
 	public $template = 'subnav/subnav.tpl';
 	function __construct($params=null) {
 		$this->params = $params;
+		
 		$this->templater = \SLSmarty::GetTemplater();
 		
 	}
