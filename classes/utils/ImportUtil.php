@@ -33,11 +33,13 @@ class ImportUtil
             $whereTo = self::MakeTmpDir($goTo) . '/';
         
         $url = $urlCheck? ParamUtil::Get(\WAPI::GetParams(), 'fileURL') : null;
+        $hasURL = !is_null($url);
         $hasFileName = isset($_FILES[$fileParam]);
+        $fileName = ImportUtil::SanitizeFileName($_FILES['source']['name']);
         
         if($hasFileName)$hasFileName = $_FILES[$fileParam]['name'] != '';
         
-        if (!$hasFileName && ! is_null($url)) {
+        if (!$hasFileName && $hasURL) {
             list ($path, $query) = explode('?', $url);
             $path = explode('/', $path);
             $lastItem =array_pop($path);
@@ -80,7 +82,7 @@ class ImportUtil
             $_FILES[$fileParam]['name'] = $targetName;
             
             $cmd = 'mv '.escapeshellarg($_FILES[$fileParam]['tmp_name']).' '.$whereTo.$targetName;
-            #var_dump($cmd);
+            
             passthru($cmd);
             ob_end_clean();
             //copy($_FILES[$fileParam]['tmp_name'],$whereTo.$targetName);
@@ -90,14 +92,13 @@ class ImportUtil
             
         }
         
-        $file = $_FILES[$fileParam]['name'];//self::SanitizeFileName($_FILES[$fileParam]['name']);
-        
-        move_uploaded_file($_FILES[$fileParam]['tmp_name'], $whereTo . $file);
+        move_uploaded_file($_FILES[$fileParam]['tmp_name'], $whereTo . $fileName);
+     
         
         return $whereTo;
     }
     
-    private static function SanitizeFileName($filename) {
+    public static function SanitizeFileName($filename) {
         try {
             list($file,$ext) = explode('.',$filename);
         } catch(\Exception $e) {
