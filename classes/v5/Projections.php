@@ -19,27 +19,29 @@ use utils\SQLUtil;
  *
  * @author Arthur Clifford <artclifford@me.com>
  */
-class Projections {
+class Projections
+{
 
     /**
      * TypeaheadArgs: {terms:string, crs:'projcs'|'geoccs', auth:'epsg'|'esri'}
      */
-    public static function TypeAhead($args) {
+    public static function TypeAhead($args)
+    {
         list($terms, $crs, $auth) = ParamUtil::Requires($args, 'terms', 'crs', 'auth');
         $with = ParamUtil::Get($args, 'with', '');
         $options = explode(',', $with);
-        
+
         $deprecated = "and not projname ilike '%(deprecated)'";
         $cols = 'projname as projection,crstype as crs,auth_name as auth,auth_srid as srid';
         $info = self::ProcessWith($options);
         $deprecated = is_null($Info['deprecated']) ? $deprecated : $info['deprecated'];
-        $crses = explode(',',$crs);
-        $crsOptions = ($crs === '*') ? "'geogcs','projcs'" :  SQLUtil::StringifyValues($crses,',','\'');
+        $crses = explode(',', $crs);
+        $crsOptions = ($crs === '*') ? "'geogcs','projcs'" :  SQLUtil::StringifyValues($crses, ',', '\'');
         $crsWhere = "crstype ilike any(array[$crsOptions])";
         $cols .= $info['cols'];
-        $auths = explode(',',$auths);
-        $authOptions = ($auth === '*') ? "'epsg','esri'" : SQLUtil::StringifyValues($auths,',','\'');
-        $authWhere = 'auth_name ilike any(array['.$authOptions.'])';
+        $auths = explode(',', $auths);
+        $authOptions = ($auth === '*') ? "'epsg','esri'" : SQLUtil::StringifyValues($auths, ',', '\'');
+        $authWhere = 'auth_name ilike any(array[' . $authOptions . '])';
         $processedTerms = self::ProcessTerms($terms);
 
         $query = <<<QUERY
@@ -47,7 +49,7 @@ with info as (select * from sl_spatial_ref_sys_extra where $authWhere)
 select $cols from info where $crsWhere and projname ilike all(array[$processedTerms])
 $deprecated
 QUERY;
-        
+
         $db = System::GetDB();
         #$db->debug = true;
 
@@ -56,14 +58,15 @@ QUERY;
         return $result;
     }
 
-    public static function ListRelaventAggregated($args) {
+    public static function ListRelaventAggregated($args)
+    {
         $wapi = System::GetWapi();
         $terms = ParamUtil::Get($args, 'terms', '');
         $crs = ParamUtil::Get($args, 'crs', 'projcs');
-        $crses = explode(',',$crs);
-        $crsOptions = ($crs === '*') ? "'geogcs','projcs'" :  SQLUtil::StringifyValues($crses,',','\'');
+        $crses = explode(',', $crs);
+        $crsOptions = ($crs === '*') ? "'geogcs','projcs'" :  SQLUtil::StringifyValues($crses, ',', '\'');
         $crsWhere = "crstype ilike any(array[$crsOptions])";
-        
+
         $with = ParamUtil::Get($args, 'with', '*');
 
         $options = explode(',', $with);
@@ -101,14 +104,15 @@ QUERY;
         return $result;
     }
 
-    public static function GetByID($args) {
+    public static function GetByID($args)
+    {
         list($auth, $id) = ParamUtil::Requires($args, 'auth', 'id');
         $crs = ParamUtil::Get($args, 'crs', '*');
         $with = ParamUtil::Get($args, 'with', '');
-        $crses = explode(',',$crs);
-        $crsOptions = ($crs === '*') ? "'geogcs','projcs'" :  SQLUtil::StringifyValues($crses,',','\'');
+        $crses = explode(',', $crs);
+        $crsOptions = ($crs === '*') ? "'geogcs','projcs'" :  SQLUtil::StringifyValues($crses, ',', '\'');
         $crsWhere = "crstype ilike any(array[$crsOptions])";
-        
+
         $cols = 'projname as name, crstype, auth_name as auth, auth_srid as id';
         $options = explode(',', $with);
         $info = self::ProcessWith($options);
@@ -124,46 +128,49 @@ QUERY;
         $results = $db->Execute($query, $params);
         return $results;
     }
-    public static function GetByNamePair($args) {
-        list($group,$name,$auth) = ParamUtil::Requires($args,'group','name','auth');
+    public static function GetByNamePair($args)
+    {
+        list($group, $name, $auth) = ParamUtil::Requires($args, 'group', 'name', 'auth');
         $cols = 'projname as name, crstype, auth_name as auth, auth_srid as id';
-        $with = ParamUtil::Get($args,'with','');
+        $with = ParamUtil::Get($args, 'with', '');
         $options = explode(',', $with);
         $info = self::ProcessWith($options);
         if ($info['cols'] !== '') {
             $cols .= $info['cols'];
         }
-        
-       $whereCRS = ($crs !== '') ? "and crstype ilike ?" : '';
-       $projectionName = ($name === '') ? $group : $group.' / '.$name;
-       
-       $query = <<<QUERY
+
+        $whereCRS = ($crs !== '') ? "and crstype ilike ?" : '';
+        $projectionName = ($name === '') ? $group : $group . ' / ' . $name;
+
+        $query = <<<QUERY
 SELECT $cols from sl_spatial_ref_sys_extra where auth_name ilike ? and projname ilike ? and crstype ilike any(array['projcs','geogcs'])
 QUERY;
-       $db = System::GetDB();
-       return $db->Execute($query,[$auth,$projectionName]);
+        $db = System::GetDB();
+        return $db->Execute($query, [$auth, $projectionName]);
     }
-  public static function GetByName($args) {
-        list($name,$auth) = ParamUtil::Requires($args,'name','auth');
+    public static function GetByName($args)
+    {
+        list($name, $auth) = ParamUtil::Requires($args, 'name', 'auth');
         $cols = 'projname as name, crstype, auth_name as auth, auth_srid as id';
-        $with = ParamUtil::Get($args,'with','');
+        $with = ParamUtil::Get($args, 'with', '');
         $options = explode(',', $with);
         $info = self::ProcessWith($options);
         if ($info['cols'] !== '') {
             $cols .= $info['cols'];
         }
-        
-       $whereCRS = ($crs !== '') ? "and crstype ilike ?" : '';
-       $projectionName = $name;
-       
-       $query = <<<QUERY
+
+        $whereCRS = ($crs !== '') ? "and crstype ilike ?" : '';
+        $projectionName = $name;
+
+        $query = <<<QUERY
 SELECT $cols from sl_spatial_ref_sys_extra where auth_name ilike ? and projname ilike ? and crstype ilike any(array['projcs','geogcs'])
 QUERY;
-       $db = System::GetDB();
-       return $db->Execute($query,[$auth,$projectionName]);
+        $db = System::GetDB();
+        return $db->Execute($query, [$auth, $projectionName]);
     }
 
-    private static function ProcessTerms($terms) {
+    private static function ProcessTerms($terms)
+    {
         $processdTerms = [];
         $termsCleaned = preg_replace('/[^\w\d]/', ' ', $terms);
         $termList = \explode(' ', $terms);
@@ -173,7 +180,8 @@ QUERY;
         return \implode(',', $processedTerms);
     }
 
-    private static function ProcessWith(array $options) {
+    private static function ProcessWith(array $options)
+    {
         $cols = '';
         $deprecated = null;
         foreach ($options as $option) {
@@ -193,87 +201,95 @@ QUERY;
         }
         return ['cols' => $cols, 'deprectated' => $deprecated];
     }
-    
-    public static function GetSRS($authCode) {
-        list($auth,$code) = explode(':',$authCode);
-        
+
+    public static function GetSRS($authCode)
+    {
+        list($auth, $code) = explode(':', $authCode);
+
         $db = System::GetDB();
-        
-        $srs = $db->GetOne('select srtext from spatial_ref_sys where auth_name ilike ? and auth_srid = ?',[$auth,$code]);
+
+        $srs = $db->GetOne('select srtext from spatial_ref_sys where auth_name ilike ? and auth_srid = ?', [$auth, $code]);
         return $srs;
     }
-    
-    public static function GetLatLonSRS() {
+
+    public static function GetLatLonSRS()
+    {
         return self::GetSRS('EPSG:4326');
     }
-    public static function GetDefaultSRS() {
-        
+    public static function GetDefaultSRS()
+    {
+
         return self::GetLatLonSRS();
     }
-    public static function GetWebSRS() {
+    public static function GetWebSRS()
+    {
         return self::GetSRS('EPSG:3857');
     }
-    public static function GetLayerSRS($layerId) {
-        
+    public static function GetLayerSRS($layerId)
+    {
+
         $db = System::GetDB();
         # $db->debug = true;
-        $infoStr = $db->GetOne('select import_info from layers where id=?',[$layerId]);
-        $importInfo = \json_decode($infoStr,true);
-        
-        if($importInfo) {
-            if($importInfo['info']) {
-                if($importInfo['info']['srs']) {
+        $infoStr = $db->GetOne('select import_info from layers where id=?', [$layerId]);
+        $importInfo = \json_decode($infoStr, true);
+
+        if ($importInfo) {
+            if ($importInfo['info']) {
+                if ($importInfo['info']['srs']) {
                     return $importInfo['info']['srs'];
                 }
             }
         }
         return self::GetDefaultSRS();
     }
-    public static function SRID2SRS($id) {
+    public static function SRID2SRS($id)
+    {
         $db = System::GetDB();
-        $srs = $db->GetOne('select srtext from spatial_ref_sys where id=?',[$id]);
+        $srs = $db->GetOne('select srtext from spatial_ref_sys where id=?', [$id]);
     }
 
-    public static function GetSRSFromPrjObj($obj) {
+    public static function GetSRSFromPrjObj($obj)
+    {
         // Recursive function to locate the top-level AUTHORITY code
-       
-    
+
+
         // Look for the main AUTHORITY code in the top component (e.g., GEOGCS or PROJCS)
-        foreach($obj as $l1) {
-            foreach($l1['value'] as $component) {
+        foreach ($obj as $l1) {
+            foreach ($l1['value'] as $component) {
                 $epsgCode = self::FindAuthority($component);
                 if ($epsgCode !== null) {
                     return $epsgCode;
                 }
             }
         }
+     
         return null;
     }
-    public static function FindAuthority($node) {
-            if(!isset($node['name'])) return null;
-            if ($node["name"] === "AUTHORITY" && is_array($node["value"]) && count($node["value"]) === 2) {
-                return implode(':',$node["value"]);
-                #return $node["value"][1];  // EPSG code is usually the second item
-            }
-            return null;
+    public static function FindAuthority($node)
+    {
+        if (!isset($node['name'])) return null;
+        if ($node["name"] === "AUTHORITY" && is_array($node["value"]) && count($node["value"]) === 2) {
+            return implode(':', $node["value"]);
+            #return $node["value"][1];  // EPSG code is usually the second item
+        }
+        return null;
     }
-    public static function ParseWktToObj($wkt) {
+    public static function ParseWktToObj($wkt)
+    {
         // Clean up whitespace
         $wkt = trim($wkt);
-    
         // Regular expressions for parsing WKT components
         $pattern = '/([A-Z_]+)\s*\[(.*)\]/';
         $components = [];
-        
-        
-    
+
         // Start parsing the top-level WKT
         $components[] = self::ParseSRSComponent($wkt);
-    
+     
         return $components;
     }
     // Recursive function to parse WKT components
-    static function ParseSRSComponent($text) {
+    static function ParseSRSComponent($text)
+    {
         $result = [];
         $pattern = '/([A-Z_]+)\s*\[(.*)\]/';
 
@@ -325,23 +341,28 @@ QUERY;
 
         return $result;
     }
-    
-    public static function GetAuthorityFromWkt($wkt){ 
+
+    public static function GetAuthorityFromWkt($wkt)
+    {
         $wktObj = self::ParseWktToObj($wkt);
+        
         // Check if the content resembles WKT format (starts with GEOGCS, PROJCS, or GEOGCRS, etc.)
-       
+
         $epsgId = self::GetSRSFromPrjObj($wktObj);
+        if(is_null($epsgId)) {
+            return $wkt;
+        }
         return $epsgId;
     }
-    public static function GetSRSFromPrj($filePath) {
+    public static function GetSRSFromPrj($filePath)
+    {
         // Check if file exists
         if (!file_exists($filePath)) {
             return false;
         }
-    
+
         // Read file content
         $wktContent = file_get_contents($filePath);
         return self::GetAuthorityFromWkt($wktContent);
     }
-
 }

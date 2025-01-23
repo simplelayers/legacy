@@ -14,9 +14,9 @@ class System {
      * @throws Exception
      * @return World
      */
-    private function System() {
+    private function __construct() {
         if (isset($GLOBALS ['_SimpleSYS']))
-            throw new Exception('System should not be instatiated; its functions are static');
+            throw new Exception('System should not be instantiated; its functions are static');
     }
 
     public static function GetSandbox() {

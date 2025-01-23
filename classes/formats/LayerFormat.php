@@ -82,10 +82,11 @@ class LayerFormat
 
         // Step 1: Move up/down-loaded content into a work directory
         $this->directory = ImportUtil::MoveUploaded(null, true, 'source', $this->moveExts);
-        #var_dump($this->directory);
-
+        $fileName = ImportUtil::SanitizeFileName($_FILES['source']['name']);
+     
         // Step 2: With a work directory, decompress any zip content
-        $zipFile = $this->directory . $_FILES['source']['name'];
+        $zipFile = $this->directory . $fileName;
+       
         $isCompressed = false;
         $zipPaths = array();
 
@@ -106,7 +107,6 @@ class LayerFormat
         } else {
             $this->targets = ImportUtil::GetTargets($this->directory, $this->targetPattern);
         }
-
 
 
         // Step 3: With a list of targets to import, loop through the
