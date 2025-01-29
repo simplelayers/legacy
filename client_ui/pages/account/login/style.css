@@ -1,4 +1,6 @@
-@CHARSET "ISO-8859-1";
+#page_content #subnav {
+	display:none !important;
+}
 .login_logo {
 	margin-top: 15px;	
 }

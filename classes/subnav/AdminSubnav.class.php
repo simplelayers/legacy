@@ -1,4 +1,4 @@
-<?
+<?php
 
 namespace subnav;
 
@@ -6,11 +6,13 @@ use auth\Context;
 use model\Permissions;
 class AdminSubnav extends Subnav {
 	
-	function makeDefault($user, $name,$org,$pageArgs){		
-		$permissions = $pageArgs['permissions'];
+	function makeDefault($obj, $user){		
+		$session = \SimpleSession::Get();
+		$permissions = $session['permissions'];
 		$context = Context::Get();
 		$this->assign("objectData", 'Admin');
-		$this->assign("ownerData", htmlspecialchars ($name));
+		
+
 		if(!$user->admin) return false;
 		//if(!is_null($right)) $this->assign("rightbar", $right);
 		

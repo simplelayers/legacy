@@ -1,4 +1,7 @@
-@CHARSET "ISO-8859-1";
+
+#page_content #subnav {
+	display:none !important;
+}
 .seats_listing .listing, .seats_listing .scrollable_listing {
 		width: auto !important;
 		max-width: 640px;

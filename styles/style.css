@@ -5,7 +5,9 @@ body        { background-color:#FFFFFF; color:#202021;
               width:100%; height:100%;
               overflow: hidden;
 }
-
+#page_content #subnav {
+	display:none !important;
+}
 .app_pane {
     position:fixed;
     bottom:0px !important; 

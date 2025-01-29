@@ -1,4 +1,6 @@
-@CHARSET "ISO-8859-1";
+#page_content #subnav {
+	display:none !important;
+}
 
 .workarea table {
 	width: 100% !important;	
