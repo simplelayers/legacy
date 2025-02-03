@@ -58,7 +58,7 @@ define([
 			if (!subdomain) return '';
 			switch (subdomain) {
 				case 'secure':
-					return 'https://app-services.simplelayers.com/';
+					return 'https://services.simplelayers.com/';
 					break;
 				case 'dev':
 					return 'https://app-svc-dev.simplelayers.com/';
