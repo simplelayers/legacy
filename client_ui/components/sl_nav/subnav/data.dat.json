@@ -217,19 +217,7 @@
             },
             {
                 "title": "SHP",
-                "ref": "?",
-                "fields": [
-                    {
-                        "name": "do",
-                        "value": "download.shp",
-                        "type": "static"
-                    },
-                    {
-                        "name": "layer",
-                        "value": "layerId",
-                        "type": "pageArg"
-                    }
-                ],
+                "ref": "wapi/v5/layers/download/shp/token:[token]/layer:[layerId]/",
                 "pageArg": "hasRecords",
                 "pageArgValue": "true"
             },
@@ -238,9 +226,24 @@
                 "ref": "",
                 "pageArg": "hasRecords",
                 "pageArgValue": "true",
-                "perm": "!Layers:Formats:KML:Save",
+                "perm": "!Layers:Formats:SHP:Save",
                	"tooltip":"You do not have permission to export SHP files."
             },
+            {
+                "title": "GeoJSON",
+                "ref": "wapi/v5/layers/download/geojson/token:[token]/layer:[layerId]/",
+                "pageArg": "hasRecords",
+                "pageArgValue": "true"
+            },
+            {
+                "title": "GeoJSON",
+                "ref": "",
+                "pageArg": "hasRecords",
+                "pageArgValue": "true",
+                "perm": "!Layers:Formats:SHP:Save",
+               	"tooltip":"You do not have permission to export SHP files."
+            },
+            
             {
                 "title": "CSV",
                 "ref": "?",
@@ -594,6 +597,17 @@
                 "perm": ":Layers:Formats:Delimited:View|!Create",
                 "tooltip":"CSV Import not available with current role."
                 
+            }, {
+                "title": "GeoJSON",
+                "ref": "layer/import/format:geojson",
+                "perm": ":Layers:Formats:SHP:View|Create",
+                "tooltip":"Import GeoJSON Format"
+            },{
+                "title": "GeoJSON",
+                "ref": null,
+                "perm": ":Layers:Formats:SHP:View|!Create",
+                "tooltip":"GeoJSON Import not available with current role"
+                
             },{
                 "title":"ArcGIS",
                 "ref":"?do=layer.import_arcgis",
@@ -691,6 +705,19 @@
                 "perm": ":Layers:Formats:CSV:View|Edit",
                 "pageArg": "hasEditableRecords",
                 "pageArgValue": "true"                              
+            }, {
+                "title": "GeoJSON",
+                "ref": "layer/import/format:geojson/",
+                "fields": [
+                    {
+                        "name": "layerid",
+                        "value": "layerId",
+                        "type": "pageArg"
+                    }
+                ],
+                "perm": ":Layers:Formats:SHP:View|Edit",
+                "pageArg": "hasEditableRecords",
+                "pageArgValue": "true"
             },{
                 "title": "GPS",
                 "ref": "?",

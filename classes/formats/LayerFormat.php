@@ -79,14 +79,12 @@ class LayerFormat
         }
 
 
-
         // Step 1: Move up/down-loaded content into a work directory
         $this->directory = ImportUtil::MoveUploaded(null, true, 'source', $this->moveExts);
         $fileName = ImportUtil::SanitizeFileName($_FILES['source']['name']);
-     
         // Step 2: With a work directory, decompress any zip content
         $zipFile = $this->directory . $fileName;
-       
+        
         $isCompressed = false;
         $zipPaths = array();
 
@@ -100,14 +98,13 @@ class LayerFormat
             ImportUtil::UnpackZip($zipFile, $ext, $zipPaths);
         }
 
-
+      
 
         if (count($zipPaths)) {
             $this->targets = ImportUtil::GetTargets($zipPaths, $this->targetPattern);
         } else {
             $this->targets = ImportUtil::GetTargets($this->directory, $this->targetPattern);
         }
-
 
         // Step 3: With a list of targets to import, loop through the
         // targets and attempt to import each one,
@@ -117,10 +114,11 @@ class LayerFormat
         $this->import_err = array();
         $this->reimport = false;
         $this->lastInfo = array();
-
+        #var_dump(getcwd());
+        
 
         foreach ($this->targets as $fmtFile) {
-
+            
 
             $layer = self::SetupLayer($params, $user, $fmtFile);
             $desiredName = $this->desiredNames[$fmtFile];
@@ -130,8 +128,8 @@ class LayerFormat
             $report = null;
             try {
                 // Each format extending LayerFormat should implement its own GetOGRLayer function.
-
                 $ogrLayer = $this->GetOGRImportLayer($fmtFile, $layer);
+               
                 $report = $this->ProcesOGRLayer($ogrLayer, $layer);
                 array_push($this->import_ok, $desiredName);
             } catch (ReportError $e) {

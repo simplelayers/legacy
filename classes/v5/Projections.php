@@ -342,6 +342,19 @@ QUERY;
         return $result;
     }
 
+    public static function ConvertWKT($wkt, $outputVersion = "wkt1")
+    {
+        // Escape shell arguments to prevent injection
+        $escapedWKT = escapeshellarg($wkt);
+
+        // Run gdalsrsinfo with the desired output format
+        $command = "gdalsrsinfo -o $outputVersion $escapedWKT";
+        
+        $output = shell_exec($command);
+
+        return trim($output);
+    }
+
     public static function GetAuthorityFromWkt($wkt)
     {
         $wktObj = self::ParseWktToObj($wkt);

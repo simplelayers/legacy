@@ -49,6 +49,7 @@ define(["dojo/_base/declare", "dojo/on", "dojo/dom-attr", "dojo/dom-class", "dij
             this.format_ins_txt.SetSrc(sl_url.getServerPath() + 'client_ui/pages/layer/import/formats/' + format.toLowerCase() + '.ins.html');
 
             dojoOn(this.projection_container, 'content_ready', this.ProjectionsReady.bind(this));
+            console.log(sl_url.getAPIPath() + 'map/projections/action:get/format:html');
             this.projection_container.SetSrc(sl_url.getAPIPath() + 'map/projections/action:get/format:html');
             dojoOn(this.import_form, 'submit', this.ValidateForm.bind(this));
             this.format_ins_head.innerHTML = format.toUpperCase() + " Instructions:";

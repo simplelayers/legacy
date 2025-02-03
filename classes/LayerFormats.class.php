@@ -4,6 +4,8 @@ use formats\Raster;
 use formats\Shp;
 use formats\WMS;
 use formats\CSV;
+use formats\GeoJSON;
+
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
 
 class LayerFormats
@@ -27,7 +29,14 @@ class LayerFormats
 
     const FORAMT_XMV = 'xmv';
 
+    const FORMAT_GEOJSON = 'geojson';
+
     public static $formats = array(
+        'geojson'=>array(
+            'label' => 'GeoJSON Format',
+            'class'=> 'GeoJSON.php',
+            'classname'=>'formats\GeoJSON'
+        ),
         'shp' => array(
             'label' => 'Shapefile Format',
             'class' => 'Shp.php',
@@ -64,6 +73,7 @@ class LayerFormats
         $permissions[self::FORMAT_GPS] = ':Layers:Formats:GPS:';
         $permissions[self::FORMAT_ODBC] = ':Layers:Formats:ODBC:';
         $permissions[self::FORMAT_SHP] = ':Layers:Formats:SHP:';
+        $permissions[self::FORMAT_GEOJSON] = ':Layers:Formats:SHP:';
         $permissions[self::FORMAT_WMS] = ':Layers:Formats:WMS:';
         $permissions[self::FORAMT_XMV] = ':Layers:Formats:XMV:';
         return $permissions;
@@ -84,6 +94,8 @@ class LayerFormats
                 return new WMS();
             case self::FORMAT_CSV:
                 return new CSV();
+            case self::FORMAT_GEOJSON:
+                return new GeoJSON();
         }
     }
 

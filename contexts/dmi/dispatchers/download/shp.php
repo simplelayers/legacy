@@ -19,6 +19,7 @@ function _config_shp() {
 }
 
 function _dispatch_shp($template, $args) {
+
     $wapi = System::GetWapi();
     $args = $wapi->GetParams();
     $args['srs'] = 'layer';
