@@ -145,7 +145,7 @@ define([
 			}, params);
 
 			return params;
-		},
+		},	
 		getURLBase: function (url) {
 			var info = url.split('?');
 			base = info.shift();

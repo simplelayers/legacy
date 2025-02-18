@@ -53,6 +53,12 @@ define(["dojo/_base/declare",
 	        	
         		}
         	},
+			getValue(val) {
+				if(val === undefined) return '';
+				if(val === 0) return '0';
+				if(val ===  '0') return 0;
+				return ''+val;
+			},
             postCreate:function(){
             
             	statusClass = 'status_'+this.item.stats.status;
@@ -60,17 +66,23 @@ define(["dojo/_base/declare",
             	if(this.item.stats.status=='ok') {
             		if(this.item.stats.info.layer_type=='raster') {
             			
-            			domClass.remove(this.ok_view_nonvector,'hidden');
+            			domClass.add(this.ok_view_nonvector,'hidden');
             			domClass.add(this.ok_view,'hidden');
-            			this.infoDisplay.innerHTML = "<div class=\"raster_info\">"+this.item.stats.metadata+"</div";
+	            		
+						this.infoDisplay.innerHTML = "<div class=\"raster_info\">"+this.item.stats.metadata+"</div";
+						domClass.remove(this.infoRow,'hidden');
+						domClass.remove(this.ok_view_nonvector,'hidden');
+            			
             		} else {
-            			domClass.remove(this.ok_view_nonvector,'hidden');
+            			domClass.add(this.ok_view_nonvector,'hidden');
             			domClass.add(this.ok_view,'hidden');
-	            		this.records_to_import.innerHTML = this.item.stats.import.records_to_import;
-	            		this.num_attempted.innerHTML = this.item.stats.import.num_attempted;
-	            		this.num_inserted.innerHTML = this.item.stats.import.numInserted;
-	            		this.nullCount.innerHTML = this.item.stats.import.nullCount;
-	            		this.invalidCount.innerHTML = this.item.stats.import.invalidCount;
+	            		this.records_to_import.innerHTML = this.getValue(this.item.stats.import.records_to_import);
+	            		this.num_attempted.innerHTML = this.getValue(this.item.stats.import.num_attempted);
+	            		this.num_inserted.innerHTML = this.getValue(this.item.stats.import.numInserted);
+	            		this.nullCount.innerHTML = this.getValue(this.item.stats.import.nullCount);
+	            		this.invalidCount.innerHTML = this.getValue(this.item.stats.import.invalidCount);
+						domClass.add(this.infoRow,'hidden');
+            			domClass.remove(this.ok_view,'hidden');
             		}
             		
             	} else {

@@ -1,7 +1,8 @@
 <tr>
 	<td>
 	<table class='ok_view' data-dojo-attach-point='ok_view'>
-	<tr><th >Layer: <a href="${url}">${layerName}</a></th><th>Status: OK</th></tr>
+	<tr><th >Layer: <a href="${url}">${layerName}</a></th><td>Status: OK</td></tr>
+	<tr class="layer-actions"><td >Go To:</td><td class="action-cell"><a  href="${url}">General</a><a href="/?&do=vector.records&id=${layerId}">Records</a><a href="layer/metadata/layer:${layerId}">Metadata</a><a href="/?&do=layer.permissions&id=${layerId}">Sharing</a><a href="?&do=vector.attributes&id=${layerId}">Attributes</a><a href="/?&do=default.colorscheme&id=${layerId}">Classification</a></td> </tr>
 	<tr><td>Records to be imported</td><td data-dojo-attach-point='records_to_import'></td></tr>
 	<tr><td>Records attempted</td><td data-dojo-attach-point='num_attempted'></td></tr>
 	<tr><td>Records inserted</td><td data-dojo-attach-point='num_inserted'></td></tr>
@@ -11,7 +12,8 @@
 	<table class='ok_view' data-dojo-attach-point="ok_view_nonvector">
 	<tr><th >Layer:</th><td><a href="${url}">${layerName}</a></td></tr>
 	<th>Status:</th><td> OK</td></tr>
-	<tr><th>Import Info:</th><td data-dojo-attach-point="infoDisplay"></td></tr>
+	<tr data-dojo-attach-point="infoRow"><th>Import Info:</th><td data-dojo-attach-point="infoDisplay"></td></tr>
+	<tr class="layer-actions"><th >Go To:</th><td><a href="${url}">General</a><a href="layer/metadata/layer:${layerId}">Metadata</a><a href="/?&do=layer.permissions&id=${layerId}">Sharing</a><a href="?&do=vector.attributes&id=${layerId}">Attributes</a><a href="/?&do=default.colorscheme&id=${layerId}">Classification</a></td> </tr>
 	</table>
 	<table class='problem_view'>
 	<tr><th >${layerName}</th><th>Status: Problem</th></tr>

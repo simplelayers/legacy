@@ -1,48 +1,73 @@
+.layer_import_report.listing {
+	width: calc(8.5in - 1rem)
+}
+
+.layer-actions .action-cell {
+    display: inline-grid;
+    gap: 0.5rem;
+    grid-auto-flow: column;
+    justify-content: end;
+    width: 100%;
+    justify-items: end;
+}
+.layer_import_report .scrollable_listing>table {
+	width: 100%;
+}
+
 .layer_import_report_item {
 	width: 100%;
-	padding:0px;
-	margin:0px;
-	margin-bottom: 10px !important;	
+	padding: 0px;
+	margin: 0px;
+	margin-bottom: 10px !important;
 }
+
 .layer_import_report_item.listing_item td {
-	padding:4px 5px 2px 5px;
-	font-size: 11pt;	
+	padding: 4px 5px 2px 5px;
+	font-size: 11pt;
 	line-height: 15pt;
-	vertical-align:top !important;
+	vertical-align: top !important;
 }
+
 .layer_import_report_item.listing_item:nth-child(odd) {
 	border: 2px solid black;
 }
 
 .layer_import_report_item.listing_item:nth-child(even) {
 	border: 2px solid #ccc;
-	
+
 }
+
 .raster_info {
-	display:block;
-	white-space: pre;;
-	text-align:left;
-	background-color:transparent !important;
+	display: block;
+	white-space: pre;
+	;
+	text-align: left;
+	background-color: transparent !important;
 }
 
 
 .status_ok .problem_view {
-	display:none !important;
+	display: none !important;
+}
+
+.status_ok .ok_view {
+	width: 100% !important;
 }
 
 .status_problem .ok_view {
-	display:None !important;
+	display: None !important;
 }
 
 .status_problem th {
-	background: #faa !important;;
-	text-align:left;	
-	padding-left:5px;
+	background: #faa !important;
+	;
+	text-align: left;
+	padding-left: 5px;
 }
 
 .status_problem td:nth-child(1) {
 	min-width: 200px;
-	
+
 }
 
 .status_problem td:nth-child(2) {
@@ -51,26 +76,31 @@
 	overflow-x: auto !important;
 	overflow-y: hidden;
 	padding-bottom: 20px;
-	
-	
+
+
 }
+
 .status_problem tr:nth-child(even) {
-	background: #fee !important; 	
+	background: #fee !important;
 }
+
 .status_problem tr:nth-child(odd) {
-	background: #fcc !important; 	
+	background: #fcc !important;
 }
 
 
 .status_ok th {
-	background: #afa !important;;
-	text-align:left;	
-	padding-left:5px;
+	background: #afa !important;
+	;
+	text-align: left;
+	padding-left: 5px;
 }
+
 .status_ok th:nth-child(2) {
-	background: #afa !important;;
-	text-align:left;	
-	padding-left:5px;
+	background: #afa !important;
+	;
+	text-align: left;
+	padding-left: 5px;
 }
 
 
@@ -78,10 +108,11 @@
 	text-align: right;
 	padding-right: 10px;
 }
+
 .status_ok tr:nth-child(even) {
-	background: #efe !important; 	
-}
-.status_ok tr:nth-child(odd) {
-	background: #cfc !important; 	
+	background: #efe !important;
 }
 
+.status_ok tr:nth-child(odd) {
+	background: #cfc !important;
+}
